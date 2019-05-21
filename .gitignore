@@ -1,0 +1,11 @@
+
+# Dependency directories
+pbx_panel_backend/config/mongodb.js
+pbx_panel_frontend/src/app/config.ts
+hapi-project/node_modules
+pbx_panel_backend/node_modules
+pbx_panel_frontend/node_modules
+pbx_panel_frontend/dist
+manish_shell/m.log
+aws_config.json
+.well-known
