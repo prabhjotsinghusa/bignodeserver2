@@ -1,0 +1,77 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>Manage Finance Hours</small></li>
+    </ol>
+    <div class="container">
+        <div class="card add box effect2">
+            <div class="card-header">
+                    <div class="card-icon">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    </div>
+                <h4>Add Finance Hours</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2 col-sm-12">
+                        <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="addActiveHour()">
+                            <img src="../../../../assets/images/loader.gif"
+                                style="position: absolute; z-index: 999; width: 60px;right: 12px;" *ngIf="isLoading">
+                            <mat-form-field class="example-full-width form-control">
+                                <input matInput placeholder="Choose a publisher" [matAutocomplete]="auto"
+                                    formControlName="pub_id" (blur)="hideLoader()" (keyup)="showLoader()">
+                            </mat-form-field>
+
+                            <!-- <span>Your choice is: {{formdata.get('pub_id').value | json}}</span> -->
+                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                <mat-option *ngFor="let publisher of (filteredPublishers| async)?.user"
+                                    [value]="publisher" (click)="hideLoader()">
+                                    <span>{{ publisher.fullname }}</span>
+                                    <small> | ID: {{publisher.uid}}</small>
+                                </mat-option>
+                            </mat-autocomplete>
+
+                            <br>
+                            <br>
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <div class="card">
+                                        <div class="card-header">Open Time</div>
+                                        <div class="card-body">
+                                            <ngb-timepicker formControlName="active_on" [minuteStep]="minuteStep"
+                                                [meridian]="true"></ngb-timepicker>
+                                        </div>
+                                    </div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.active_on.errors != null && formdata.controls.active_on.errors.required">
+                                        Open
+                                        Time is required.</div>
+                                </div>
+
+
+                                <div class="col-sm-6">
+                                    <div class="card">
+                                        <div class="card-header">Close Time</div>
+                                        <div class="card-body">
+                                            <ngb-timepicker formControlName="active_off" [minuteStep]="minuteStep"
+                                                [meridian]="true"></ngb-timepicker>
+                                        </div>
+                                    </div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.active_off.errors != null && formdata.controls.active_off.errors.required">
+                                        Close
+                                        Time is required.</div>
+                                </div>
+
+                            </div>
+                            <button type="submit" class="btn btn-secondary btn-success" [disabled]="error"
+                                style="margin-top:0px;">Submit</button>&nbsp;
+                            <a routerLink="/financehours" class="btn btn-secondary btn-default">Cancel</a>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+        </div>
+    </div>
+</div>

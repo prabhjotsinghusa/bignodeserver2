@@ -1,0 +1,134 @@
+<div [@routerTransition]>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <i class="fa fa-dashboard"></i>
+      <a href="/dashboard" ng-reflect-router-link="/dashboard">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item active">
+      <i class="fa fa-fw fa-area-chart"></i> Manage Capping</li>
+  </ol>
+
+  <div class="row ui">
+      <div class="col col-sm-12">
+          <div class="card mb-3">
+              <div class="card-header">
+                  Manage Cappping List
+                  <!--<a routerLink="/cccapping/add" class="btn btn-success pull-right">Add Capping</a>-->
+              </div>
+              <div class="card-body">
+                  <div class="col-md-12">
+                      <flash-messages></flash-messages>
+                      <div class="alert alert-success" *ngIf="grid_deleted">Capping is deleted successfully.</div>
+                  </div>
+                  <div class="col-md-12">
+                      <table style="width:100%">
+                          <thead>
+                              <th>Buyer Number</th>
+                              <th>Capping</th>
+                              <th>Global Cap</th>
+                              <th>Pause/Unpause</th>
+                              <!--<th>Priority</th>-->
+                          </thead>
+                          <tbody *ngFor="let realtimeData of cccapping; let i = index">
+                           
+                                <tr *ngFor="let realtime of realtimeData.cappingData" class="mat-row ng-tns-c4-0 ng-star-inserted">
+                                <td>{{realtimeData.number}}&nbsp;-&nbsp;{{loggedUser.name}}</td>
+                                <td>{{realtime.capping}}</td>
+                                <td>{{realtime.global_cap}}&nbsp;&nbsp;<a routerLink="/buyercapping/edit/{{realtime._id}}" class="btn btn-success btn-sm"><i
+                                      class="fa fa-edit"></i></a></td>
+                                <td>
+                                  <mat-slide-toggle class="example-margin" [color]="primary" [checked]="realtime.pause_status === 'pause'"
+                                    (change)="pauseUnpause($event,realtime)">
+              
+                                  </mat-slide-toggle>
+                                </td>
+                                <!--<td>
+                                  <button (click)="setPriority(realtime, 0)" [ngClass]="{'buttonBorder': realtime.priority === 0}">0</button>
+                                  <button (click)="setPriority(realtime, 1)" [ngClass]="{'buttonBorder': realtime.priority === 1}">1</button>
+                                  <button (click)="setPriority(realtime, 2)" [ngClass]="{'buttonBorder': realtime.priority === 2}">2</button>
+                                </td>-->
+                            </tr>
+                           
+                          </tbody>
+                        </table>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+
+  <!-- <div class="">
+    <div class="row">
+      <div class="col-md-12">
+        <h4>Manage Cappping List</h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-9">
+        <flash-messages></flash-messages>
+        <div class="alert alert-success" *ngIf="grid_deleted">Capping is deleted successfully.</div>
+      </div>
+      <div class="col-md-3">
+        <a routerLink="/cccapping/add" class="btn btn-success pull-right">Add Capping</a>
+      </div>
+    </div>
+    <hr>
+    <!- new accordion design in angular 6 ->
+    <div class="container">
+      <mat-accordion>
+        <mat-expansion-panel *ngFor="let item of cccapping | keyvalue; let i = index;" [expanded]="panelOpenIndex == i"
+          (opened)="panelOpenIndex = i">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <p class="realtime blue">{{item.key}}</p>
+            </mat-panel-title>
+            <mat-panel-description>
+              &nbsp;&nbsp;<p class="realtime blue">Total Records (in queue): <strong>{{item.value.length}}</strong></p>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div class="table-responsive">
+            <table class="table-hover table table-striped table-bordered" style="width:100%">
+              <thead>
+                <tr>
+                  <th>Buyer Number</th>
+                  <th>Realtime Calls</th>
+                  <th>Capping</th>
+                  <th>Global Cap</th>
+                  <th>Add/Remove</th>
+                  <th>Pause/Unpause</th>
+                  <th>Priority</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let realtimeData of item.value">
+                  <td>{{realtimeData.buyer_number}}&nbsp;-&nbsp;{{realtimeData.buyer}}</td>
+                  <td>{{realtimeData.realtime}}</td>
+                  <td>{{realtimeData.capping}}</td>
+                  <td>{{realtimeData.global_cap}}&nbsp;&nbsp;<a routerLink="/cccapping/edit/{{realtimeData._id}}" class="btn btn-success btn-sm"><i
+                        class="fa fa-edit"></i></a></td>
+                  <td>
+                    <mat-slide-toggle class="example-margin" [color]="primary" [checked]="realtimeData.status === 'on'"
+                      (change)="onOff($event,realtimeData)">
+                      <!- ON/OFF ->
+                    </mat-slide-toggle>
+                  </td>
+                  <td>
+                    <mat-slide-toggle class="example-margin" [color]="primary" [checked]="realtimeData.pause_status === 'pause'"
+                      (change)="pauseUnpause($event,realtimeData)">
+
+                    </mat-slide-toggle>
+                  </td>
+                  <td>
+                    <button (click)="setPriority(realtimeData, 0)" [ngClass]="{'buttonBorder': realtimeData.priority === 0}">0</button>
+                    <button (click)="setPriority(realtimeData, 1)" [ngClass]="{'buttonBorder': realtimeData.priority === 1}">1</button>
+                    <button (click)="setPriority(realtimeData, 2)" [ngClass]="{'buttonBorder': realtimeData.priority === 2}">2</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div> -->
+</div>

@@ -1,0 +1,221 @@
+<div [@routerTransition]>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <i class="fa fa-dashboard"></i>
+      <a href="/dashboard" ng-reflect-router-link="/dashboard">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item active">
+      <i class="fa fa-fw fa-area-chart"></i> Realtime Calls</li>
+  </ol>
+
+  <div class="row ui">
+    <div class="col col-sm-12">
+        <div class="card mb-3">
+            <div class="card-header"><i class="fa fa-fw fa-tachometer"></i>Realtime Calls</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                      <label>TFN</label>
+                      <input type="number" class="form-control" #tfn (change)="getRealtime(tfn?.value, pub_id?.value)"
+                        placeholder="Enter TFN">
+                    </div>
+                    <div class="col-md-6" *ngIf="loggedUser.role === 'admin'">
+                      <label>Publisher</label>
+                      <input type="text" class="form-control" #pub_id (change)="getRealtime(tfn?.value, pub_id?.value)"
+                        placeholder="Enter publisher name">
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row ui">
+    <div class="col col-sm-12">
+        <div class="card mb-3">
+            <div class="card-header"></div>
+            <div class="card-body">
+              <hr>
+              <div class="">
+                  <mat-accordion>
+                      <mat-expansion-panel *ngFor="let item of realtime | keyvalue; let i = index;" [expanded]="panelOpenIndex == i"
+                        (opened)="panelOpenIndex = i">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title>
+                            <p class="realtime blue">{{item.value.publisher}}</p>
+                          </mat-panel-title>
+                          <mat-panel-description>
+                            &nbsp;&nbsp;<p class="realtime blue">Total Calls: <strong>{{item.value.total}}</strong></p>
+                          </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <div class="row" *ngFor="let calls of item.value.calls | keyvalue;">
+                          <p class="realtime green">TFN: {{calls.key}}</p>
+                          <div class="table-responsive">
+                            <table class="mat-elevation-z8 table-bordered mat-table table-hover table table-striped table-bordered" style="width:100%">
+                              <thead>
+                                <tr class="mat-header-row">
+                                  <th class="mat-header-cell">TFN</th>
+                                  <th class="mat-header-cell">Taking To</th>
+                                  <th class="mat-header-cell">Duration</th>
+                                  <th class="mat-header-cell" *ngIf="loggedUser.role !== 'publisher'">Extension</th>
+                                  <!-- <th >Status</th> -->
+                                </tr>
+                              </thead>
+                              <tbody>                                
+                                <tr class="mat-row" *ngFor="let realtimeData of calls.value">
+                                  <td class="mat-cell">{{realtimeData.from_did}}</td>
+                                  <td class="mat-cell">{{(loggedUser.role ==='publisher' && !loggedUserSettings.display_cnum)
+                                    ? 'xxxx-xxx-'+realtimeData.talking_to.substr(-4): realtimeData.talking_to}}</td>
+                                  <td class="mat-cell">{{realtimeData.duration}}</td>
+                                  <td class="mat-cell" *ngIf="loggedUser.role !=='publisher'">{{realtimeData.buyer_number}}</td>
+                                  <!-- <td>{{realtimeData.status}}</td> -->
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+                                     
+              </div>
+              <hr>
+              <div class="" *ngIf="show_waiting">
+                  <h4>Waiting Calls</h4>
+                  <mat-accordion>
+                    <mat-expansion-panel [expanded]="true" (opened)="true">
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+            
+                        </mat-panel-title>
+                        <mat-panel-description>
+                          &nbsp;&nbsp;<p class="realtime blue">Total Calls: <strong>{{waitingcalls.length}}</strong></p>
+                        </mat-panel-description>
+                      </mat-expansion-panel-header>
+                      <div class="table-responsive">
+                        <table class="mat-elevation-z8 table-bordered mat-table table-hover table table-striped table-bordered" style="width:100%">
+                          <thead>
+                            <tr class="mat-header-row">
+                              <th class="mat-header-cell">#</th>
+                              <th class="mat-header-cell">TFN</th>
+                              <th class="mat-header-cell">Taking To</th>
+                              <th class="mat-header-cell">Duration</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="mat-row" *ngFor="let realtimeData of waitingcalls;  let i = index">
+                              <td class="mat-cell">{{realtimeData.sno}}</td>
+                              <td class="mat-cell">{{realtimeData.did}}</td>
+                              <td class="mat-cell">{{realtimeData.connected}}</td>
+                              <td class="mat-cell">{{realtimeData.time}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </mat-expansion-panel>
+                  </mat-accordion>
+                </div>               
+            </div>
+        </div>
+    </div>
+</div>
+
+  <!--<div class="container">
+    <div class="row">
+      <div class="col-xl-12">
+        <h4>Realtime Calls</h4>
+      </div>
+    </div>
+    <div class="block realtime-block">
+      <div class="row">
+        <div class="col-md-6">
+          <label>TFN</label>
+          <input type="number" class="form-control" #tfn (change)="getRealtime(tfn?.value, pub_id?.value)"
+            placeholder="Enter TFN">
+        </div>
+        <div class="col-md-6" *ngIf="loggedUser.role === 'admin'">
+          <label>Publisher</label>
+          <input type="text" class="form-control" #pub_id (change)="getRealtime(tfn?.value, pub_id?.value)"
+            placeholder="Enter publisher name">
+        </div>
+      </div>
+    </div>
+    <hr>
+    <!- new accordion design in angular 6 ->
+    <div class="container">
+      <mat-accordion>
+        <mat-expansion-panel *ngFor="let item of realtime | keyvalue; let i = index;" [expanded]="panelOpenIndex == i"
+          (opened)="panelOpenIndex = i">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <p class="realtime blue">{{item.value.publisher}}</p>
+            </mat-panel-title>
+            <mat-panel-description>
+              &nbsp;&nbsp;<p class="realtime blue">Total Calls: <strong>{{item.value.total}}</strong></p>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div class="row" *ngFor="let calls of item.value.calls | keyvalue;">
+            <p class="realtime green">TFN: {{calls.key}}</p>
+            <div class="table-responsive">
+              <table class="table-hover table table-striped table-bordered" style="width:100%">
+                <thead>
+                  <tr>
+                    <th>TFN</th>
+                    <th>Taking To</th>
+                    <th>Duration</th>
+                    <th>Extension</th>
+                    <!- <th >Status</th> ->
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let realtimeData of calls.value">
+                    <td>{{realtimeData.tfn}}</td>
+                    <td>{{realtimeData.connected_line}}</td>
+                    <td>{{realtimeData.time}}</td>
+                    <td>{{realtimeData.caller_id}}</td>
+                    <!- <td>{{realtimeData.status}}</td> ->
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+    <hr>
+    <div class="container" *ngIf="show_waiting">
+      <h4>Waiting Calls</h4>
+      <mat-accordion>
+        <mat-expansion-panel [expanded]="true" (opened)="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+
+            </mat-panel-title>
+            <mat-panel-description>
+              &nbsp;&nbsp;<p class="realtime blue">Total Calls: <strong>{{waitingcalls.length}}</strong></p>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div class="table-responsive">
+            <table class="table-hover table table-striped table-bordered" style="width:100%">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>TFN</th>
+                  <th>Taking To</th>
+                  <th>Duration</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let realtimeData of waitingcalls;  let i = index">
+                  <td>{{i+1}}</td>
+                  <td>{{realtimeData.did}}</td>
+                  <td>{{realtimeData.connected}}</td>
+                  <td>{{realtimeData.duration}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>-->
+</div>

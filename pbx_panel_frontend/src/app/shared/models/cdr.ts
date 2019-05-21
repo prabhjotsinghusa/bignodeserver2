@@ -1,0 +1,34 @@
+export interface Cdr {
+    clid: string;
+    src: string;
+    dst: string;
+    dcontext: string;
+    channel: string;
+    dstchannel: string;
+    lastapp: string;
+    lastdata: string;
+    start: string;
+    answer: string;
+    end: string;
+    duration: string;
+    billsec: string;
+    disposition: string;
+    amaflags: string;
+    accountcode: string;
+    uniqueid: string;
+    userfield: string;
+    sequence: string;
+    did: string;
+    oxygen_call_id: string;
+    pub_id: string;
+    camp_id: string;
+    buyer_id: string;
+    price_per_tfn: string;
+    call_reducer: string;
+    count: string;
+    status: string;
+    publisherName: string;
+    buyerName: string;
+    //campName: string;
+    recordingfile: string;
+}

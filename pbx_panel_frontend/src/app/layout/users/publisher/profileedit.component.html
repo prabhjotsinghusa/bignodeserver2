@@ -1,0 +1,83 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>Edit Profile</small></li>
+    </ol>
+    <div class="container">
+        <div class="card add box effect2">
+            <div class="card-header">
+                    <div class="card-icon">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                    </div>
+                <h4>Profile Details</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2 col-sm-12">
+                        <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="saveProfile()">
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                </div> -->
+                                <input type="text" class="form-control" placeholder="Username" name="username"
+                                    formControlName="username">
+                            </div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                                </div> -->
+                                <input type="email" class="form-control" placeholder="Email" name="email"
+                                    formControlName="email">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.email.errors != null && formdata.controls.email.errors.required">
+                                Email
+                                is required.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.email.errors != null && formdata.controls.email.errors.email">
+                                Email
+                                is invalid.</div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                </div> -->
+                                <input type="text" class="form-control" placeholder="Fullname" name="fullname"
+                                    formControlName="fullname">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.fullname.errors != null && formdata.controls.fullname.errors.required">
+                                Fullname
+                                is required.</div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                                </div> -->
+                                <input type="text" class="form-control" placeholder="Contact Number" name="contact"
+                                    formControlName="contact" pattern="[0-9]*">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.contact.errors != null && formdata.controls.contact.errors.required">
+                                Contact
+                                Number is required.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.contact.errors != null && formdata.controls.contact.errors.minlength">
+                                Contact
+                                Number minimum 10 digit.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.contact.errors != null && formdata.controls.contact.errors.maxlength">
+                                Contact
+                                Number maximum 10 digit.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.contact.errors != null && formdata.controls.contact.errors.pattern">
+                                Contact
+                                Number contains only numbers.</div>
+                            <button type="submit" class="btn btn-secondary btn-success">Save</button>&nbsp;
+                            <a routerLink="/users/profile" class="btn btn-secondary btn-default">Cancel</a>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+        </div>
+    </div>
+</div>

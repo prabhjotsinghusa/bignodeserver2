@@ -1,0 +1,170 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>View Buyer Balance</small></li>
+    </ol>
+
+    <div class="row ui pb_balance">
+            <div class="col col-sm-12">
+                <div class="card mb-3 pb_balance">
+                    <div class="card-header"></div>
+                    <div class="card-body">
+                        <div class="col-md-12">
+                                <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="searchWithFilter()">
+                               
+                                <div class="row">
+                                    <div class="col-md-4" style="margin-left:15px;">
+                                        <img src="../../../../assets/images/loader.gif"
+                                            style="position: absolute; z-index: 999; width: 60px;right: 12px;" *ngIf="isLoading">
+                                        <mat-form-field class="example-full-width form-control">
+                                            <input matInput placeholder="Choose a buyer" [matAutocomplete]="auto"
+                                                formControlName="buyer_id" (blur)="hideLoader()" (keyup)="showLoader()">
+                                        </mat-form-field>
+                                        <!-- <span>Your choice is: {{formdata.get('pub_id').value | json}}</span> -->
+                                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                            <mat-option *ngFor="let buyer of (filteredBuyers| async)?.buyer" [value]="buyer"
+                                                (click)="hideLoader()">
+            
+                                                <span>{{ buyer.name }}</span>
+                                                <small> | ID: {{buyer.buyer_id}}</small>
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <ng-daterangepicker formControlName="daterange" [options]="options"></ng-daterangepicker>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button type="submit" class="btn btn-secondary btn-success">Search</button>
+                                    </div>
+                                </div>
+                            
+                            </form>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row ui">
+            <div class="col col-sm-12">
+                <div class="card mb-3">
+                     <div class="card-header"></div> 
+                    <div class="card-body">
+                            <div class="row">
+                                    <div class="col-md-12 col-md-offset-1">
+                                        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 table-bordered"
+                                            style="width:100%">
+                            
+                                            <!-- Weight Column -->
+                                            <ng-container matColumnDef="buyerName">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Buyer Name </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.cdr.buyerName}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="buyer_id">
+                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Buyer Number </th>
+                                                    <td mat-cell *matCellDef="let element"> {{element.cdr['_id'].buyer_id}} </td>
+                                                </ng-container>
+
+                                            <ng-container matColumnDef="total_calls">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Calls </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.d.totalcalls}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="qualified_calls">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Payable Calls </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.d.payablecalls}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="price_per_call">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Price Per Call </th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    {{element.cdr.buyerdata!==undefined?element.cdr.buyerdata.price_per_call:0}}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="total_amount">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.d.totalamount}} </td>
+                                            </ng-container>
+                            
+                                            <!-- <ng-container matColumnDef="edit">
+                                                    <th mat-header-cell *matHeaderCellDef> Actions </th>
+                                                    <td mat-cell *matCellDef="let element">
+                                                        <a routerLink="/activehours/edit/{{element._id}}" class="btn btn-info btn-sm" title="Edit"><i class="fa fa-pencil"></i></a>&nbsp;
+                                                        <button type="button" (click)="deleteActivehour(element._id)" class="btn btn-danger btn-sm" title="Delete"><i
+                                                                class="fa fa-trash-o"></i></button>
+                                                    </td>
+                                                </ng-container> -->
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                        </table>
+                            
+                                        <!--  <mat-form-field>
+                                              <input matInput [matDatepicker]="picker" placeholder="Choose a date">
+                                              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                              <mat-datepicker #picker></mat-datepicker>
+                                            </mat-form-field>
+                                         -->
+                            
+                                        <mat-paginator [pageSizeOptions]="[20, 50, 200]" showFirstLastButtons></mat-paginator>
+                                    </div>
+                                    <img src="../../../../assets/images/loading.gif" style="position: absolute; z-index: 999; left: 40%;top:30%"
+                                        *ngIf="isLoading2">
+                             </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- <div class="">
+        <div class="col-md-12 col-md-offset-1">
+            <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 table-bordered"
+                style="width:100%">
+
+                <!- Weight Column ->
+                <ng-container matColumnDef="buyerName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Buyer Name </th>
+                    <td mat-cell *matCellDef="let element"> {{element.cdr.buyerName}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="total_calls">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Calls </th>
+                    <td mat-cell *matCellDef="let element"> {{element.d.totalcalls}} </td>
+                </ng-container>
+                <ng-container matColumnDef="qualified_calls">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Payable Calls </th>
+                    <td mat-cell *matCellDef="let element"> {{element.d.payablecalls}} </td>
+                </ng-container>
+                <ng-container matColumnDef="price_per_call">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Price Per Call </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{element.cdr.buyerdata!==undefined?element.cdr.buyerdata.price_per_call:0}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="total_amount">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount </th>
+                    <td mat-cell *matCellDef="let element"> {{element.d.totalamount}} </td>
+                </ng-container>
+
+                <!- <ng-container matColumnDef="edit">
+                        <th mat-header-cell *matHeaderCellDef> Actions </th>
+                        <td mat-cell *matCellDef="let element">
+                            <a routerLink="/activehours/edit/{{element._id}}" class="btn btn-info btn-sm" title="Edit"><i class="fa fa-pencil"></i></a>&nbsp;
+                            <button type="button" (click)="deleteActivehour(element._id)" class="btn btn-danger btn-sm" title="Delete"><i
+                                    class="fa fa-trash-o"></i></button>
+                        </td>
+                    </ng-container> ->
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <!-  <mat-form-field>
+                  <input matInput [matDatepicker]="picker" placeholder="Choose a date">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+             ->
+
+            <mat-paginator [pageSizeOptions]="[20, 50, 200]" showFirstLastButtons></mat-paginator>
+        </div>
+        <img src="../../../../assets/images/loading.gif" style="position: absolute; z-index: 999; left: 40%;top:30%"
+            *ngIf="isLoading2">
+    </div> -->
+</div>

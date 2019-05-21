@@ -1,0 +1,879 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>Manage Campaign</small></li>
+    </ol>
+
+    <div class="container">
+        <div class="card add box effect2">
+            <div class="card-header">
+                    <div class="card-icon">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    </div>
+                <h4>Add Campaign</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2 col-sm-12">
+                        <div class="alert alert-danger" *ngIf="show_error">{{error_message}}</div>
+                        <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="addCampaign()">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group input-group">
+                                        <!-- <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-500px"></i></span>
+                                        </div> -->
+                                        <input type="text" class="form-control" placeholder="Campaign Name"
+                                            name="camp_name" formControlName="camp_name">
+                                    </div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.camp_name.errors != null && formdata.controls.camp_name.errors.required">
+                                        Campaign
+                                        Name
+                                        is required.</div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.camp_name.errors != null && formdata.controls.camp_name.errors.minlength">
+                                        Campaign
+                                        Name
+                                        minimum 4 characters.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group input-group">
+                                        <select class="form-control" placeholder="Time Zone" name="time_zone"
+                                            formControlName="time_zone">
+                                            <option value="CST">C.S.T.</option>
+                                            <option value="EST">E.S.T.</option>
+                                            <option value="PST">P.S.T.</option>
+                                            <option value="IST">I.S.T.</option>
+                                        </select>
+                                    </div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.time_zone.errors != null && formdata.controls.time_zone.errors.required">
+                                        Time
+                                        Zone is required.</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group input-group">
+                                        <!-- <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
+                                        </div> -->
+                                        <input type="text" class="form-control" placeholder="Buffer Time"
+                                            name="buffer_time" formControlName="buffer_time" pattern="[0-9]*">
+                                    </div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.buffer_time.errors != null && formdata.controls.buffer_time.errors.required">
+                                        Buffer
+                                        Time
+                                        is required.</div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.buffer_time.errors != null && formdata.controls.buffer_time.errors.minlength">
+                                        Buffer
+                                        Time
+                                        minimum 1 digit.</div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.buffer_time.errors != null && formdata.controls.buffer_time.errors.pattern">
+                                        Buffer
+                                        Time
+                                        contains only numbers.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group input-group">
+                                        <!-- <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
+                                        </div> -->
+                                        <input type="text" class="form-control" placeholder="Price Per Call"
+                                            name="price_per_call" formControlName="price_per_call" pattern="[0-9]*">
+                                    </div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.price_per_call.errors != null && formdata.controls.price_per_call.errors.required">
+                                        Price
+                                        Per Call
+                                        is required.</div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.price_per_call.errors != null && formdata.controls.price_per_call.errors.minlength">
+                                        Price
+                                        Per Call
+                                        minimum 1 digit.</div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.price_per_call.errors != null && formdata.controls.price_per_call.errors.pattern">
+                                        Price
+                                        Per Call
+                                        contains only numbers.</div>
+                                </div>
+                            </div>
+                            <div class="for_admin" *ngIf="loggedUser.role == 'admin'">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <img src="../../../../assets/images/loader.gif"
+                                            style="position: absolute; z-index: 999; width: 60px;right: 12px;"
+                                            *ngIf="isLoading">
+                                        <mat-form-field class="example-full-width form-control"
+                                            style="margin-bottom:10px;">
+                                            <input matInput placeholder="Choose a publisher" [matAutocomplete]="auto"
+                                                formControlName="pub_id" (blur)="hideLoader()" (keyup)="showLoader()">
+                                        </mat-form-field>
+                                        <!-- <span>Your choice is: {{formdata.get('pub_id').value | json}}</span> -->
+                                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                            <mat-option *ngFor="let publisher of (filteredPublishers| async)?.user"
+                                                [value]="publisher" (click)="hideLoader()">
+                                                <span>{{ publisher.fullname }}</span>
+                                                <small> | ID: {{publisher.uid}}</small>
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Read Only Mode</span>
+                                            </div>
+                                            <div class="btn-group btn-group-toggle" ngbRadioGroup name="read_only"
+                                                formControlName="read_only">
+                                                <label ngbButtonLabel class="btn-primary" *ngFor="let op of optionsArr">
+                                                    <input ngbButton type="radio" [value]="op.key"> {{op.value}}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span *ngIf="show_pub_template;then template1"></span>
+                                <ng-template #template1>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label><strong>Select TFN(s)</strong></label>
+                                                <div class="container">
+                                                    <div class="row" *ngFor="let tfn of pub_tfn;">
+                                                        <label class="form-control col-md-4"
+                                                            *ngIf="!(tfn.status == 'used' || tfn.status == 'pending')">
+                                                            <input type="checkbox" value="{{tfn.tfn}}"
+                                                                [checked]="tfn.status =='used'"
+                                                                (change)="selectTFN($event)">{{tfn.tfn}}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Internal Routing -->
+                                    <div class="row"
+                                        *ngIf="selected_pub_settings.enable_inside_route && !selected_pub_settings.number_to_ivr">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label><strong>Internal Routing</strong></label>
+                                                <div class="container row">
+                                                    <div *ngIf="selected_publisher.pub_queue == null || selected_publisher.pub_queue == 'others'"
+                                                        class="container row">
+                                                        <label class="form-control col-md-4">
+                                                            <input type="radio" value="602"
+                                                                formControlName="inside_route" name="inside_route">602
+                                                        </label>
+                                                        <label class="form-control col-md-4">
+                                                            <input type="radio" value="604"
+                                                                formControlName="inside_route" name="inside_route">604
+                                                        </label>
+                                                        <label class="form-control col-md-4">
+                                                            <input type="radio" value="100009988"
+                                                                formControlName="inside_route"
+                                                                name="inside_route">100009988
+                                                        </label>
+                                                    </div>
+                                                    <label class="form-control col-md-6"
+                                                        *ngIf="selected_publisher.pub_queue == 'travel'">
+                                                        <input type="radio" value="602" formControlName="inside_route"
+                                                            name="inside_route" [checked]="true">602
+                                                    </label>
+                                                    <label class="form-control col-md-6"
+                                                        *ngIf="selected_publisher.pub_queue == 'tech'">
+                                                        <input type="radio" value="604" formControlName="inside_route"
+                                                            name="inside_route" [checked]="true">604
+                                                    </label>
+                                                    <label class="form-control col-md-6"
+                                                        *ngIf="selected_publisher.pub_queue == 'forwarding'">
+                                                        <input type="radio" value="100009988"
+                                                            formControlName="inside_route" name="inside_route"
+                                                            [checked]="true">100009988
+                                                    </label>
+
+                                                </div>
+                                                <div class="container row">
+                                                    <button type="button" class="btn btn-info col-md-2"
+                                                        (click)="otherInsideroute()">Others</button>
+                                                    <input type="number" placeholder="Enter Inside Route"
+                                                        formControlName="inside_route" name="inside_route"
+                                                        *ngIf="checkother" class="form-control col-md-6">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Buyers and Buyer Numbers -->
+                                    <div class="row"
+                                        *ngIf="selected_pub_settings.enable_outside_route && !selected_pub_settings.number_to_ivr">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label><strong>Select Buyer</strong></label>
+                                                <label class="form-control col-md-12"
+                                                    *ngFor="let buyer of publisher_buyers;">
+                                                    <input type="checkbox" value="{{buyer.buyer_id}}"
+                                                        (change)="selectBuyer($event)"><strong>{{buyer.name}}</strong>
+                                                    <div class="container row">
+                                                        <label class="col-md-12 form-control"
+                                                            *ngFor="let bn of buyer_numbers[buyer.buyer_id];">
+                                                            <input type="checkbox" class="check_{{buyer.buyer_id}}"
+                                                                value="{{bn.number}}"
+                                                                (change)="selectBuyerNumber($event,buyer.buyer_id)">{{bn.number}}
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group input-group">
+                                                                        <div class="input-group-prepend mb_10">
+                                                                            <span class="input-group-text padding_11">CC
+                                                                                Capping</span>
+                                                                        </div>
+                                                                        <input class="form-control"
+                                                                            id="cccapping_{{buyer.buyer_id}}_{{bn.number}}"
+                                                                            value="0" type="number" min="0">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group input-group pull-right">
+                                                                        <div class="input-group-prepend mb_10">
+                                                                            <span
+                                                                                class="input-group-text padding_11">Priority</span>
+                                                                        </div>
+                                                                        <select class="form-control"
+                                                                            id="priority_{{buyer.buyer_id}}_{{bn.number}}"
+                                                                            (change)="selectPriority($event)">
+                                                                            <option
+                                                                                *ngFor="let p of priorities; let i = index">
+                                                                                {{i}}</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <button type="button" class="btn btn-success btn-sm pull-right"
+                                                (click)="open(addBuyer)">Add
+                                                Buyer Numbers</button>
+                                            <!-- bootstrap modal add buyer -->
+                                            <ng-template #addBuyer let-c="close" let-d="dismiss">
+                                                <form [formGroup]="formdata2" role="form" method="POST"
+                                                    (ngSubmit)="addBuyerWithNumber()">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Add Buyer</h4>
+                                                        <button type="button" class="close" aria-label="Close"
+                                                            (click)="d('Cross click')">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body add">
+                                                        <div class="alert alert-danger" *ngIf="buyer_number_error">There
+                                                            is
+                                                            some while adding the buyer number(s)</div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fa fa-envelope"></i></span>
+                                                                            </div>
+                                                                            <input type="email" class="form-control"
+                                                                                placeholder="Email" name="email"
+                                                                                formControlName="email">
+                                                                        </div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.email.errors != null && formdata2.controls.email.errors.required">
+                                                                            Email
+                                                                            is required.</div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.email.errors != null && formdata2.controls.email.errors.email">
+                                                                            Email
+                                                                            is invalid.</div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fa fa-user"></i></span>
+                                                                            </div>
+                                                                            <input type="text" class="form-control"
+                                                                                placeholder="Buyer Name" name="name"
+                                                                                formControlName="name">
+                                                                        </div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.name.errors != null && formdata2.controls.name.errors.required">
+                                                                            Buyer
+                                                                            name is required.</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fa fa-lock"></i></span>
+                                                                            </div>
+                                                                            <input type="password" class="form-control"
+                                                                                placeholder="Enter Password"
+                                                                                name="passwd" formControlName="passwd">
+                                                                        </div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.passwd.errors != null && formdata2.controls.passwd.errors.required">
+                                                                            Password
+                                                                            is required.</div>
+                                                                        <div *ngIf="error2 && formdata2.controls.passwd.errors != null &&  formdata2.controls.passwd.errors.minlength"
+                                                                            style="color:red;">Password must be at least
+                                                                            8
+                                                                            characters</div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fa fa-lock"></i></span>
+                                                                            </div>
+                                                                            <input type="password" class="form-control"
+                                                                                placeholder="Confirm Password"
+                                                                                name="cnf_passwd"
+                                                                                formControlName="cnf_passwd">
+                                                                        </div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.cnf_passwd.errors != null && formdata2.controls.cnf_passwd.errors.required">
+                                                                            Confirm
+                                                                            password is required.</div>
+                                                                        <div style="color:red;" *ngIf="password_error">
+                                                                            Password
+                                                                            is not
+                                                                            matched.</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fa fa-phone"></i></span>
+                                                                            </div>
+                                                                            <input type="text" class="form-control"
+                                                                                placeholder="Contact Number"
+                                                                                name="contact" formControlName="contact"
+                                                                                pattern="[0-9]*">
+                                                                        </div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.contact.errors != null && formdata2.controls.contact.errors.required">
+                                                                            Contact
+                                                                            Number is required.</div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.contact.errors != null && formdata2.controls.contact.errors.minlength">
+                                                                            Contact
+                                                                            Number minimum 10 digit.</div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.contact.errors != null && formdata2.controls.contact.errors.maxlength">
+                                                                            Contact
+                                                                            Number maximum 10 digit.</div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.contact.errors != null && formdata2.controls.contact.errors.pattern">
+                                                                            Contact
+                                                                            Number contains only numbers.</div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"
+                                                                                    style="padding-top:20px; padding-bottom:20px"><i
+                                                                                        class="fa fa-home"></i></span>
+                                                                            </div>
+                                                                            <textarea class="form-control"
+                                                                                placeholder="Address" name="address"
+                                                                                formControlName="address"></textarea>
+                                                                        </div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.address.errors != null && formdata2.controls.address.errors.required">
+                                                                            Address
+                                                                            is required.</div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.address.errors != null && formdata2.controls.address.errors.minlength">
+                                                                            Address
+                                                                            minimum 4 characters.</div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.address.errors != null && formdata2.controls.address.errors.maxlength">
+                                                                            Address
+                                                                            maximum 200 characters.</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text">$</span>
+                                                                            </div>
+                                                                            <input type="number" class="form-control"
+                                                                                placeholder="Price Per Call"
+                                                                                name="price_per_call"
+                                                                                formControlName="price_per_call">
+                                                                        </div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.price_per_call.errors != null && formdata2.controls.price_per_call.errors.required">
+                                                                            Price
+                                                                            per Call is required.</div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fa fa-clock-o"></i></span>
+                                                                            </div>
+                                                                            <input type="number" class="form-control"
+                                                                                placeholder="Buffer Time"
+                                                                                name="buffer_time"
+                                                                                formControlName="buffer_time">
+                                                                        </div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.buffer_time.errors != null && formdata2.controls.buffer_time.errors.required">
+                                                                            Buffer
+                                                                            Time is required.</div>
+                                                                    </div>
+                                                                </div>
+                                                                <h4>Buyer Number(s)</h4>
+                                                                <div class="row">
+                                                                    <div class="col-md-10">
+                                                                        <div class="input-group mb-3"
+                                                                            formArrayName="buyer_number"
+                                                                            *ngFor="let buyernumberControl of formdata2.get('buyer_number').controls; index as i">
+                                                                            <input type="number" class="form-control"
+                                                                                placeholder="Buyer Number"
+                                                                                [formControlName]="i">
+                                                                            <div class="input-group-append">
+                                                                                <span class="input-group-text"
+                                                                                    title="Delete Buyer Number"><i
+                                                                                        class="fa fa-remove"
+                                                                                        (click)="deleteBuyerNumber(i)"></i></span>
+                                                                            </div>
+                                                                            <div style="color:red;position: relative;"
+                                                                                *ngIf="error2 && buyernumberControl.errors != null && buyernumberControl.errors.required">
+                                                                                Buyer
+                                                                                Number is required.</div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <div class="col-md-2">
+                                                                        <button type="button" class="btn btn-default"
+                                                                            (click)="addMoreBuyerNumber()"
+                                                                            title="Add Buyer Number"><i
+                                                                                class="fa fa-plus"></i></button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer add">
+                                                        <button type="submit"
+                                                            class="btn btn-secondary btn-success">Save</button>&nbsp;
+                                                        <button type="button" class="btn btn-secondary"
+                                                            (click)="c('Close click')">Close</button>
+                                                    </div>
+                                                </form>
+                                            </ng-template>
+                                        </div>
+                                    </div>
+                                    <div class="container row" *ngIf="selected_pub_settings.number_to_ivr">
+                                        <div class="form-group">
+                                            <label><strong>Internal Routing(IVR)</strong></label>
+                                            <select class="form-control" name="inside_route"
+                                                formControlName="inside_route" placeholder="-Please Select-">
+                                                <option *ngFor="let ivr of ivr_details; let i = index"
+                                                    value="ivr-{{ivr.id}},s,1">{{ivr.name}}</option>
+                                                <option value="ivr-4,s,1">Igoair</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </div>
+                            <div class="for_publisher" *ngIf="loggedUser.role == 'publisher'">
+                                <div class="row">
+                                    <input type="hidden" name="pub_id" formControlName="pub_id">
+                                    <div class="col-md-6">
+                                        <div class="form-group input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Read Only Mode</span>
+                                            </div>
+                                            <div class="btn-group btn-group-toggle" ngbRadioGroup name="read_only"
+                                                formControlName="read_only">
+                                                <label ngbButtonLabel class="btn-primary" *ngFor="let op of optionsArr">
+                                                    <input ngbButton type="radio" [value]="op.key"> {{op.value}}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span *ngIf="show_pub_template;then template1"></span>
+                                <ng-template #template1>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label><strong>Select TFN(s)</strong></label>
+                                                <div class="container">
+                                                    <div class="row" *ngFor="let tfn of pub_tfn;">
+                                                        <label class="form-control col-md-4"
+                                                            *ngIf="!(tfn.status == 'used' || tfn.status == 'pending')">
+                                                            <input type="checkbox" value="{{tfn.tfn}}"
+                                                                [checked]="tfn.status =='used'"
+                                                                (change)="selectTFN($event)">{{tfn.tfn}}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Internal Routing -->
+                                    <div class="row"
+                                        *ngIf="selected_pub_settings.enable_inside_route && !selected_pub_settings.number_to_ivr">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label><strong>Internal Routing</strong></label>
+                                                <div class="container row">
+                                                    <div *ngIf="selected_publisher.pub_queue == null || selected_publisher.pub_queue == 'others'"
+                                                        class="container row">
+                                                        <label class="form-control col-md-4">
+                                                            <input type="radio" value="602"
+                                                                formControlName="inside_route" name="inside_route">602
+                                                        </label>
+                                                        <label class="form-control col-md-4">
+                                                            <input type="radio" value="604"
+                                                                formControlName="inside_route" name="inside_route">604
+                                                        </label>
+                                                        <label class="form-control col-md-4">
+                                                            <input type="radio" value="100009988"
+                                                                formControlName="inside_route"
+                                                                name="inside_route">100009988
+                                                        </label>
+                                                    </div>
+                                                    <label class="form-control col-md-6"
+                                                        *ngIf="selected_publisher.pub_queue == 'travel'">
+                                                        <input type="radio" value="602" formControlName="inside_route"
+                                                            name="inside_route" [checked]="true">602
+                                                    </label>
+                                                    <label class="form-control col-md-6"
+                                                        *ngIf="selected_publisher.pub_queue == 'tech'">
+                                                        <input type="radio" value="604" formControlName="inside_route"
+                                                            name="inside_route" [checked]="true">604
+                                                    </label>
+                                                    <label class="form-control col-md-6"
+                                                        *ngIf="selected_publisher.pub_queue == 'forwarding'">
+                                                        <input type="radio" value="100009988"
+                                                            formControlName="inside_route" name="inside_route"
+                                                            [checked]="true">100009988
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Buyers and Buyer Numbers -->
+                                    <div class="row"
+                                        *ngIf="selected_pub_settings.enable_outside_route && !selected_pub_settings.number_to_ivr">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label><strong>Select Buyer</strong></label>
+                                                <label class="form-control col-md-12"
+                                                    *ngFor="let buyer of publisher_buyers;">
+                                                    <input type="checkbox" value="{{buyer.buyer_id}}"
+                                                        (change)="selectBuyer($event)"><strong>{{buyer.name}}</strong>
+                                                    <div class="container row">
+                                                        <label class="col-md-12 form-control"
+                                                            *ngFor="let bn of buyer_numbers[buyer.buyer_id];">
+                                                            <input type="checkbox" class="check_{{buyer.buyer_id}}"
+                                                                value="{{bn.number}}"
+                                                                (change)="selectBuyerNumber($event,buyer.buyer_id)">{{bn.number}}
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group input-group">
+                                                                        <div class="input-group-prepend mb_10">
+                                                                            <span class="input-group-text padding_11">CC
+                                                                                Capping</span>
+                                                                        </div>
+                                                                        <input class="form-control"
+                                                                            id="cccapping_{{buyer.buyer_id}}_{{bn.number}}"
+                                                                            value="0" type="number" min="0">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group input-group pull-right">
+                                                                        <div class="input-group-prepend mb_10">
+                                                                            <span
+                                                                                class="input-group-text padding_11">Priority</span>
+                                                                        </div>
+                                                                        <select class="form-control"
+                                                                            id="priority_{{buyer.buyer_id}}_{{bn.number}}"
+                                                                            (change)="selectPriority($event)">
+                                                                            <option
+                                                                                *ngFor="let p of priorities; let i = index">
+                                                                                {{i}}</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <button type="button" class="btn btn-success btn-sm pull-right"
+                                                (click)="open(addBuyer)" *ngIf="show_add_button">Add
+                                                Buyer Numbers</button>
+                                            <!-- bootstrap modal add buyer -->
+                                            <ng-template #addBuyer let-c="close" let-d="dismiss">
+                                                <form [formGroup]="formdata2" role="form" method="POST"
+                                                    (ngSubmit)="addBuyerWithNumber()">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Add Buyer</h4>
+                                                        <button type="button" class="close" aria-label="Close"
+                                                            (click)="d('Cross click')">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body add">
+                                                        <div class="alert alert-danger" *ngIf="buyer_number_error">There
+                                                            is
+                                                            some while adding the buyer number(s)</div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fa fa-envelope"></i></span>
+                                                                            </div>
+                                                                            <input type="email" class="form-control"
+                                                                                placeholder="Email" name="email"
+                                                                                formControlName="email">
+                                                                        </div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.email.errors != null && formdata2.controls.email.errors.required">
+                                                                            Email
+                                                                            is required.</div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.email.errors != null && formdata2.controls.email.errors.email">
+                                                                            Email
+                                                                            is invalid.</div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fa fa-user"></i></span>
+                                                                            </div>
+                                                                            <input type="text" class="form-control"
+                                                                                placeholder="Buyer Name" name="name"
+                                                                                formControlName="name">
+                                                                        </div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.name.errors != null && formdata2.controls.name.errors.required">
+                                                                            Buyer
+                                                                            name is required.</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fa fa-lock"></i></span>
+                                                                            </div>
+                                                                            <input type="password" class="form-control"
+                                                                                placeholder="Enter Password"
+                                                                                name="passwd" formControlName="passwd">
+                                                                        </div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.passwd.errors != null && formdata2.controls.passwd.errors.required">
+                                                                            Password
+                                                                            is required.</div>
+                                                                        <div *ngIf="error2 && formdata2.controls.passwd.errors != null &&  formdata2.controls.passwd.errors.minlength"
+                                                                            style="color:red;">Password must be at least
+                                                                            8
+                                                                            characters</div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fa fa-lock"></i></span>
+                                                                            </div>
+                                                                            <input type="password" class="form-control"
+                                                                                placeholder="Confirm Password"
+                                                                                name="cnf_passwd"
+                                                                                formControlName="cnf_passwd">
+                                                                        </div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.cnf_passwd.errors != null && formdata2.controls.cnf_passwd.errors.required">
+                                                                            Confirm
+                                                                            password is required.</div>
+                                                                        <div style="color:red;" *ngIf="password_error">
+                                                                            Password
+                                                                            is not
+                                                                            matched.</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fa fa-phone"></i></span>
+                                                                            </div>
+                                                                            <input type="text" class="form-control"
+                                                                                placeholder="Contact Number"
+                                                                                name="contact" formControlName="contact"
+                                                                                pattern="[0-9]*">
+                                                                        </div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.contact.errors != null && formdata2.controls.contact.errors.required">
+                                                                            Contact
+                                                                            Number is required.</div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.contact.errors != null && formdata2.controls.contact.errors.minlength">
+                                                                            Contact
+                                                                            Number minimum 10 digit.</div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.contact.errors != null && formdata2.controls.contact.errors.maxlength">
+                                                                            Contact
+                                                                            Number maximum 10 digit.</div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.contact.errors != null && formdata2.controls.contact.errors.pattern">
+                                                                            Contact
+                                                                            Number contains only numbers.</div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"
+                                                                                    style="padding-top:20px; padding-bottom:20px"><i
+                                                                                        class="fa fa-home"></i></span>
+                                                                            </div>
+                                                                            <textarea class="form-control"
+                                                                                placeholder="Address" name="address"
+                                                                                formControlName="address"></textarea>
+                                                                        </div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.address.errors != null && formdata2.controls.address.errors.required">
+                                                                            Address
+                                                                            is required.</div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.address.errors != null && formdata2.controls.address.errors.minlength">
+                                                                            Address
+                                                                            minimum 4 characters.</div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.address.errors != null && formdata2.controls.address.errors.maxlength">
+                                                                            Address
+                                                                            maximum 200 characters.</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text">$</span>
+                                                                            </div>
+                                                                            <input type="number" class="form-control"
+                                                                                placeholder="Price Per Call"
+                                                                                name="price_per_call"
+                                                                                formControlName="price_per_call">
+                                                                        </div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.price_per_call.errors != null && formdata2.controls.price_per_call.errors.required">
+                                                                            Price
+                                                                            per Call is required.</div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group input-group">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"><i
+                                                                                        class="fa fa-clock-o"></i></span>
+                                                                            </div>
+                                                                            <input type="number" class="form-control"
+                                                                                placeholder="Buffer Time"
+                                                                                name="buffer_time"
+                                                                                formControlName="buffer_time">
+                                                                        </div>
+                                                                        <div style="color:red;"
+                                                                            *ngIf="error2 && formdata2.controls.buffer_time.errors != null && formdata2.controls.buffer_time.errors.required">
+                                                                            Buffer
+                                                                            Time is required.</div>
+                                                                    </div>
+                                                                </div>
+                                                                <h4>Buyer Number(s)</h4>
+                                                                <div class="row">
+                                                                    <div class="col-md-10">
+                                                                        <div class="input-group mb-3"
+                                                                            formArrayName="buyer_number"
+                                                                            *ngFor="let buyernumberControl of formdata2.get('buyer_number').controls; index as i">
+                                                                            <input type="number" class="form-control"
+                                                                                placeholder="Buyer Number"
+                                                                                [formControlName]="i">
+                                                                            <div class="input-group-append">
+                                                                                <span class="input-group-text"
+                                                                                    title="Delete Buyer Number"><i
+                                                                                        class="fa fa-remove"
+                                                                                        (click)="deleteBuyerNumber(i)"></i></span>
+                                                                            </div>
+                                                                            <div style="color:red;position: relative;"
+                                                                                *ngIf="error2 && buyernumberControl.errors != null && buyernumberControl.errors.required">
+                                                                                Buyer
+                                                                                Number is required.</div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <div class="col-md-2">
+                                                                        <button type="button" class="btn btn-default"
+                                                                            (click)="addMoreBuyerNumber()"
+                                                                            title="Add Buyer Number"><i
+                                                                                class="fa fa-plus"></i></button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer add">
+                                                        <button type="submit"
+                                                            class="btn btn-secondary btn-success">Save</button>&nbsp;
+                                                        <button type="button" class="btn btn-secondary"
+                                                            (click)="c('Close click')">Close</button>
+                                                    </div>
+                                                </form>
+                                            </ng-template>
+                                        </div>
+                                    </div>
+                                    <div class="container row" *ngIf="selected_pub_settings.number_to_ivr">
+                                        <div class="form-group">
+                                            <label><strong>Internal Routing(IVR)</strong></label>
+                                            <select class="form-control" name="inside_route"
+                                                formControlName="inside_route" placeholder="-Please Select-">
+                                                <option *ngFor="let ivr of ivr_details; let i = index"
+                                                    value="ivr-{{ivr.id}},s,1">{{ivr.name}}</option>
+                                                <option value="ivr-4,s,1">Igoair</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </div>
+                            <button type="submit" class="btn btn-secondary btn-success">Submit</button>&nbsp;
+                            <a routerLink="/campaign" class="btn btn-secondary btn-default">Cancel</a>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+        </div>
+
+    </div>
+</div>

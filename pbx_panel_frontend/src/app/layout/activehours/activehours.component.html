@@ -1,0 +1,70 @@
+<div [@routerTransition]>
+  <ol class="breadcrumb">
+    <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+    <li>&nbsp;<small>Manage Active Hours</small></li>
+  </ol>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="alert alert-success" *ngIf="grid_deleted">Active Hour is deleted successfully.</div>
+    </div>
+  </div>
+  <div class="col-md-12 col-md-offset-1">
+    <div class="pull-left">
+      <a routerLink="/activehours/add" class="btn btn-success">Add Active Hours</a>
+    </div>
+    <div class="pull-right">
+      <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+      </mat-form-field>
+    </div>
+
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 table-bordered" style="width:100%">
+      <ng-container matColumnDef="day">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Days </th>
+        <td mat-cell *matCellDef="let element"> {{element.day}} </td>
+      </ng-container>
+      <!-- Weight Column -->
+      <ng-container matColumnDef="tfn">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> TFN </th>
+        <td mat-cell *matCellDef="let element"> {{element.tfn}} </td>
+      </ng-container>
+      <ng-container matColumnDef="destination">
+        <th mat-header-cell *matHeaderCellDef> Destination </th>
+        <td mat-cell *matCellDef="let element"> {{element.destination}} </td>
+      </ng-container>
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="active_on">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Open Time </th>
+        <td mat-cell *matCellDef="let element"> {{element.active_on}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="active_off">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Close Time </th>
+        <td mat-cell *matCellDef="let element"> {{element.active_off}} </td>
+      </ng-container>
+      <ng-container matColumnDef="edit">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let element">
+          <a routerLink="/activehours/edit/{{element._id}}" class="btn btn-info btn-sm" title="Edit"><i
+              class="fa fa-pencil"></i></a>&nbsp;
+          <button type="button" (click)="deleteActivehour(element._id)" class="btn btn-danger btn-sm" title="Delete"><i
+              class="fa fa-trash-o"></i></button>
+        </td>
+      </ng-container>
+
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <!--  <mat-form-field>
+        <input matInput [matDatepicker]="picker" placeholder="Choose a date">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+   -->
+
+    <mat-paginator [pageSizeOptions]="[20, 50, 200]" showFirstLastButtons></mat-paginator>
+  </div>
+
+</div>

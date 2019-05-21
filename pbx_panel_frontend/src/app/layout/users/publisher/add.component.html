@@ -1,0 +1,132 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>Manage Publishers</small></li>
+    </ol>
+    <div class="container">
+        <div class="card add box effect2">
+            <div class="card-header">
+                    <div class="card-icon">
+                            <i class="fa fa-address-book-o" aria-hidden="true"></i>
+                        </div> 
+                <h4>Add Publisher</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2 col-sm-12">
+                        <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="addPublisher()">
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                                </div> -->
+
+                                <input type="email" class="form-control" placeholder="Email" name="email"
+                                    formControlName="email">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.email.errors != null && formdata.controls.email.errors.required">
+                                Email
+                                is required.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.email.errors != null && formdata.controls.email.errors.email">
+                                Email
+                                is invalid.</div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                </div> -->
+
+                                <input type="text" class="form-control" placeholder="Fullname" name="fullname"
+                                    formControlName="fullname">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.fullname.errors != null && formdata.controls.fullname.errors.required">
+                                Fullname
+                                is required.</div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                                </div> -->
+
+                                <input type="password" class="form-control" placeholder="Enter Password" name="passwd"
+                                    formControlName="passwd">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.passwd.errors != null && formdata.controls.passwd.errors.required">
+                                Password
+                                is required.</div>
+                            <div *ngIf="error && formdata.controls.passwd.errors != null &&  formdata.controls.passwd.errors.minlength"
+                                style="color:red;">Password must be at least 8 characters</div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                                </div> -->
+
+                                <input type="password" class="form-control" placeholder="Confirm Password"
+                                    name="cnf_passwd" formControlName="cnf_passwd">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.cnf_passwd.errors != null && formdata.controls.cnf_passwd.errors.required">
+                                Confirm
+                                password is required.</div>
+                            <div style="color:red;" *ngIf="password_error">Password is not matched.</div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                                </div> -->
+
+                                <input type="text" class="form-control" placeholder="Contact Number" name="contact"
+                                    formControlName="contact" pattern="[0-9]*">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.contact.errors != null && formdata.controls.contact.errors.required">
+                                Contact
+                                Number is required.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.contact.errors != null && formdata.controls.contact.errors.minlength">
+                                Contact
+                                Number minimum 10 digit.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.contact.errors != null && formdata.controls.contact.errors.maxlength">
+                                Contact
+                                Number maximum 10 digit.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.contact.errors != null && formdata.controls.contact.errors.pattern">
+                                Contact
+                                Number contains only numbers.</div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                </div> -->
+
+                                <input type="number" class="form-control" placeholder="Price Per TFN"
+                                    name="price_per_tfn" formControlName="price_per_tfn">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.price_per_tfn.errors != null && formdata.controls.price_per_tfn.errors.required">
+                                Price
+                                per tfn is required.</div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text">Publisher Queue</span>
+                                </div> -->
+
+                                <select class="form-control" name="pub_queue" formControlName="pub_queue">
+                                    <option value="travel" [selected]="true">Travel</option>
+                                    <option value="tech">Tech</option>
+                                    <option value="forwarding">Forwarding</option>
+                                    <option value="others">Others</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-secondary btn-success">Submit</button>&nbsp;
+                            <a routerLink="/users" class="btn btn-secondary btn-default">Cancel</a>
+                        </form>
+
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+        </div>
+    </div>
+</div>

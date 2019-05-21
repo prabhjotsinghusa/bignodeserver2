@@ -1,0 +1,75 @@
+<div [@routerTransition]>
+  <ol class="breadcrumb">
+    <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+    <li>&nbsp;<small>Agent EOD Report(Call Detail Report)</small></li>
+  </ol>
+
+
+  <div class="row agenteod">
+
+    <div class="col-md-4 offset-md-8">
+      <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="searchWithFilter()">
+        <div class="form-group">
+          <div class="input-group datepicker-input">
+            <input class="form-control" placeholder="Select Date(yyyy-mm-dd)" name="dp" formControlName="selected_date"
+              ngbDatepicker #d="ngbDatepicker" dateFormat="yyyy-MMM-dd">
+            <button class="input-group-addon" (click)="d.toggle()" type="button">
+              <!-- <img src="img/calendar-icon.svg" style="width: 1.2rem; height: 1rem; cursor: pointer;"/> -->
+              <span class="fa fa-calendar"></span>
+            </button>
+
+            <button type="submit" class="btn btn-secondary btn-success pull-right" title="Search"><i
+                class="fa fa-search"></i></button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row ui eod">
+    <div class="col col-sm-12">
+      <div class="card mb-3">
+        <div class="card-header"></div>
+        <div class="card-body">
+          <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+            class="mat-elevation-z8 table-bordered mat-table" style="width:100%">
+            <thead>
+              <tr class="mat-header-row ng-tns-c13-4 ng-star-inserted">
+                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                  Agent
+                </th>
+                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                  Extension</th>
+                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                  Total Calls</th>
+                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                  Unique Calls</th>
+                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">AHT
+                  (in
+                  minutes)</th>
+                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                  Total
+                  Minutes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let element of EOD" class="mat-row ng-tns-c4-0 ng-star-inserted">
+                <td class="mat-cell ng-star-inserted">{{element.agent !== undefined && element.agent !== null ?element.agent.name:'-NA-'}}</td>
+                <td class="mat-cell ng-star-inserted">{{element.cdr.dst}}</td>
+                <td class="mat-cell ng-star-inserted">{{element.result[0].totalcalls}}</td>
+                <td class="mat-cell ng-star-inserted">{{(element.result[2][0] === undefined)? 0:
+                                  element.result[2][0].unique_calls}}
+                </td>
+                <td class="mat-cell ng-star-inserted">{{(element.result[2][0] === undefined)? 0: (element.result[2][0].aht /
+                                  60) | number:'1.0-0'}}</td>
+                <td class="mat-cell ng-star-inserted">{{element.result[1].mins}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <img src="../../../../assets/images/loading.gif" style="position: absolute; z-index: 999; left: 40%; top:45%;"
+            *ngIf="isLoading">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

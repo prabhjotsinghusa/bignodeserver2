@@ -1,0 +1,150 @@
+<nav class="navbar navbar-expand-lg fixed-top">
+    <a class="navbar-brand" routerLink="/dashboard" *ngIf="user.role !== 'buyer'">PBX Portal </a>
+    <a class="navbar-brand" routerLink="/cdr" *ngIf="user.role === 'buyer'">PBX Portal </a>
+    <button class="navbar-toggler" type="button" (click)="toggleSidebar()">
+        <!-- <span class="navbar-toggler-icon"></span> -->
+        <i class="fa fa-bars text-muted" aria-hidden="true"></i>
+    </button>
+    <div class="collapse navbar-collapse">
+        <!-- <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="{{ 'Search' | translate }}" >
+          </form> -->
+        <ul class="navbar-nav ml-auto">
+            <!-- <li class="nav-item">
+             <a href="javascript:void(0)" class="nav-link mt-1"
+                 style="padding: 0.375rem 1rem !important; border-color: #999;"
+                 (click)="rltAndLtr()"
+             >
+                 RTL/LTR
+             </a>
+             </li> &nbsp; -->
+            <li class="nav-item" *ngIf="show_live">
+                <span class="call-live">
+                    <img src="../../../../assets/images/ringing.gif" alt="Ringing" style="height:30px">
+                    <span><span class="number">{{realtimecount}}</span>
+                        <span class="text">Live</span>
+                    </span>
+                </span>
+            </li>
+            <li class="nav-item dropdown message-link" ngbDropdown *ngIf="user.role === 'admin'">
+                <a class="nav-link" href="javascript:void(0)" ngbDropdownToggle>
+                    <i class="fa fa-envelope"></i> <span
+                        class="head-number">{{notification !== undefined?notification.length:0}}</span> <b
+                        class="caret"></b><span class="sr-only">(current)</span>
+                </a>
+                <div class="dropdown-menu-right" id="pending-dropdown2" ngbDropdownMenu>
+                    <a routerLink="/paymentnotification" class="dropdown-item">
+                        {{ 'Notification' | translate }} <span
+                            class="badge badge-info">{{notification  !== undefined?notification.length:0}}</span>
+                    </a>
+                    <ul class="list-unstyled">
+                        <li *ngFor="let p of notification">
+                            <a routerLink="/paymentnotification">
+                                <div class="alert-icon green pull-left">
+                                    <i class="fa fa-money"></i>
+                                </div>
+                                <strong>{{p.publisherName}}</strong> have a payment request.
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="dropdown-divider"></div>
+                    <a routerLink="/paymentnotification" class="dropdown-item">
+                        {{ 'View All' | translate }}
+                    </a>
+                </div>
+            </li>
+            <li class="nav-item dropdown alert-link" ngbDropdown *ngIf="user.role === 'admin'">
+                <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                    <i class="fa fa-bell"></i> <span
+                        class="head-number">{{pending_tfns !== undefined?pending_tfns.length:0}}</span> <b
+                        class="caret"></b><span class="sr-only">(current)</span>
+                </a>
+                <div class="dropdown-menu-right" id="pending-dropdown" ngbDropdownMenu>
+                    <a routerLink="/tfns/pending" class="dropdown-item">
+                        {{ 'Pending TFN' | translate }} <span
+                            class="badge badge-info">{{pending_tfns !== undefined?pending_tfns.length:0}}</span>
+                    </a>
+                    <ul class="list-unstyled">
+                        <li *ngFor="let p of pending_tfns">
+                            <a routerLink="/tfns/pending">
+                                <div class="alert-icon red pull-left">
+                                    <i class="fa fa-bolt"></i>
+                                </div>
+                                <strong>{{p.publisherName}}</strong> have purchased TFN
+                                <span class="small">
+                                    <strong>
+                                        <em>{{p.tfn}}</em>
+                                    </strong>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="dropdown-divider"></div>
+                    <a routerLink="/tfns/pending" class="dropdown-item">
+                        {{ 'View All' | translate }}
+                    </a>
+                </div>
+            </li>
+            <!-- <li class="nav-item dropdown" ngbDropdown>
+             <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                 <i class="fa fa-language"></i> {{ 'Language' | translate }} <b class="caret"></b>
+             </a>
+             <div class="dropdown-menu-right" ngbDropdownMenu>
+                 <a class="dropdown-item" href="javascript:void(0)" (click)="changeLang('en')">
+                     {{ 'English' | translate }}
+                 </a>
+                 <a class="dropdown-item" href="javascript:void(0)" (click)="changeLang('fr')">
+                     {{ 'French' | translate }}
+                 </a>
+                 <a class="dropdown-item" href="javascript:void(0)" (click)="changeLang('ur')">
+                     {{ 'Urdu' | translate }}
+                 </a>
+                 <a class="dropdown-item" href="javascript:void(0)" (click)="changeLang('es')">
+                     {{ 'Spanish' | translate }}
+                 </a>
+                 <a class="dropdown-item" href="javascript:void(0)" (click)="changeLang('it')">
+                     {{ 'Italian' | translate }}
+                 </a>
+                 <a class="dropdown-item" href="javascript:void(0)" (click)="changeLang('fa')">
+                     {{ 'Farsi' | translate }}
+                 </a>
+                 <a class="dropdown-item" href="javascript:void(0)" (click)="changeLang('de')">
+                     {{ 'German' | translate }}
+                 </a>
+                 <a class="dropdown-item" href="javascript:void(0)" (click)="changeLang('zh-CHS')">
+                     {{ 'Simplified Chinese' | translate }}
+                 </a>
+             </div>
+             </li> -->
+            <li class="nav-item dropdown" ngbDropdown>
+                <a href="javascript:void(0)" class="nav-link" ngbDropdownToggle>
+                    <i class="fa fa-user"></i> {{user.fullname}} <b class="caret"></b>
+                </a>
+                <div class="dropdown-menu-right" ngbDropdownMenu *ngIf="user.role !== 'buyer'">
+                    <a class="dropdown-item" routerLink="/users/profile">
+                        <i class="fa fa-fw fa-user"></i> {{ 'Profile' | translate }}
+                    </a>
+                    <!-- <a class="dropdown-item" href="javascript:void(0)">
+                   <i class="fa fa-fw fa-envelope"></i> {{ 'Inbox' | translate }}
+                   </a> -->
+                    <a class="dropdown-item" routerLink="/users/passwordedit">
+                        <i class="fa fa-fw fa-key"></i> {{ 'Edit Password' | translate }}
+                    </a>
+                    <a class="dropdown-item" (click)="onLoggedout()" clearHistory="true">
+                        <i class="fa fa-fw fa-power-off"></i> {{ 'Log Out' | translate }}
+                    </a>
+                </div>
+                <div class="dropdown-menu-right" ngbDropdownMenu *ngIf="user.role === 'buyer'">
+                    <a class="dropdown-item" routerLink="/users/passwordedit">
+                        <i class="fa fa-fw fa-key"></i> {{ 'Edit Password' | translate }}
+                    </a>
+                    <a class="dropdown-item" (click)="onLoggedout()" clearHistory="true">
+                        <i class="fa fa-fw fa-power-off"></i> {{ 'Log Out' | translate }}
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>

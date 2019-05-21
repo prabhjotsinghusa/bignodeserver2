@@ -1,0 +1,69 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>Manage Profile</small></li>
+    </ol>
+    <div class="container">
+        <div class="card add box effect2">
+            <div class="card-header">
+                    <div class="card-icon">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                    </div>
+                <h4>Profile Details</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2 col-sm-12">
+                        <div class="card-body table-responsive">
+                            <table class="mat-elevation-z8 table-bordered table table-hover table-striped table-bordered">
+                                <thead>
+                                    <tr class="mat-header-row">
+                                        <th class="mat-header-cell">Name</th>
+                                        <th class="mat-header-cell">Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="mat-header-cell">
+                                    <tr class="mat-row">
+                                        <th class="mat-row" scope="row">Username</th>
+                                        <td class="mat-row" >{{loggedUser.username}}</td>
+                                    </tr>
+                                    <tr class="mat-row">
+                                        <th class="mat-row" scope="row">Fullname</th>
+                                        <td class="mat-row" >{{loggedUser.fullname}}</td>
+                                    </tr>
+                                    <tr class="mat-row">
+                                        <th class="mat-row" scope="row">Email</th>
+                                        <td class="mat-row" >{{loggedUser.email}}</td>
+                                    </tr>
+                                    <tr class="mat-row">
+                                        <th class="mat-row" scope="row">Contact</th>
+                                        <td class="mat-row" >{{loggedUser.contact}}</td>
+                                    </tr>
+                                    <tr class="mat-row">
+                                        <th class="mat-row" scope="row">Price Per TFN</th>
+                                        <td class="mat-row" >{{loggedUser.price_per_tfn}}</td>
+                                    </tr>
+                                    <tr class="mat-row">
+                                        <th class="mat-row" scope="row">Created</th>
+                                        <td class="mat-row" >{{loggedUser.created_at|date:'medium'}}</td>
+                                    </tr>
+                                    <tr class="mat-row">
+                                        <th class="mat-row" scope="row">Status</th>
+                                        <td class="mat-row" >{{loggedUser.status}}</td>
+                                    </tr>
+                                    <tr class="mat-row">
+                                        <td class="mat-row" colspan="2" ><a routerLink="/users/profileedit" class="btn btn-success btn-sm pull-right" style="margin-right:10px;"><i class="fa fa-pencil"></i>Edit Profile</a>
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+        </div>
+
+    </div>
+</div>

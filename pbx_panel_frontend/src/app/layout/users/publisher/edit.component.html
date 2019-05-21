@@ -1,0 +1,325 @@
+<div [@routerTransition]>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card add box effect2">
+                    <div class="card-header">
+                            
+                        <h4>Edit Publisher</h4>
+                    </div>
+                    <div class="card-body">
+                        <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="editPublisher()">
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                </div> -->
+
+                                <input type="text" class="form-control" placeholder="Username" name="username"
+                                    formControlName="username">
+                            </div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                                </div> -->
+
+                                <input type="email" class="form-control" placeholder="Email" name="email"
+                                    formControlName="email">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.email.errors != null && formdata.controls.email.errors.required">
+                                Email is required.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.email.errors != null && formdata.controls.email.errors.email">
+                                Email is invalid.</div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                </div> -->
+
+                                <input type="text" class="form-control" placeholder="Fullname" name="fullname"
+                                    formControlName="fullname">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.fullname.errors != null && formdata.controls.fullname.errors.required">
+                                Fullname is required.</div>
+
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                                </div> -->
+
+                                <input type="password" class="form-control" placeholder="Enter Password" name="passwd"
+                                    formControlName="passwd">
+                            </div>
+
+                            <div *ngIf="error && formdata.controls.passwd.errors != null &&  formdata.controls.passwd.errors.minlength"
+                                style="color:red;">Password must be at least 8 characters</div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                                </div> -->
+
+                                <input type="password" class="form-control" placeholder="Confirm Password"
+                                    name="cnf_passwd" formControlName="cnf_passwd">
+                            </div>
+
+                            <div style="color:red;" *ngIf="password_error">Password is not matched.</div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                                </div> -->
+
+                                <input type="text" class="form-control" placeholder="Contact Number" name="contact"
+                                    formControlName="contact" pattern="[0-9]*">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.contact.errors != null && formdata.controls.contact.errors.required">
+                                Contact Number is required.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.contact.errors != null && formdata.controls.contact.errors.minlength">
+                                Contact Number minimum 10 digit.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.contact.errors != null && formdata.controls.contact.errors.maxlength">
+                                Contact Number maximum 10 digit.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.contact.errors != null && formdata.controls.contact.errors.pattern">
+                                Contact Number contains only numbers.</div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                </div> -->
+
+                                <input type="number" class="form-control" placeholder="Price Per TFN"
+                                    name="price_per_tfn" formControlName="price_per_tfn">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.price_per_tfn.errors != null && formdata.controls.price_per_tfn.errors.required">
+                                Price per tfn is required.</div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text">Publisher Queue</span>
+                                </div> -->
+                                <select class="form-control" name="pub_queue" formControlName="pub_queue">
+                                    <option *ngFor="let pq of pub_queues" [value]="pq.name">{{pq.value}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text">Status</span>
+                                </div> -->
+                                <select class="form-control" name="status" formControlName="status">
+                                    <option *ngFor="let s of statuses" [value]="s.name">{{s.value}}</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-secondary btn-success">Save</button>&nbsp;
+                            <a routerLink="/users" class="btn btn-secondary btn-default">Cancel</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+<!-- Publisher settings part -->
+            <div class="col-md-6">
+                <div class="card add box effect2">
+                    <div class="card-header">
+                        <h4>Publisher Settings</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-success" *ngIf="success_msg">Publisher Settings are saved successfully.
+                        </div>
+                        <form [formGroup]="formdata2" role="form" method="POST" (ngSubmit)="editSettings()">
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend margin_right">
+                                    <span class="input-group-text">Enabled Record</span>
+                                </div>
+                                <div class="btn-group btn-group-toggle" ngbRadioGroup name="enabled_record"
+                                    formControlName="enabled_record">
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="1"> Enable
+                                    </label>
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="0"> Disable
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend margin_right">
+                                    <span class="input-group-text">Display CNUM</span>
+                                </div>
+                                <div class="btn-group btn-group-toggle" ngbRadioGroup name="display_cnum"
+                                    formControlName="display_cnum">
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="1"> Enable
+                                    </label>
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="0"> Disable
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend margin_right">
+                                    <span class="input-group-text">Display Wallet</span>
+                                </div>
+                                <div class="btn-group btn-group-toggle" ngbRadioGroup name="display_wallet"
+                                    formControlName="display_wallet">
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="1"> Enable
+                                    </label>
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="0"> Disable
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend margin_right">
+                                    <span class="input-group-text">Phone System</span>
+                                </div>
+                                <div class="btn-group btn-group-toggle" ngbRadioGroup name="phone_system"
+                                    formControlName="phone_system">
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="1"> Enable
+                                    </label>
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="0"> Disable
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend margin_right">
+                                    <span class="input-group-text">Enable Inside Routing</span>
+                                </div>
+                                <div class="btn-group btn-group-toggle" ngbRadioGroup name="enable_inside_route"
+                                    formControlName="enable_inside_route">
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="1"> Enable
+                                    </label>
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="0"> Disable
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend margin_right">
+                                    <span class="input-group-text">Enable Outside Routing</span>
+                                </div>
+                                <div class="btn-group btn-group-toggle" ngbRadioGroup name="enable_outside_route"
+                                    formControlName="enable_outside_route">
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="1"> Enable
+                                    </label>
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="0"> Disable
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend mb_10">
+                                    <span class="input-group-text padding_11">Oxygen Calls</span>
+                                </div>
+                                <select class="form-control custom-select" name="call_reducer"
+                                    formControlName="call_reducer">
+                                    <option *ngFor="let op of oxygencallArr" [value]="op.key">{{op.value}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend mb_10">
+                                    <span class="input-group-text padding_11">Daily TFN(s)</span>
+                                </div>
+                                <input type="number" class="form-control" name="daily_tfns" formControlName="daily_tfns"
+                                    placeholder="Daily TFN(s)">
+                            </div>
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend mb_10">
+                                    <span class="input-group-text padding_11">Monthly TFN(s)</span>
+                                </div>
+                                <input type="number" class="form-control" name="monthly_tfns"
+                                    formControlName="monthly_tfns" placeholder="Monthly TFN(s)">
+                            </div>
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend mb_10">
+                                    <span class="input-group-text padding_11">Buyer Limit</span>
+                                </div>
+                                <input type="number" class="form-control" name="buyer_limit"
+                                    formControlName="buyer_limit" placeholder="Buyer Limit">
+                            </div>
+
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend margin_right">
+                                    <span class="input-group-text">Enable Usage Module</span>
+                                </div>
+                                <div class="btn-group btn-group-toggle" ngbRadioGroup name="usage_module"
+                                    formControlName="usage_module">
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="1"> Enable
+                                    </label>
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="0"> Disable
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend margin_right">
+                                    <span class="input-group-text">Number to IVR</span>
+                                </div>
+                                <div class="btn-group btn-group-toggle" ngbRadioGroup name="number_to_ivr"
+                                    formControlName="number_to_ivr">
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="1"> Enable
+                                    </label>
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="0"> Disable
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend margin_right">
+                                    <span class="input-group-text">Show buyer No.</span>
+                                </div>
+                                <div class="btn-group btn-group-toggle" ngbRadioGroup name="show_buyer_no"
+                                    formControlName="show_buyer_no">
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="1"> Enable
+                                    </label>
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="0"> Disable
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend  margin_right">
+                                    <span class="input-group-text">Hide Campaign</span>
+                                </div>
+                                <div class="btn-group btn-group-toggle" ngbRadioGroup name="hide_campaign"
+                                    formControlName="hide_campaign">
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="1"> Enable
+                                    </label>
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="0"> Disable
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend  margin_right">
+                                    <span class="input-group-text">Charge Per Minute</span>
+                                </div>
+                                <div class="btn-group btn-group-toggle" ngbRadioGroup name="charge_per_minute"
+                                    formControlName="charge_per_minute">
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="1"> Enable
+                                    </label>
+                                    <label ngbButtonLabel class="btn-primary">
+                                        <input ngbButton type="radio" [value]="0"> Disable
+                                    </label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-secondary btn-success">Save</button>&nbsp;
+                            <a routerLink="/users" class="btn btn-secondary btn-default">Cancel</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+</div>

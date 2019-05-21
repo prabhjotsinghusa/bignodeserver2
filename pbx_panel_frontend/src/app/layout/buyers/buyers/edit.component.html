@@ -1,0 +1,161 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>Manage Buyers</small></li>
+    </ol>
+    <div class="container">
+        <div class="card add box effect2">
+            <div class="card-header">
+                    <div class="card-icon">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        </div>
+                <h4>Edit Buyer</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2 col-sm-12">
+                        <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="editBuyer()">
+                            <div *ngIf="loggedUser.role === 'admin'">
+                                <img src="../../../../assets/images/loader.gif"
+                                    style="position: absolute; z-index: 999; width: 60px;right: 12px;" *ngIf="isLoading">
+                                <mat-form-field class="example-full-width form-control">
+                                    <input matInput placeholder="Choose a publisher" [matAutocomplete]="auto"
+                                        formControlName="pub_id" (blur)="hideLoader()" (keyup)="showLoader()">
+                                </mat-form-field>
+                                <!-- <span>Your choice is: {{formdata.get('pub_id').value | json}}</span> -->
+                                <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                    <mat-option *ngFor="let publisher of (filteredPublishers| async)?.user"
+                                        [value]="publisher" (click)="hideLoader()">
+                                        <span>{{ publisher.fullname }}</span>
+                                        <small> | ID: {{publisher.uid}}</small>
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                                </div> -->
+                                <input type="email" class="form-control" placeholder="Email" name="email"
+                                    formControlName="email">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.email.errors != null && formdata.controls.email.errors.required">
+                                Email
+                                is required.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.email.errors != null && formdata.controls.email.errors.email">
+                                Email
+                                is invalid.</div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                </div> -->
+                                <input type="text" class="form-control" placeholder="Buyer Name" name="name"
+                                    formControlName="name">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.name.errors != null && formdata.controls.name.errors.required">
+                                Buyer
+                                name is required.</div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                                </div> -->
+
+                                <input type="password" class="form-control" placeholder="Enter Password" name="passwd"
+                                    formControlName="passwd">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.passwd.errors != null && formdata.controls.passwd.errors.required">
+                                Password
+                                is required.</div>
+                            <div *ngIf="error && formdata.controls.passwd.errors != null &&  formdata.controls.passwd.errors.minlength"
+                                style="color:red;">Password must be at least 8 characters</div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                                </div> -->
+
+                                <input type="password" class="form-control" placeholder="Confirm Password"
+                                    name="cnf_passwd" formControlName="cnf_passwd">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.cnf_passwd.errors != null && formdata.controls.cnf_passwd.errors.required">
+                                Confirm
+                                password is required.</div>
+                            <div style="color:red;" *ngIf="password_error">Password is not matched.</div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                                </div> -->
+                                <input type="text" class="form-control" placeholder="Contact Number" name="contact"
+                                    formControlName="contact" pattern="[0-9]*">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.contact.errors != null && formdata.controls.contact.errors.required">
+                                Contact
+                                Number is required.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.contact.errors != null && formdata.controls.contact.errors.minlength">
+                                Contact
+                                Number minimum 10 digit.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.contact.errors != null && formdata.controls.contact.errors.maxlength">
+                                Contact
+                                Number maximum 10 digit.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.contact.errors != null && formdata.controls.contact.errors.pattern">
+                                Contact
+                                Number contains only numbers.</div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text" style="padding-top:20px; padding-bottom:20px"><i
+                                            class="fa fa-home"></i></span>
+                                </div> -->
+                                <textarea class="form-control" placeholder="Address" name="address"
+                                    formControlName="address"></textarea>
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.address.errors != null && formdata.controls.address.errors.required">
+                                Address
+                                is required.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.address.errors != null && formdata.controls.address.errors.minlength">
+                                Address
+                                minimum 4 characters.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.address.errors != null && formdata.controls.address.errors.maxlength">
+                                Address
+                                maximum 200 characters.</div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                </div> -->
+                                <input type="number" class="form-control" placeholder="Price Per Call"
+                                    name="price_per_call" formControlName="price_per_call">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.price_per_call.errors != null && formdata.controls.price_per_call.errors.required">
+                                Price
+                                per Call is required.</div>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
+                                </div> -->
+                                <input type="number" class="form-control" placeholder="Buffer Time" name="buffer_time"
+                                    formControlName="buffer_time">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.buffer_time.errors != null && formdata.controls.buffer_time.errors.required">
+                                Buffer
+                                Time is required.</div>
+                            <button type="submit" class="btn btn-secondary btn-success">Submit</button>&nbsp;
+                            <a routerLink="/buyers" class="btn btn-secondary btn-default">Cancel</a>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+        </div>
+    </div>
+</div>

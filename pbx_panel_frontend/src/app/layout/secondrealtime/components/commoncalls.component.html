@@ -1,0 +1,157 @@
+<div [@routerTransition]>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <i class="fa fa-dashboard"></i>
+      <a href="/dashboard" ng-reflect-router-link="/dashboard">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item active">
+      <i class="fa fa-fw fa-area-chart"></i> Common Calls</li>
+  </ol>
+
+  <!-- new accordion design in angular 6 -->
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-12">
+        <h4>Realtime Calls</h4>
+      </div>
+    </div>
+    <div class="block realtime-block">
+        <div class="row">
+            <div class="col-md-6">
+              <label>TFN</label>
+              <input type="number" class="form-control" #tfn (change)="getRealtime(tfn?.value, pub_id?.value)" placeholder="Enter TFN">
+            </div>
+            <div class="col-md-6">
+              <label>Publisher</label>
+              <input type="text" class="form-control" #pub_id (change)="getRealtime(tfn?.value, pub_id?.value)" placeholder="Enter publisher name">
+            </div>
+          </div>
+    </div>
+    
+    <hr>
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let item of realtime | keyvalue; let i = index;" [expanded]="panelOpenIndex2 == i"
+        (opened)="panelOpenIndex2 = i">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <p class="realtime blue">{{item.value.publisher}}</p>
+          </mat-panel-title>
+          <mat-panel-description>
+            &nbsp;&nbsp;<p class="realtime blue">Total Calls: <strong>{{item.value.total}}</strong></p>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="row" *ngFor="let calls of item.value.calls | keyvalue;">
+          <p class="realtime green">TFN: {{calls.key}}</p>
+          <div class="table-responsive">
+            <table class="table-hover table table-striped table-bordered" style="width:100%">
+              <thead>
+                <tr>
+                  <th>TFN</th>
+                  <th>Taking To</th>
+                  <th>Duration</th>
+                  <th>Extension</th>
+                  <!-- <th >Status</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let realtimeData of calls.value">
+                  <td>{{realtimeData.from_did}}</td>
+                  <td>{{realtimeData.talking_to}}</td>
+                  <td>{{realtimeData.duration}}</td>
+                  <td>{{realtimeData.buyer_number}}</td>
+                  <!-- <td>{{realtimeData.status}}</td> -->
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+  <hr>
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-12">
+        <h4>Realtime Buyer Calls</h4>
+      </div>
+    </div>
+    <mat-accordion>
+        <mat-expansion-panel *ngFor="let item of realtime2; let i = index;" [expanded]="panelOpenIndex == i"
+          (opened)="panelOpenIndex = i">
+          <mat-expansion-panel-header *ngIf="item !== null">
+            <mat-panel-title>
+              <p class="realtime blue">{{item.name}}</p>
+            </mat-panel-title>
+            <mat-panel-description>
+              &nbsp;&nbsp;<p class="realtime blue">Total Calls: <strong>{{item.total}}</strong></p>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <div class="row" *ngFor="let calls of item.calls;">
+            <p class="realtime green" *ngIf="item.dynamic && calls !== null">Buyer No: {{calls !==
+              null?calls.key:'-NA'}}</p>
+              
+            <div class="table-responsive" *ngIf="item !== null && calls !== null">
+              <table class="mat-elevation-z8 table-bordered mat-table table-hover table table-striped table-bordered"
+                style="width:100%">
+                <thead>
+                  <tr class="mat-header-row">
+                    <th class="mat-header-cell" *ngIf="loggedUser.role !== 'buyer'">TFN</th>
+                    <th class="mat-header-cell">Taking To</th>
+                    <th class="mat-header-cell">Duration</th>
+                    <th class="mat-header-cell">Extension</th>
+                    <th class="mat-header-cell" *ngIf="loggedUser.role !== 'buyer'">Publisher</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="mat-row" *ngFor="let realtimeData of calls.value;">
+                    <td class="mat-cell" *ngIf="loggedUser.role !== 'buyer'">{{realtimeData.from_did}}</td>
+                    <td class="mat-cell">{{realtimeData.talking_to}}</td>
+                    <td class="mat-cell">{{realtimeData.duration}}</td>
+                    <td class="mat-cell">{{realtimeData.buyer_number}}</td>
+                    <td class="mat-cell" *ngIf="loggedUser.role !== 'buyer'">{{realtimeData.pub_name}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+  </div>
+  <hr>
+  <div class="container" *ngIf="show_waiting">
+    <h4>Waiting Calls</h4>
+    <mat-accordion>
+      <mat-expansion-panel [expanded]="true" (opened)="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+
+          </mat-panel-title>
+          <mat-panel-description>
+            &nbsp;&nbsp;<p class="realtime blue">Total Calls: <strong>{{waitingcalls.length}}</strong></p>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="table-responsive">
+          <table class="table-hover table table-striped table-bordered" style="width:100%">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>TFN</th>
+                <th>Taking To</th>
+                <th>Duration</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let realtimeData of waitingcalls;  let i = index">
+                <td>{{realtimeData.sno}}</td>
+                <td>{{realtimeData.did}}</td>
+                <td>{{realtimeData.connected}}</td>
+                <td>{{realtimeData.time}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+</div>

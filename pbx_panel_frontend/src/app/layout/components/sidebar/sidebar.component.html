@@ -1,0 +1,427 @@
+<nav class="sidebar" [ngClass]="{sidebarPushRight: isActive, collapsed: collapsed}">
+    <div class="user-detail list-group">
+        <p class="welcome">
+            <i class="fa fa-key"></i> Logged in as
+        </p>
+        <p class="name tooltip-sidebar-logout">
+            {{user.fullname?user.fullname:user.name}} <a style="color: inherit" class="logout_open"
+                (click)="onLoggedout()" data-toggle="tooltip" data-placement="top" title="Logout"
+                data-original-title="Logout"><i class="fa fa-sign-out"></i></a>
+        </p>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="list-group" *ngIf="user.role === 'admin'">
+        <!-- Admin Panel -->
+        <a routerLink="/dashboard" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-dashboard"></i>&nbsp;
+            <span>{{ 'Dashboard' | translate }}</span>
+        </a>
+
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('users')">
+                <i class="fa fa-users"></i>&nbsp;
+                <span>{{ 'Manage Users' | translate }}</span><i class="fa fa-caret-down pull-right"></i>
+            </a>
+            <div class="nested" [class.expand]="showMenu === 'users'">
+                <ul class="submenu">
+                    <li>
+                        <a routerLink="/users" [routerLinkActive]="['router-link-active']" class="list-group-item">
+                            <i class="fa fa-fw fa-users"></i><span>{{ 'Manage Publishers(s)' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/auditprofile" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-fw fa-users"></i><span>{{ 'Manage Audit Profile(s)' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/buyers" [routerLinkActive]="['router-link-active']" class="list-group-item">
+                            <i class="fa fa-fw fa-users"></i><span>{{ 'Manage Buyer(s)' | translate }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('tfns')">
+                <i class="fa fa-th-list"></i>&nbsp;
+                <span>{{ 'TFN(s)' | translate }}</span><i class="fa fa-caret-down pull-right"></i>
+            </a>
+            <div class="nested" [class.expand]="showMenu === 'tfns'">
+                <ul class="submenu">
+                    <li>
+                        <a routerLink="/tfns" [routerLinkActive]="['router-link-active']" class="list-group-item">
+                            <i class="fa fa-fw fa-eye"></i><span>{{ 'View TFN(s)' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/tfns/assignpublisher" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-fw fa-plus"></i>
+                            <span>{{ 'Add and Assign TFN(s)' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/tfns/pending" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            <i class="fa fa-fw fa-clock-o"></i>
+                            <span>{{ 'Pending TFN(s)' | translate }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <a [routerLink]="['/blacklist']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-ban"></i>&nbsp;
+            <span>{{ 'Blacklist' | translate }}</span>
+        </a>
+        <a [routerLink]="['/buyernumbers']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-cog"></i>&nbsp;
+            <span>{{ 'Buyer Number Settings' | translate }}</span>
+        </a>
+        <a [routerLink]="['/managegroup']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-user-circle-o"></i>&nbsp;
+            <span>{{ 'Manage Group' | translate }}</span>
+        </a>
+        <a [routerLink]="['/activehours']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-hourglass-half"></i>&nbsp;
+            <span>{{ 'Active Hours' | translate }}</span>
+        </a>
+        <a [routerLink]="['/financehours']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-hourglass-half"></i>&nbsp;
+            <span>{{ 'Finance Hours' | translate }}</span>
+        </a>
+        <a [routerLink]="['/campaign']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-inbox"></i>&nbsp;
+            <span>{{ 'Manage Campaign(s)' | translate }}</span>
+        </a>
+        <a [routerLink]="['/cdr']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-area-chart"></i>&nbsp;
+            <span>{{ 'CDR Report' | translate }}</span>
+        </a>
+        <a [routerLink]="['/agentreport']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-pie-chart"></i>&nbsp;
+            <span>{{ 'Agent Report' | translate }}</span>
+        </a>
+        <a [routerLink]="['/customerreport']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-pie-chart"></i>&nbsp;
+            <span>{{ 'Customer Report' | translate }}</span>
+        </a>
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('eod')">
+                <i class="fa fa-fw fa-line-chart"></i>&nbsp;
+                <span>{{ 'EOD Reports' | translate }}</span><i class="fa fa-caret-down pull-right"></i>
+            </a>
+            <div class="nested" [class.expand]="showMenu === 'eod'">
+                <ul class="submenu">
+                    <li>
+                        <a [routerLink]="['/eod']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+                            >>
+                            <span>{{ 'EOD Report' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/agenteod" [routerLinkActive]="['router-link-active']" class="list-group-item">
+                            >>
+                            <span>{{ 'Agent EOD Report' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/buyereod" [routerLinkActive]="['router-link-active']" class="list-group-item">
+                            >>
+                            <span>{{ 'Buyer EOD Report' | translate }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('realtime')">
+                <i class="fa fa-fw fa-clock-o"></i>&nbsp;
+                <span>{{ 'Realtime' | translate }}</span><i class="fa fa-caret-down pull-right"></i>
+            </a>
+            <div class="nested" [class.expand]="showMenu === 'realtime'">
+                <ul class="submenu">
+                    <li>
+                        <a [routerLink]="['/secondrealtime']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            >>
+                            <span>{{ 'Realtime' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/secondrealtime/publisher" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            >>
+                            <span>{{ 'Realtime Publisher' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/secondrealtime/buyer" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            >>
+                            <span>{{ 'Realtime Count' | translate }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('wallets')">
+                <i class="fa fa-money"></i>&nbsp;
+                <span>{{ 'Wallet' | translate }}</span><i class="fa fa-caret-down pull-right"></i>
+            </a>
+            <div class="nested" [class.expand]="showMenu === 'wallets'">
+                <ul class="submenu">
+                    <li>
+                        <a [routerLink]="['/wallet/finance']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            >>
+                            <span>{{ 'Publisher Balance' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['/wallet/finance2']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            >>
+                            <span>{{ 'Publisher Balance' | translate }}<small>(Charge/Minute)</small></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['/wallet/buyer_finance']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            >>
+                            <span>{{ 'Buyer Balance' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['/wallet/deduction']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            >>
+                            <span>{{ 'Add Deduction' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['/wallet/payment']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            >>
+                            <span>{{ 'Add Payment' | translate }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <a [routerLink]="['/usagereport']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-list"></i>&nbsp;
+            <span>{{ 'Usage' | translate }}</span>
+        </a>
+        <a [routerLink]="['/oxygencalls']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-flask"></i>&nbsp;
+            <span>{{ 'Oxygen Calls' | translate }}</span>
+        </a>
+        <a [routerLink]="['/cccapping']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-empire"></i>&nbsp;
+            <span>{{ 'Capping' | translate }}</span>
+        </a>
+        <a [routerLink]="['/audio']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-file"></i>&nbsp;
+            <span>{{ 'Audio Fle' | translate }}</span>
+        </a>
+
+        <!-- <a [routerLink]="['/charts']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-bar-chart-o"></i>&nbsp;
+            <span>{{ 'Charts' | translate }}</span>
+        </a> -->
+    </div>
+    <div class="list-group" *ngIf="user.role === 'publisher'">
+        <!-- Publisher Panel -->
+        <a routerLink="/dashboard" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-dashboard"></i>&nbsp;
+            <span>{{ 'Dashboard' | translate }}</span>
+        </a>
+        <a routerLink="/buyers" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-users"></i>&nbsp;
+            <span>{{ 'Buyers' | translate }}</span>
+        </a>
+        <div class="nested-menu">
+            <a class="list-group-item" (click)="addExpandClass('tfns')">
+                <i class="fa fa-th-list"></i>&nbsp;
+                <span>{{ 'TFN(s)' | translate }}</span><i class="fa fa-caret-down pull-right"></i>
+            </a>
+            <div class="nested" [class.expand]="showMenu === 'tfns'">
+                <ul class="submenu">
+                    <li>
+                        <a routerLink="/tfns" [routerLinkActive]="['router-link-active']" class="list-group-item">
+                            >>
+                            <span>{{ 'View TFN(s)' | translate }}</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/tfns/buy" [routerLinkActive]="['router-link-active']" class="list-group-item">
+                            >>
+                            <span>{{ 'Buy TFN(s)' | translate }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <a [routerLink]="['/campaign']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-inbox"></i>&nbsp;
+            <span>{{ 'Manage Campaign(s)' | translate }}</span>
+        </a>
+        <a [routerLink]="['/cdr']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-area-chart"></i>&nbsp;
+            <span>{{ 'CDR Report' | translate }}</span>
+        </a>
+        <a [routerLink]="['/secondrealtime']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-clock-o"></i>&nbsp;
+            <span>{{ 'Realtime' | translate }}</span>
+        </a>
+        <div class="nested-menu" *ngIf="loggedUserSettings.display_wallet">
+            <a class="list-group-item" (click)="addExpandClass('wallets')">
+                <i class="fa fa-money"></i>&nbsp;
+                <span>{{ 'Wallet' | translate }}</span><i class="fa fa-caret-down pull-right"></i>
+            </a>
+            <div class="nested" [class.expand]="showMenu === 'wallets'">
+                <ul class="submenu">
+                    <li>
+                        <a routerLink="/wallet/finance" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            >>
+                            <span>{{ 'Wallet' | translate }}</span>
+                        </a>
+                    </li>
+                    <li *ngIf="loggedUserSettings.charge_per_minute">
+                        <a [routerLink]="['/wallet/finance2']" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            >>
+                            <span>{{ 'Wallet' | translate }}<small>(Charge/Minute)</small></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a routerLink="/wallet/buyer_finance" [routerLinkActive]="['router-link-active']"
+                            class="list-group-item">
+                            >>
+                            <span>{{ 'Buyer Finance' | translate }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <a [routerLink]="['/usagereport']" [routerLinkActive]="['router-link-active']" class="list-group-item"
+            *ngIf="loggedUserSettings.usage_module">
+            <i class="fa fa-fw fa-list"></i>&nbsp;
+            <span>{{ 'Usage' | translate }}</span>
+        </a>
+
+        <!-- Siderbar menu ends here -->
+    </div>
+    <div class="list-group" *ngIf="user.role === 'buyer'">
+        <!-- buyer Panel -->
+        <a routerLink="/buyerdashboard" [routerLinkActive]="['router-link-active']" class="list-group-item"
+            *ngIf="user.buyer_id === 454">
+            <i class="fa fa-fw fa-dashboard"></i>&nbsp;
+            <span>{{ 'Dashboard' | translate }}</span>
+        </a>
+        <a [routerLink]="['/buyers/buyernumber',user.buyer_id]" [routerLinkActive]="['router-link-active']"
+            class="list-group-item">
+            <i class="fa fa-fw fa-clock-o"></i>&nbsp;
+            <span>{{ 'Manage Numbers' | translate }}</span>
+        </a>
+        <a *ngIf="user.buyer_id !== 453 && user.buyer_id !== 477" [routerLink]="['/cdr']" [routerLinkActive]="['router-link-active']"
+            class="list-group-item">
+            <i class="fa fa-fw fa-area-chart"></i>&nbsp;
+            <span>{{ 'CDR Report' | translate }}</span>
+        </a>
+        <!--<a *ngIf="user.buyer_id === 441 || user.buyer_id === 453" [routerLink]="['/buyermonitoring',627,'FR']"
+            [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-area-chart"></i>&nbsp;
+            <span>{{ '627- Monitoring' | translate }}</span>
+        </a>
+        <a *ngIf="user.buyer_id === 441 || user.buyer_id === 453" [routerLink]="['/buyermonitoring',628,'FRR']"
+            [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-area-chart"></i>&nbsp;
+            <span>{{ '628- Monitoring' | translate }}</span>
+        </a>-->
+        <a *ngIf="user.buyer_id === 441" [routerLink]="['/outboundcdr']" [routerLinkActive]="['router-link-active']"
+            class="list-group-item">
+            <i class="fa fa-fw fa-area-chart"></i>&nbsp;
+            <span>{{ 'OutBoundCDR Report' | translate }}</span>
+        </a>
+
+        <!-- <a [routerLink]="['/buyerreport']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-area-chart"></i>&nbsp;
+            <span>{{ 'Buyer Report' | translate }}</span>
+        </a> -->
+        <div *ngFor="let element of buyer_numbers">
+            <a [routerLink]="['/buyerreport',element.number]" [routerLinkActive]="['router-link-active']"
+                class="list-group-item" *ngIf="element.cdr">
+                <i class="fa fa-fw fa-phone"></i>&nbsp;
+                <span>{{ element.number }}</span>
+
+            </a>
+
+            <a *ngIf="element.monitoring" [routerLink]="['/buyermonitoring',element.number,element.agents]"
+                [routerLinkActive]="['router-link-active']" class="list-group-item">
+                <i class="fa fa-fw fa-area-chart"></i>&nbsp;
+                <span>{{ element.number }}- Monitoring</span>
+            </a>
+        </div>
+
+        <a *ngIf="enablecapping" [routerLink]="['/buyercapping']" [routerLinkActive]="['router-link-active']"
+            class="list-group-item">
+            <i class="fa fa-fw fa-area-chart"></i>&nbsp;
+            <span>{{ 'CC Capping' | translate }}</span>
+        </a>
+        <a [routerLink]="['/secondrealtime/buyer']" [routerLinkActive]="['router-link-active']" class="list-group-item"
+            *ngIf="realtime === 1">
+            <i class="fa fa-fw fa-clock-o"></i>&nbsp;
+            <span>{{ 'Realtime' | translate }}</span>
+        </a>
+        <!--  <a [routerLink]="['/walletbuyer']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-clock-o"></i>&nbsp;
+            <span>{{ 'Wallet' | translate }}</span>
+        </a> -->
+        <!-- Siderbar menu ends here -->
+
+        <!--<a *ngIf="user.buyer_id === 441 || user.buyer_id === 454" [routerLink]="['/buyercapping']"
+            [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-area-chart"></i>&nbsp;
+            <span>{{ 'CC Capping' | translate }}</span>
+        </a>-->
+
+        <a *ngIf="user.buyer_id !== 477" [routerLink]="['/audio']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-file"></i>&nbsp;
+            <span>{{ 'Audio Fle' | translate }}</span>
+        </a>
+    </div>
+    <div class="list-group" *ngIf="user.role === 'director'">
+        <!-- director Panel -->
+        <a routerLink="/dashboard" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-dashboard"></i>&nbsp;
+            <span>{{ 'Dashboard' | translate }}</span>
+        </a>
+        <a [routerLink]="['/secondrealtime/commoncalls']" [routerLinkActive]="['router-link-active']"
+            class="list-group-item">
+            <i class="fa fa-fw fa-clock-o"></i>&nbsp;
+            <span>{{ 'Common Realtime' | translate }}</span>
+        </a>
+    </div>
+    <div class="list-group" *ngIf="user.role === 'audit_profile'">
+        <!-- Audit Profile Panel -->
+        <a routerLink="/dashboard" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-dashboard"></i>&nbsp;
+            <span>{{ 'Dashboard' | translate }}</span>
+        </a>
+        <a [routerLink]="['/auditreport']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-area-chart"></i>&nbsp;
+            <span>{{ 'Audit Report' | translate }}</span>
+        </a>
+    </div>
+    <div class="toggle-button" [ngClass]="{collapsed: collapsed}" (click)="toggleCollapsed()">
+        <i class="fa fa-fw fa-angle-double-left"></i>&nbsp;
+        <span>{{ 'Collapse Sidebar' | translate }}</span>
+    </div>
+</nav>

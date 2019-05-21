@@ -1,0 +1,70 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>Manage TFN(s)</small></li>
+    </ol>
+    <div class="container">
+        <div class="card add box effect2">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                </div>
+                <h4>Edit TFN</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2 col-sm-12">
+                        <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="editTFN()">
+                            <img src="../../../../assets/images/loader.gif"
+                                style="position: absolute; z-index: 999; width: 60px;right: 12px;" *ngIf="isLoading">
+                            <mat-form-field class="example-full-width form-control">
+                                <input matInput placeholder="Choose a publisher" [matAutocomplete]="auto"
+                                    formControlName="pub_id" (blur)="hideLoader()" (keyup)="showLoader()">
+                            </mat-form-field>
+                            <!-- <span>Your choice is: {{formdata.get('pub_id').value | json}}</span> -->
+                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                <mat-option *ngFor="let publisher of (filteredPublishers| async)?.user"
+                                    [value]="publisher" (click)="hideLoader()">
+                                    <span>{{ publisher.fullname }}</span>
+                                    <small> | ID: {{publisher.uid}}</small>
+                                </mat-option>
+                            </mat-autocomplete>
+                            <br>
+                            <br>
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                                </div> -->
+                                <input type="text" class="form-control" placeholder="TFN" name="tfn"
+                                    formControlName="tfn">
+                            </div>
+                            <label>Price Per TFN</label>
+                            <div class="form-group input-group">
+                                <input type="number" class="form-control" placeholder="Price Per TFN"
+                                    name="price_per_tfn" formControlName="price_per_tfn">
+                            </div>
+                            <label>Charge Per Minute</label>
+                            <div class="form-group input-group">
+                                <input type="number" class="form-control" placeholder="Charge Per Minute"
+                                    name="charge_per_minute" formControlName="charge_per_minute">
+                            </div>
+                            <label>Status</label>
+                            <div class="form-group input-group">
+                                <select name="status" formControlName="status" class="form-control">
+                                        <option value="available">Available</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="unused">Unused</option>
+                                    <option value="used">Used</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-secondary btn-success"
+                                style="margin-top:0px;">Submit</button>&nbsp;
+                            <a routerLink="/tfns" class="btn btn-secondary btn-default">Cancel</a>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+        </div>
+    </div>
+</div>

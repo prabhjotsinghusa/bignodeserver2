@@ -1,0 +1,9 @@
+<app-header></app-header>
+<app-sidebar (collapsedEvent)="receiveCollapsed($event)"></app-sidebar>
+<section class="main-container" [ngClass]="{collapsed: collapedSideBar}">
+    <router-outlet></router-outlet>
+    <!-- <div class="column column-50" style="">
+        <h1>Angular Chat</h1>
+
+    </div> -->
+</section>

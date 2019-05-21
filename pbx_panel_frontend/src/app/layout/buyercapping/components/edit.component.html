@@ -1,0 +1,128 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>Manage Capping</small></li>
+    </ol>
+    <div class="container">
+        <div class="card add box effect2">
+            <div class="card-header">
+                <h4>Edit Capping</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2 col-sm-12">
+                        <div class="alert alert-danger" *ngIf="show_error">{{error_message}}</div>
+                        <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="save()">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group input-group">
+                                        <div class="input-group-prepend mb_10">
+                                            <span class="input-group-text padding_11">
+                                                <p>Queue</p>
+                                            </span>
+                                        </div>
+                                        <select class="form-control" placeholder="Select Queue" name="queue"
+                                            formControlName="queue" style="height:auto;">
+                                            <option value="">Select Queue</option>
+                                            <option value="100001389">FR - 100001389</option>
+                                            
+                                        </select>
+                                    </div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.queue.errors != null && formdata.controls.queue.errors.required">
+                                        Queue
+                                        is required.</div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group input-group">
+                                        <div class="input-group-prepend mb_10">
+                                            <span class="input-group-text padding_11">
+                                                <p>Buyer Number</p>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Enter Buyer Number"
+                                            name="buyer_number" formControlName="buyer_number" pattern="[0-9]*">
+                                    </div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.buyer_number.errors != null && formdata.controls.buyer_number.errors.required">
+                                        Buyer
+                                        Number
+                                        is required.</div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.buyer_number.errors != null && formdata.controls.buyer_number.errors.minlength">
+                                        Buyer
+                                        Number
+                                        minimum 3 digit.</div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.buyer_number.errors != null && formdata.controls.buyer_number.errors.maxlength">
+                                        Buyer
+                                        Number
+                                        maximum 15 digit.</div>
+                                    <div style="color:red;"padding_11
+                                        *ngIf="error && formdata.controls.buyer_number.errors != null && formdata.controls.buyer_number.errors.pattern">
+                                        Buyer
+                                        Number
+                                        contains only numbers.</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group input-group">
+                                        <div class="input-group-prepend mb_10">
+                                            <span class="input-group-text padding_11">
+                                                <p>Edit CC Capping</p>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Enter Capping"
+                                            name="capping" formControlName="capping" pattern="[0-9]*">
+                                    </div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.capping.errors != null && formdata.controls.capping.errors.required">
+                                        Capping
+                                        is required.</div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.capping.errors != null && formdata.controls.capping.errors.maxlength">
+                                        Capping
+                                        maximum 15 digit.</div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.capping.errors != null && formdata.controls.capping.errors.pattern">
+                                        Capping
+                                        contains only numbers.</div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group input-group">
+                                        <div class="input-group-prepend mb_10">
+                                            <span class="input-group-text padding_11">
+                                                <p>Global Capping</p>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control" placeholder="Enter Global Cap"
+                                            name="global_cap" formControlName="global_cap" pattern="[0-9]*">
+                                    </div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.global_cap.errors != null && formdata.controls.global_cap.errors.required">
+                                        Global
+                                        Capping
+                                        is required.</div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.global_cap.errors != null && formdata.controls.global_cap.errors.maxlength">
+                                        Global
+                                        Capping
+                                        maximum 15 digit.</div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.global_cap.errors != null && formdata.controls.global_cap.errors.pattern">
+                                        Global
+                                        Capping
+                                        contains only numbers.</div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-secondary btn-success">Submit</button>&nbsp;
+                            <a routerLink="/buyercapping" class="btn btn-secondary btn-default">Cancel</a>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+        </div>
+    </div>
+</div>

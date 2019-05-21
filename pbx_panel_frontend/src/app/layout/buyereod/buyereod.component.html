@@ -1,0 +1,91 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>Buyer EOD Report(Call Detail Report)</small></li>
+    </ol>
+
+    <div class="row ui eod">
+        <div class="col col-sm-12">
+            <div class="card mb-3">
+                <div class="card-header"></div>
+                <div class="card-body eod">
+                    <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="searchWithFilter()">
+                        <div class="row">
+                            <div class="col-md-4 offset-md-2">
+                                <div class="form-group">
+                                    <div class="input-group datepicker-input">
+                                        <input class="form-control" placeholder="yyyy-mm-dd" name="dp"
+                                            formControlName="selected_date" ngbDatepicker #d="ngbDatepicker"
+                                            dateFormat="yyyy-MMM-dd">
+                                        <button class="input-group-addon" (click)="d.toggle()" type="button">
+                                            <!-- <img src="img/calendar-icon.svg" style="width: 1.2rem; height: 1rem; cursor: pointer;"/> -->
+                                            <span class="fa fa-calendar"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+
+                                <button type="submit"
+                                    class="eod btn btn-secondary btn-success btn-block pull-right">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row ui">
+        <div class="col col-sm-12">
+            <div class="card mb-3">
+                <div class="card-header"></div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12 col-md-offset-1">
+                            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                                class="mat-elevation-z8 table-bordered mat-table" style="width:100%">
+                                <thead>
+                                    <tr class="mat-header-row">
+                                        <th class="mat-header-cell ">
+                                            Fullname
+                                        </th>
+                                        <th class="mat-header-cell ">
+                                            Total Calls</th>
+                                            <th class="mat-header-cell ">
+                                                Total Unique Calls</th>
+                                                <th class="mat-header-cell ">
+                                                    Total Answered Calls</th>
+                                        <th class="mat-header-cell ">
+                                            Total Payable Calls</th>
+                                        <th class="mat-header-cell ">
+                                            Total Payable Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let element of EOD" class="mat-row">
+                                        <td class="mat-cell ">
+                                            {{element.buyerNumber !== undefined ?element.buyerNumber.buyerName:'-NA-'}}
+                                        </td>
+                                        <td class="mat-cell ">
+                                            {{element.result ? element.result.total_calls:0}}</td>
+                                            <td class="mat-cell ">
+                                                {{element.result ? element.result.unique_calls:0}}</td>
+                                                <td class="mat-cell ">
+                                                    {{element.result ? element.result.answered_calls:0}}</td>
+                                        <td class="mat-cell ">{{(element.result.result[0] === undefined)? 0:
+                            element.result.result[0].payable_calls}}</td>
+                                        <td class="mat-cell ">{{(element.result.result[0] === undefined)? 0:
+                              element.result.result[0].payableamount}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <img src="../../../../assets/images/loading.gif"
+                                style="position: absolute; z-index: 999; left: 40%; top:40%;" *ngIf="isLoading">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

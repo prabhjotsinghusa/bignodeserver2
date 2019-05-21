@@ -1,0 +1,58 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>Recording List</small></li>
+    </ol>
+    <div class="pull-left" *ngIf="loggedUser.role == 'admin'">
+        <a routerLink="/audio/add" class="btn btn-success pull-right">Add Audio</a>
+    </div>
+
+    <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="mat-elevation-z8 table-bordered mat-table"
+        style="width:100%">
+
+        <thead>
+            <tr class="mat-header-row ng-tns-c13-4 ng-star-inserted">
+                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">#
+                </th>
+                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                    Date</th>
+                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                    Buyer
+                    Name
+                </th>
+                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                    Recording
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let element of audioReport;let i = index" class="mat-row ng-tns-c4-0 ng-star-inserted">
+                <td class="mat-cell ng-star-inserted">{{i+1}}</td>
+                <td class="mat-cell ng-star-inserted">{{element.date}}</td>
+                <td class="mat-cell ng-star-inserted">{{element.name}}</td>
+                <td class="mat-cell ng-star-inserted">
+                    <button type="button" class="btn btn-default" (click)="showAudio(i)" *ngIf="element.fileName !== ''"
+                        title="Play"><i class="
+                        fa fa-volume-up"></i>
+                    </button>
+                    <audio _ngcontent-c4="" class="recording_class ng-tns-c4-0 ng-star-inserted" controls="true"
+                        controlsList="nodownload" preload="none" *ngIf="element.fileName !== '' && selectedAudio === i"
+                        [autoplay]="element.fileName !== '' && selectedAudio === i">
+                        <source _ngcontent-c4="" class="ng-tns-c4-0" type="audio/ogg"
+                            src="https://s3.amazonaws.com/filesystem-backup-bucket/ankit/{{element.fileName}}">
+                        <source _ngcontent-c4="" class="ng-tns-c4-0" type="audio/mpeg"
+                            src="https://s3.amazonaws.com/filesystem-backup-bucket/ankit/{{element.fileName}}">
+                        https://s3.amazonaws.com/filesystem-backup-bucket/ankit/{{element.fileName}}
+                    </audio>
+                    <span *ngIf="element.fileName !== ''"
+                        style="display:none;">https://s3.amazonaws.com/filesystem-backup-bucket/ankit/{{element.fileName}}</span>
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+
+    <img src="../../../../assets/images/loading.gif" style="position: absolute; z-index: 999; left: 40%;top:30%;"
+        *ngIf="isLoadingTable">
+</div>

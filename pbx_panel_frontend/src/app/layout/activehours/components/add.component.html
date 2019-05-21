@@ -1,0 +1,104 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>Manage Active Hours</small></li>
+    </ol>
+    <div class="container">
+        <div class="card add box effect2">
+            <div class="card-header">
+                    <div class="card-icon">
+                            <i class="fa fa-clock-o" aria-hidden="true"></i>
+                    </div>                
+                <h4>Add Active Hours</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-danger" *ngIf="show_error">{{error_message}}</div>
+                <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="addActiveHour()">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text" style="height:200px;">
+                                        <p style="position:relative;top:40%;">Days</p>
+                                    </span>
+                                </div> -->
+                                <select class="form-control" placeholder="Select Days" name="day" formControlName="day"
+                                    multiple="multiple" style="height:200px;">
+                                    <option value="">---Select Days---</option>
+                                    <option>Sunday</option>
+                                    <option>Monday</option>
+                                    <option>Tuesday</option>
+                                    <option>Wednesday</option>
+                                    <option>Thursday</option>
+                                    <option>Friday</option>
+                                    <option>Saturday</option>
+                                </select>
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.day.errors != null && formdata.controls.day.errors.required">
+                                Day
+                                is required.</div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                                </div> -->
+                                <input type="text" class="form-control" placeholder="Enter TFN" name="tfn"
+                                    formControlName="tfn" pattern="[0-9]*">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.tfn.errors != null && formdata.controls.tfn.errors.required">
+                                TFN
+                                is required.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.tfn.errors != null && formdata.controls.tfn.errors.minlength">
+                                TFN
+                                minimum 3 digit.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.tfn.errors != null && formdata.controls.tfn.errors.maxlength">
+                                TFN
+                                maximum 15 digit.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.tfn.errors != null && formdata.controls.tfn.errors.pattern">
+                                TFN
+                                contains only numbers.</div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="card">
+                                <div class="card-header">Open Time</div>
+                                <div class="card-body">
+                                    <ngb-timepicker formControlName="active_on" [meridian]="true"></ngb-timepicker>
+                                </div>
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.active_on.errors != null && formdata.controls.active_on.errors.required">
+                                Open
+                                Time is required.</div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="card">
+                                <div class="card-header">Close Time</div>
+                                <div class="card-body">
+                                    <ngb-timepicker formControlName="active_off" [meridian]="true"></ngb-timepicker>
+                                </div>
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.active_off.errors != null && formdata.controls.active_off.errors.required">
+                                Close
+                                Time is required.</div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-secondary btn-success">Submit</button>&nbsp;
+                            <a routerLink="/activehours" class="btn btn-secondary btn-default">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+</div>

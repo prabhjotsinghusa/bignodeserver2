@@ -1,0 +1,69 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>Manage Publishers</small></li>
+    </ol>
+    <div class="row">
+        <div class="col-md-12">
+            <flash-messages></flash-messages>
+        </div>
+    </div>
+    <div class="col-md-12 col-md-offset-1">
+        <div class="pull-left">
+            <a routerLink="/users/add" class="btn btn-success">Add Publisher</a>
+        </div>
+
+        <!-- data tables -->
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+            class="mat-elevation-z8 table-bordered mat-table" style="width:100%">
+            <thead>
+                <tr class="mat-header-row">
+                    <th
+                        class="mat-header-cell">
+                        UID
+                    </th>
+                    <th
+                        class="mat-header-cell">
+                        User</th>
+                    <th
+                        class="mat-header-cell">
+                        Fullname</th>
+                    <th
+                        class="mat-header-cell">
+                        Email</th>
+                    <th
+                        class="mat-header-cell">
+                        Contact Number</th>
+                    <th
+                        class="mat-header-cell">
+                        Created At</th>
+                    <th
+                        class="mat-header-cell">
+                        Status</th>
+                    <th
+                        class="mat-header-cell">
+                        Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="mat-row ng-tns-c4-0 " *ngFor="let element of publishers; let i = index">
+                    <td class="mat-cell ">{{element.uid}}</td>
+                    <td class="mat-cell ">{{element.username}}</td>
+                    <td class="mat-cell ">{{element.fullname}}</td>
+                    <td class="mat-cell ">{{element.email}}</td>
+                    <td class="mat-cell ">{{element.contact}}</td>
+                    <td class="mat-cell ">{{element.created_at}}</td>
+                    <td class="mat-cell ">{{(element.status)}}</td>
+                    <td class="mat-cell ">
+                        <a routerLink="/users/addbuyer/{{element.uid}}" title="Add Buyer"><i
+                                class="fa fa-user"></i></a>&nbsp;
+                        <a routerLink="/users/edit/{{element.uid}}" title="Edit"><i class="fa fa-pencil"></i></a>&nbsp;
+                        <i class="fa fa-trash-o" (click)="deletePublisher(element.uid,i)" style="color:#0062cc;"></i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <img src="../../../../assets/images/loading.gif" style="position: absolute; z-index: 999; left: 40%;"
+        *ngIf="isLoading">
+</div>

@@ -1,0 +1,56 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>Manage TFN(s)</small></li>
+    </ol>
+    <div class="container">
+        <div class="card add box effect2">
+            <div class="card-header">
+                <h4>Buy TFN(s)</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2 col-sm-12" *ngIf="available_tfns.length > 0; else norecord">
+                        <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="buyTfn()">
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text" style="height:150px;"><i class="fa fa-phone"
+                                            style="position: relative; top: 40%;"></i></span>
+                                </div> -->
+                                <!-- <select class="form-control" placeholder="Choose TFN(s)" name="tfn"
+                                    formControlName="tfn" multiple="multiple" style="height: 150px;"
+                                    (change)="checkTFN()">
+                                    <option *ngFor="let t of available_tfns" [value]="t.tfn">
+                                        {{t.tfn}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Price:{{price_per_tfn}})</option>
+                                </select> -->
+                            </div>
+                            
+                            <div class="form-group input-group">
+                                <ng-multiselect-dropdown [placeholder]="'Select TFN(s)'" [data]="available_tfns" formControlName="tfn"
+                                     [settings]="dropdownSettings"
+                                    (onSelect)="onItemSelect($event)" (onSelectAll)="onSelectAll($event)" class="margin-span" style="width: 100%;">
+                                </ng-multiselect-dropdown>
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.tfn.errors != null && formdata.controls.tfn.errors.required">
+                                TFN
+                                is required.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.tfn.errors != null && formdata.controls.tfn.errors.minlength">
+                                TFN
+                                should be minimum of 10 digits.</div>
+                            <div style="color:red;" *ngIf="tfn_error">{{error_message}}</div>
+                            <button type="submit" class="btn btn-secondary btn-success" [disabled]="tfn_error"
+                                style="margin-top:0px;">Submit</button>&nbsp;
+                            <a routerLink="/tfns" class="btn btn-secondary btn-default">Cancel</a>
+                        </form>
+                    </div>
+                    <ng-template #norecord>
+                        <div class="col-lg-8 col-md-12">No TFN(s) are available to buy.</div>
+                    </ng-template>
+                </div>
+                <!-- /.row -->
+            </div>
+        </div>
+    </div>
+</div>

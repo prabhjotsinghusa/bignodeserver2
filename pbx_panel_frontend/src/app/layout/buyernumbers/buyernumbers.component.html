@@ -1,0 +1,53 @@
+<div [@routerTransition]>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <i class="fa fa-dashboard"></i>
+      <a href="/dashboard" ng-reflect-router-link="/dashboard">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item active">
+      <i class="fa fa-fw fa-area-chart"></i> Manage Buyer Numbers</li>
+  </ol>
+
+  <div class="row ui">
+      <div class="col col-sm-12">
+          <div class="card mb-3">
+              <div class="card-header">
+                  Buyer Numbers
+                 
+              </div>
+              <div class="card-body">
+                  <div class="col-md-12">
+                      <flash-messages></flash-messages>
+                      <div class="alert alert-success" *ngIf="grid_deleted"></div>
+                  </div>
+                  <div class="col-md-12">
+                      <table style="width:100%" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="mat-elevation-z8 table-bordered mat-table">
+                          <thead>
+                            <tr class="mat-header-row ng-tns-c13-4 ng-star-inserted">
+                              <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">Buyer Name</th>
+                              <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">Buyer Number</th>
+                              <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">Edit</th>
+                             </tr> 
+                          </thead>
+                          
+                          <tbody>
+                           
+                                <tr class="mat-row ng-tns-c4-0 ng-star-inserted" *ngFor="let buyerdataa of buyerdata; let i = index">
+                                <td class="mat-cell ng-star-inserted">{{buyerdataa.buyerName}}</td>
+                                <td class="mat-cell ng-star-inserted">{{buyerdataa.number}}</td>
+                                <td class="mat-cell ng-star-inserted">
+                                    <a routerLink="/buyernumbers/edit/{{buyerdataa._id}}" class="btn btn-info btn-sm" title="Settings"><i
+                                      class="fa fa-cog"></i></a>
+                                 
+                                 </td>
+                             
+                            </tr>
+                           
+                          </tbody>
+                        </table>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+</div>

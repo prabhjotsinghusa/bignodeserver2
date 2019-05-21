@@ -1,0 +1,164 @@
+<div [@routerTransition]>
+  <ol class="breadcrumb">
+    <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+    <li>&nbsp;<small>Oxygen Calls Report</small></li>
+  </ol>
+  <div class="">
+
+      <div class="row ui pb_balance">
+          <div class="col col-sm-12">
+              <div class="card mb-3 pb_balance">
+                  <div class="card-header"></div>
+                  <div class="card-body">
+                      <div class="col-md-12">
+                          <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="searchWithFilter()">
+                              <div class="row">
+                                <div class="col-md-4 offset-md-5">
+                                  <div class="form-group">
+                                    <!-- <label>Select range</label> -->
+                                    <ng-daterangepicker class="pull-right" formControlName="daterange" [options]="options"></ng-daterangepicker>
+                                  </div>
+                                </div>
+                                <div class="col-md-3">
+                                  <button type="submit" class="btn btn-secondary btn-success pull-right">Search</button>
+                                </div>
+                              </div>
+                            </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+    <!-- <div class="block  pb_balance">
+      <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="searchWithFilter()">
+        <div class="container-fluid row">
+          <div class="col-md-4 offset-md-5">
+            <div class="form-group">
+              <!- <label>Select range</label> ->
+              <ng-daterangepicker formControlName="daterange" [options]="options"></ng-daterangepicker>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <button type="submit" class="btn btn-secondary btn-success pull-right">Search</button>
+          </div>
+        </div>
+      </form>
+    </div> -->
+ 
+    <div class="row">
+      <div class="col-md-12">
+        <div class="alert alert-success" *ngIf="grid_deleted">Status is changed successfully.</div>
+      </div>
+    </div>
+
+    <div class="row ui">
+      <div class="col col-sm-12">
+          <div class="card mb-3">
+              <div class="card-header"></div>
+              <div class="card-body">
+                <div class="col-md-12">
+                  <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="mat-elevation-z8 table-bordered mat-table"
+                    style="width:100%">
+                    <thead class="mat-header-cell">
+                      <tr class="mat-header-row ng-tns-c13-4 ng-star-inserted">
+                        <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">Date
+                        </th>
+                        <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">Time
+                        </th>
+                        <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">DID
+                        </th>
+                        <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                          Customer
+                          Number</th>
+                        <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">Buyer
+                          Number</th>
+                        <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                          Disposition</th>
+                        <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                          Duration</th>
+                        <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                          Publisher
+                          Name</th>
+                        <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">Status
+                        </th>
+                        <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">Action
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let element of cdr" class="mat-row ng-tns-c4-0 ng-star-inserted">
+                        <td class="mat-cell ng-star-inserted">{{element.start|date:'yyyy-MM-dd'}}</td>
+                        <td class="mat-cell ng-star-inserted">{{element.start|date:'shortTime'}}</td>
+                        <td class="mat-cell ng-star-inserted">{{element.did}}</td>
+                        <td class="mat-cell ng-star-inserted">{{ element.src}}</td>
+                        <td class="mat-cell ng-star-inserted">{{element.buyer_id}}</td>
+                        <td class="mat-cell ng-star-inserted">{{element.disposition}}</td>
+                        <td class="mat-cell ng-star-inserted">{{element.duration}}</td>
+                        <td class="mat-cell ng-star-inserted">{{element.publisherName}}</td>
+                        <td class="mat-cell ng-star-inserted">{{element.status}}</td>
+                        <td class="mat-cell ng-star-inserted"><button type="button" class="btn btn-default btn-sm"
+                            (click)="changeStatus(element._id)">Change
+                            Status</button></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <img src="../../../../assets/images/loading.gif" style="position: absolute; z-index: 999; left: 40%; top:28%;"
+                    *ngIf="isLoading">
+                </div>
+              </div>
+          </div>
+      </div>
+    </div>
+
+    <!-- <div class="col-md-12 col-md-offset-1">
+      <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="mat-elevation-z8 table-bordered mat-table"
+        style="width:100%">
+        <thead>
+          <tr class="mat-header-row ng-tns-c13-4 ng-star-inserted">
+            <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">Date
+            </th>
+            <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">Time
+            </th>
+            <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">DID
+            </th>
+            <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+              Customer
+              Number</th>
+            <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">Buyer
+              Number</th>
+            <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+              Disposition</th>
+            <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+              Duration</th>
+            <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+              Publisher
+              Name</th>
+            <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">Status
+            </th>
+            <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">Action
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let element of cdr" class="mat-row ng-tns-c4-0 ng-star-inserted">
+            <td class="mat-cell ng-star-inserted">{{element.start|date:'yyyy-MM-dd'}}</td>
+            <td class="mat-cell ng-star-inserted">{{element.start|date:'shortTime'}}</td>
+            <td class="mat-cell ng-star-inserted">{{element.did}}</td>
+            <td class="mat-cell ng-star-inserted">{{ element.src}}</td>
+            <td class="mat-cell ng-star-inserted">{{element.buyer_id}}</td>
+            <td class="mat-cell ng-star-inserted">{{element.disposition}}</td>
+            <td class="mat-cell ng-star-inserted">{{element.duration}}</td>
+            <td class="mat-cell ng-star-inserted">{{element.publisherName}}</td>
+            <td class="mat-cell ng-star-inserted">{{element.status}}</td>
+            <td class="mat-cell ng-star-inserted"><button type="button" class="btn btn-default btn-sm"
+                (click)="changeStatus(element._id)">Change
+                Status</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <img src="../../../../assets/images/loading.gif" style="position: absolute; z-index: 999; left: 40%; top:28%;"
+        *ngIf="isLoading">
+    </div> -->
+  </div>
+</div>

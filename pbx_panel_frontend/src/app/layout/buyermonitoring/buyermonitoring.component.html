@@ -1,0 +1,262 @@
+<div [@routerTransition]>
+  <ol class="breadcrumb">
+     <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+     <li class="breadcrumb-item active">
+        <i class="fa fa-fw fa-area-chart"></i> Buyer Monitoring
+     </li>
+  </ol>
+
+  <div class="row ui fr_li">
+   <div class="col col-sm-12">
+
+       <div class="card mb-3">
+           <div class="card-header"> {{realtime.qname}}
+           </div>
+           <div class="card-body geeks">
+               <div class="row">
+                   <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                       <div class="circle-tile">
+                           <a href="#">
+                               <div class="circle-tile-heading red">
+                                   <i class="fa fa-clock-o fa-fw fa-2x"></i>
+                               </div>
+                           </a>
+                           <div class="circle-tile-content content">
+                               <div class="circle-tile-description text-faded">
+                                   Call Waiting
+                                   
+                                   <p class="calls">{{realtime.waiting}}</p>
+                               </div>
+                               <div class="circle-tile-number text-faded">
+                                 <i class="fa fa-fw fa-area-chart"></i>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                       <div class="circle-tile">
+                           <a href="#">
+                               <div class="circle-tile-heading orange">
+                                   <i class="fa fa-phone fa-fw fa-2x"></i>
+                               </div>
+                           </a>
+                           <div class="circle-tile-content content">
+                               <div class="circle-tile-description text-faded">
+                                   On Calls
+                                   <p class="calls">{{realtime.oncall}}</p>
+                               </div>
+                               <div class="circle-tile-number text-faded">
+                                 <i class="fa fa-fw fa-area-chart"></i>
+                                 <span class="text-left bound">Inbound : <strong>{{realtime.inboundcalls}}</strong></span>
+                                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                                 <span class="text-right bound">Outboud : <strong>{{realtime.outboundcalls}}</strong></span>
+                                 </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                       <div class="circle-tile">
+                           <a href="#">
+                               <div class="circle-tile-heading blue">
+                                   <i class="fa fa-sign-in fa-fw fa-2x"></i>
+                               </div>
+                           </a>
+                           <div class="circle-tile-content content">
+                               <div class="circle-tile-description text-faded">
+                                  Logged In
+                                  <p class="calls">{{realtime.loggedin}}</p>
+                               </div>
+                               <div class="circle-tile-number text-faded">
+                                 <i class="fa fa-fw fa-area-chart"></i>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                       <div class="circle-tile">
+                           <a href="#">
+                               <div class="circle-tile-heading red">
+                                   <i class="fa fa-phone fa-fw fa-2x"></i>
+                               </div>
+                           </a>
+                           <div class="circle-tile-content content">
+                               <div class="circle-tile-description text-faded">
+                                  Avail
+                                  <p class="calls">{{realtime.avails}}</p>
+                               </div>
+                               <div class="circle-tile-number text-faded">
+                                 <i class="fa fa-fw fa-area-chart"></i>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+</div>
+
+  <div class="row ui fr_li">
+     <div class="col col-sm-12">
+        <div class="card mb-3">
+            <div class="card-header"> {{realtime.qname}}
+           </div>
+           <div class="card-body">
+              <div class="row">
+                 <!-- <div class="col-md-5">
+                    <ul style="display:flex; padding: 0px;" id="all_content">
+                       <ul class="list-group">
+                          <li class="list-group-item main-header">
+                             <table class="geeks">
+                                <tbody>
+                                   <tr>
+                                      <td>
+                                         FR										
+                                      </td>
+                                   </tr>
+                                </tbody>
+                             </table>
+                          </li>
+                          <li class="list-group-item call-wait-class">
+                             <table class="table internal-table">
+                                <tbody>
+                                   <tr>
+                                      <td>
+                                         <p><span><img src="https://portal.pbx4you.com/monitoring/img/images/waiting.png"></span>Call Waiting</p>
+                                      </td>
+                                      <td>
+                                         <div class="call">
+                                            <p id="wait_tech"><span style="font-size:70px;">0</span></p>
+                                         </div>
+                                      </td>
+                                   </tr>
+                                </tbody>
+                             </table>
+                          </li>
+                          <li class="list-group-item on-call-class">
+                             <table class="table internal-table">
+                                <tbody>
+                                   <tr>
+                                      <td>
+                                         <p><span><img src="https://portal.pbx4you.com/monitoring/img/images/call.png"></span>On Call</p>
+                                      </td>
+                                      <td>
+                                         <div class="call">
+                                            <p id="oncall_tech">11</p>
+                                         </div>
+                                      </td>
+                                   </tr>
+                                   <tr>
+                                      <td>Inbound Calls</td>
+                                      <td>9</td>
+                                   </tr>
+                                   <tr>
+                                      <td>Outbound Calls</td>
+                                      <td>2</td>
+                                   </tr>
+                                </tbody>
+                             </table>
+                          </li>
+                          <li class="list-group-item logged-in-class">
+                             <table class="table internal-table">
+                                <tbody>
+                                   <tr>
+                                      <td>
+                                         <p><span><img src="https://portal.pbx4you.com/monitoring/img/images/log.png"></span>Logged In</p>
+                                      </td>
+                                      <td>
+                                         <div class="log">
+                                            <p id="loggedin_tech">26</p>
+                                         </div>
+                                      </td>
+                                   </tr>
+                                </tbody>
+                             </table>
+                          </li>
+                          <li class="list-group-item avail-class">
+                             <table class="table internal-table">
+                                <tbody>
+                                   <tr>
+                                      <td>
+                                         <p><span><img src="https://portal.pbx4you.com/monitoring/img/images/agent.png"></span>Avail.</p>
+                                      </td>
+                                      <td>
+                                         <div class="agent">
+                                            <p id="ar_tech">15</p>
+                                         </div>
+                                      </td>
+                                   </tr>
+                                </tbody>
+                             </table>
+                          </li>
+                       </ul>
+                    </ul>
+                 </div> -->
+                 <div class="col-md-12">
+                    <div id="onoff_content" class="col-md-12 table table-bordered main-table" style="padding:0; background-color: #f0f0f0;">
+                       <div id="onoff_content" class="col-md-12 table table-bordered main-table" style="padding:0; background-color: #f0f0f0;">
+                          <div style="padding:0;">
+                             <div class="col-md-12">
+                                <!-- Tech Sales -->
+                                <div class="col-md-12">
+                                   <div class="col-md-12" style="padding:0; background: #ddd; margin-bottom:20px">
+                                      <div class="col-md-12 " style="padding:20px 0 0 0;border-bottom: 1px dashed #a59393;">
+                                         <div class="col-md-12" style="padding: 0 15px;">
+                                            <div class="col-md-12 table internal-table">
+                                               <div class="col-md-12" style="background: #cfc;padding-top: 10px;margin-bottom: 15px;border: 1px solid #b5e4b5;border-radius: 8px;">
+                                                  <div class="d-flex justify-content-between" style="height:50px">
+                                                     <p style="padding-top: 6px;" ><span style="float: left;">
+                                                      <img src="https://portal.pbx4you.com/monitoring/img/images/call.png" style="width:35px">
+                                                    </span>Online</p>
+                                                     <p id="oncall_tech" style="color:#000" class="call text-right">{{onlineextcount}}</p>                             
+                                                   </div>
+       
+                                               </div>
+                                               <div class="online col-md-9">
+                                                  <div class="pull-left" *ngFor="let ext of realtime.online">
+                                                     <div class="col-md-12" style="color:#000">
+                                                        <div class="led-green"></div>
+                                                        <i class="fa fa-user" aria-hidden="true"></i> 
+                                                         {{ext}} 
+                                                      </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                         </div>
+                                         <div class=" col-md-12" style="padding: 0 15px;">
+                                            <div class="table internal-table col-md-12">
+                                               <div class="col-md-12" style="background: #fcc;padding-top: 10px;margin-bottom: 15px;border: 1px solid #dda1a1;border-radius: 8px;">
+                                                  <div class="d-flex justify-content-between" style="height:50px">
+                                                     <p><span><img src="https://portal.pbx4you.com/monitoring/img/images/unavail.png"></span>Offline</p>
+                                                     <p style="color:#000" class="call text-right">{{offlineextcount}}</p>
+                                                  </div>
+                                               </div>
+                                               <div class="online col-md-12">
+                                               <div class="pull-left" *ngFor="let offlineext of realtime.offline">
+                                                  <div class="col-md-12" style="color:#5d5d5d">
+                                                     <div class="led-red"></div>
+                                                     <i class="fa fa-user" aria-hidden="true"></i>
+                                                     
+                                                        {{offlineext}}
+                                                     
+                                                  </div>
+                                               </div>
+                                               
+                                               </div>
+                                            </div>
+                                         </div>
+                                      </div>
+                                   </div>
+                                </div>
+                                <!-- Tech Sales -->
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+  </div>
+  </div>

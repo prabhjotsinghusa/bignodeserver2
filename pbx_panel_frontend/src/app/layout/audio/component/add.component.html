@@ -1,0 +1,62 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>Manage Audit Profile</small></li>
+    </ol>
+    <div class="container">
+        <div class="card add box effect2">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fa fa-address-book-o" aria-hidden="true"></i>
+                </div>
+                <h4>Add Audio File</h4>
+            </div>
+            <div class="card-body">                
+                <div class="row">
+                    <div class="col-md-8 offset-md-2 col-sm-12">
+                        <ngx-flash-messages></ngx-flash-messages>
+                        <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="searchWithFilter()"
+                            class="container">
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <img src="../../../../assets/images/loader.gif"
+                                        style="position: absolute; z-index: 999; width: 60px;right: 12px;"
+                                        *ngIf="isLoading">
+                                    <mat-form-field class="example-full-width form-control">
+                                        <input matInput placeholder="Choose a buyer" [matAutocomplete]="auto"
+                                            formControlName="buyer" (blur)="hideLoader()" (keyup)="showLoader()">
+                                    </mat-form-field>
+                                    <!-- <span>Your choice is: {{formdata.get('pub_id').value | json}}</span> -->
+                                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                        <mat-option *ngFor="let buyer of (filteredBuyer| async)?.buyer" [value]="buyer"
+                                            (click)="hideLoader()">
+                                            <span>{{ buyer.name }}</span>
+                                            <small> | ID: {{buyer.buyer_id}}</small>
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="input-group">
+                                        <input type="file" #fileImportInput name="audio" id="audioFileUpload"
+                                            class="btn sel" (change)="uploadAudioFile($event.target.files)"
+                                            accept=".mp3,audio/*" />
+                                        <button type="button" class="btn btn-success pull-right btn-r" (click)="reset()">
+                                            Reset
+                                        </button>
+                                        <a class="btn btn-default" routerLink="/audio">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <img src="../../../../assets/images/loading.gif" style="position: absolute; z-index: 999; left: 40%; top:40%;"
+        *ngIf="isLoadingTable">
+
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+        </div>
+
+    </div>
+</div>

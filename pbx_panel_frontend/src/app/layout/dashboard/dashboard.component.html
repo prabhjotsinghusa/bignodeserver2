@@ -1,0 +1,326 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i>&nbsp;<a routerLink="/dashboard">Dashboard &nbsp;</a></li>
+        <li>&nbsp;<small>Statistics Overview</small></li>
+    </ol>
+
+    <div class="row ui pb_balance">
+        <div class="col col-sm-12">
+            <div class="mb-3 pb_balance">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="offset-md-7 col-md-3">
+                            <input type="text" ngxDaterangepickerMd startKey="start" endKey="end"
+                                [locale]="{format:'DD-MM-YYYY'}" [(ngModel)]="daterange" [ranges]="ranges"
+                                [alwaysShowCalendars]="true" [showCustomRangeLabel]="true" [linkedCalendars]="true"
+                                [showClearButton]="true" class="form-control dash-range" placeholder="Select range"/>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" (click)="dateChange()"
+                                class="btn btn-secondary btn-success dash-search">Search</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row ui">
+        <div class="col col-sm-12">
+
+            <div class="card mb-3">
+                <div class="card-header"><i class="fa fa-fw fa-bar-chart-o"></i> Stats
+                    <button class="btn btn-info btn-sm pull-right " (click)="refreshCalls()"><i
+                            class="fa fa-fw fa-refresh"></i></button>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="circle-tile">
+                                <a href="#">
+                                    <div class="circle-tile-heading dark-blue">
+                                        <i class="fa fa-phone fa-fw fa-2x"></i>
+                                    </div>
+                                </a>
+                                <div class="circle-tile-content content">
+                                    <div class="circle-tile-description text-faded">
+                                        Total Calls
+                                    </div>
+                                    <div class="circle-tile-number text-faded">
+                                        {{totalcalls}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="circle-tile">
+                                <a href="#">
+                                    <div class="circle-tile-heading orange">
+                                        <i class="fa fa-phone fa-fw fa-2x"></i>
+                                    </div>
+                                </a>
+                                <div class="circle-tile-content content">
+                                    <div class="circle-tile-description text-faded">
+                                        Unique Calls
+                                    </div>
+                                    <div class="circle-tile-number text-faded">
+                                        {{totaluniquecalls}} </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="circle-tile">
+                                <a href="#">
+                                    <div class="circle-tile-heading blue">
+                                        <i class="fa fa-headphones fa-fw fa-2x"></i>
+                                    </div>
+                                </a>
+                                <div class="circle-tile-content content">
+                                    <div class="circle-tile-description text-faded">
+                                        Unique Answered Calls
+                                    </div>
+                                    <div class="circle-tile-number text-faded">
+                                        {{totaluniqueansweredcalls}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="circle-tile">
+                                <a href="#">
+                                    <div class="circle-tile-heading red">
+                                        <i class="fa fa-clock-o fa-fw fa-2x"></i>
+                                    </div>
+                                </a>
+                                <div class="circle-tile-content content">
+                                    <div class="circle-tile-description text-faded">
+                                        AHT (in minutes)
+                                    </div>
+                                    <div class="circle-tile-number text-faded">
+                                        {{aht}} <span id="sparklineC"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="circle-tile">
+                                <a href="#">
+                                    <div class="circle-tile-heading purple">
+                                        <i class="fa fa-file fa-fw fa-2x"></i>
+                                    </div>
+                                </a>
+                                <div class="circle-tile-content content">
+                                    <div class="circle-tile-description text-faded">
+                                        Payable Calls
+                                    </div>
+                                    <div class="circle-tile-number text-faded">
+                                        {{payablecalls}} <span id="sparklineD"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="circle-tile">
+                                <a href="#">
+                                    <div class="circle-tile-heading green">
+                                        <i class="fa fa-money fa-fw fa-2x"></i>
+                                    </div>
+                                </a>
+                                <div class="circle-tile-content content">
+                                    <div class="circle-tile-description text-faded">
+                                        Payable Amount
+                                    </div>
+                                    <div class="circle-tile-number text-faded">
+                                        ${{payableamount}} </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12" style="display:none;">
+                            <div class="circle-tile">
+                                <a href="#">
+                                    <div class="circle-tile-heading green">
+                                        <i class="fa fa-phone fa-fw fa-2x"></i>
+                                    </div>
+                                </a>
+                                <div class="circle-tile-content content">
+                                    <div class="circle-tile-description text-faded">
+                                        Current Running Calls
+                                    </div>
+                                    <div class="circle-tile-number text-faded">
+                                        {{realtimecount}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="circle-tile">
+                                <a href="#">
+                                    <div class="circle-tile-heading orange">
+                                        <i class="fa fa-user fa-fw fa-2x"></i>
+                                    </div>
+                                </a>
+                                <div class="circle-tile-content content">
+                                    <div class="circle-tile-description text-faded ">
+                                        Highest Publisher Calls
+                                    </div>
+                                    <div class="circle-tile-number text-faded">
+                                        {{maxPub}} </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row ui">
+        <div class="col col-sm-7">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fa fa-fw fa-phone"></i> Call Breakdown ({{calls_chart_title}}) <button
+                        class="btn btn-info btn-sm pull-right" (click)="refreshWeekly()">Weekly</button>
+                    <button class="btn btn-info btn-sm pull-right" (click)="refreshHourly()">Hourly</button>
+                </div>
+                <div class="card-body chart">
+                    <canvas baseChart height="150" [datasets]="lineChartData" [labels]="lineChartLabels"
+                        [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend"
+                        [chartType]="lineChartType" (chartHover)="chartHovered($event)"
+                        (chartClick)="chartClicked($event)">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col col-sm-5">
+            <div class="card mb-3">
+                <div class="card-header">
+                    Pie Chart <button class="btn btn-info btn-sm pull-right" (click)="refreshPie()"><i
+                            class="fa fa-fw fa-refresh"></i></button>
+                </div>
+                <div class="card-body">
+                    <canvas baseChart height="218" [data]="pieChartData" [labels]="pieChartLabels"
+                        [chartType]="pieChartType" (chartHover)="chartHovered($event)"
+                        (chartClick)="chartClicked($event)">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row ui" *ngIf="loggedUser.role === 'admin' || loggedUser.role === 'publisher'">
+        <div class="col col-sm-12">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fa fa-fw fa-money"></i> Recent Transactions <button class="btn btn-info btn-sm pull-right"
+                        (click)="refreshTransaction()"><i class="fa fa-fw fa-refresh"></i></button>
+                </div>
+                <div class="card-body">
+                    <div class="col-md-12" style="margin-top:2rem">
+                        <!-- <div class="pull-right">
+                            <mat-form-field>
+                                <input matInput (keyup)="applyFilter2($event.target.value)" placeholder="Filter">
+                            </mat-form-field>
+                        </div> -->
+                        <div class="table-responsive">
+                            <table mat-table [dataSource]="dataSource" matSort
+                                class="mat-elevation-z8 table-bordered table" style="width:100%">
+                                <ng-container matColumnDef="payment_date">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Payment Date </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.payment_date}} </td>
+                                </ng-container>
+                                <!-- Weight Column -->
+                                <ng-container matColumnDef="publisherName">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Publisher Name </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.publisherName}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="mode_payment">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Mode </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.mode_payment}} </td>
+                                </ng-container>
+                                <!-- Symbol Column -->
+                                <ng-container matColumnDef="amount">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.amount}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="remark">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Remarks </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.remark}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="edit">
+                                    <th mat-header-cell *matHeaderCellDef> Actions </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <button type="button" (click)="deleteTransaction(element._id)"
+                                            class="btn btn-danger btn-sm" title="Delete"><i
+                                                class="fa fa-trash-o"></i></button>
+                                    </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            </table>
+                        </div>
+                        <mat-paginator #paging2 [pageSizeOptions]="[10, 20, 50, 200]" showFirstLastButtons>
+                        </mat-paginator>
+                    </div>
+                    <a class="btn btn-green" href="https://client.pbx4you.com/finance">View All Transactions</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--  <div class="row">
+        <div class="col col-sm-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    Radar Chart
+                </div>
+                <div class="card-body">
+                    <canvas baseChart height="150px" [datasets]="radarChartData" [labels]="radarChartLabels"
+                        [chartType]="radarChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col col-sm-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    Pie Chart
+                </div>
+                <div class="card-body">
+                    <canvas baseChart height="150px" [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
+                        (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-sm-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    Polar Area Chart
+                </div>
+                <div class="card-body">
+                    <canvas baseChart height="130px" [data]="polarAreaChartData" [labels]="polarAreaChartLabels"
+                        [legend]="polarAreaLegend" [chartType]="polarAreaChartType" (chartHover)="chartHovered($event)"
+                        (chartClick)="chartClicked($event)">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col col-sm-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    Line Chart
+                </div>
+                <div class="card-body">
+                    <canvas baseChart height="130" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
+                        [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)"
+                        (chartClick)="chartClicked($event)">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+    </div> -->
+</div>

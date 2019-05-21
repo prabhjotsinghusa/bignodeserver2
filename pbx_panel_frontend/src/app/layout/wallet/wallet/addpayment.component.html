@@ -1,0 +1,81 @@
+<div [@routerTransition]>
+  <ol class="breadcrumb">
+    <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+    <li>&nbsp;<small>Manage Payment(s)</small></li>
+  </ol>
+  <div class="container">
+    <div class="card add box effect2">
+      <div class="card-header">
+          <div class="card-icon">
+              <i class="fa fa-address-book-o" aria-hidden="true"></i>
+          </div>
+        <h4>Add Payment(s)</h4>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-7" style="margin-left: 15%;">
+            <div class="alert alert-success" *ngIf="show_success">Payment for the selected publisher(s) is added
+              successfully.</div>
+            <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="addPayment()">
+              <div class="row">
+                <div class="col-md-12">
+                  <img src="../../../../assets/images/loader.gif"
+                    style="position: absolute; z-index: 999; width: 60px;right: 12px;" *ngIf="isLoading">
+                  <mat-form-field class="example-chip-list form-control">
+                    <mat-chip-list #chipList>
+                      <mat-chip *ngFor="let pub of publishers" [selectable]="selectable" [removable]="removable"
+                        (removed)="remove(pub)">
+                        {{pub.fullname}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                      </mat-chip>
+                      <input placeholder="Choose Publisher..." #pubInput [formControl]="publishersCtrl"
+                        [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur">
+                    </mat-chip-list>
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                      <mat-option *ngFor="let publisher of filteredpublishers | async" [value]="publisher">
+                        {{publisher.fullname}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                  <div style="color:red;" *ngIf="error && publishers.length <= 0">Publisher
+                    is required.</div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field class="example-full-width form-control">
+                    <input type="text" matInput placeholder="Mode of Payment" formControlName="mode">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field class="example-full-width form-control">
+                    <input matInput type="number" placeholder="Amount" formControlName="amount" min="10">
+                    <!-- <mat-error *ngIf="options.get('fontSize')?.invalid">Minimum  size: 10px</mat-error> -->
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="form-field">
+                <mat-form-field class="example-full-width form-control">
+                  <input matInput [matDatepicker]="picker" formControlName="paymentDate" placeholder="Payment Date">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="form-field">
+                <mat-form-field class="example-full-width form-control" style="width: 100%;">
+                  <textarea matInput placeholder="Remarks" formControlName="remarks" style="height: 30px;"></textarea>
+                </mat-form-field>
+              </div>
+              <div class="form-field ">
+                <button type="submit" class="btn btn-secondary btn-success">Submit</button>&nbsp;
+                <button type="reset" class="btn btn-secondary btn-default">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

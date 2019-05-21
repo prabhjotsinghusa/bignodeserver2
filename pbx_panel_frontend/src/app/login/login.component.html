@@ -1,0 +1,23 @@
+<div class="login-page" [@routerTransition]>
+    <div class="row justify-content-md-center">
+        <div class="col-md-4">
+            <img src="assets/images/logo.png" width="150px" class="user-avatar" />
+            <h1>Login to PBX Portal</h1>
+            <div class="alert alert-danger" *ngIf="error">{{message}}</div>
+            <form role="form" [formGroup]="formdata" method="post" id="validate" (ngSubmit)="onLoggedin()">
+                <div class="form-content">
+                    <div class="form-group">
+                        <input type="email" ng-model="name" class="form-control input-underline input-lg" placeholder="Email" name="username" formControlName="username">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password" class="form-control input-underline input-lg" placeholder="Password" name="password" formControlName="password">
+                    </div>
+                </div>
+                <button type="submit" class="btn rounded-btn"> Log in </button>
+                &nbsp;
+                <!-- <a class="btn rounded-btn" [routerLink]="['/signup']">Register</a> -->
+            </form>
+        </div>
+    </div>
+</div>

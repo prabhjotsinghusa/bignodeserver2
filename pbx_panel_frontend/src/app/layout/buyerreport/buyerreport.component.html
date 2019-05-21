@@ -1,0 +1,178 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item active">
+            <i class="fa fa-fw fa-area-chart"></i> Buyer Report</li>
+    </ol>
+
+    <div class="row ui pb_balance">
+        <div class="col col-sm-12">
+            <div class="mb-3 pb_balance">
+                <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="searchWithFilter()" class="container">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="offset-md-6 col-md-4">
+                                <ng-daterangepicker formControlName="daterange" [options]="options"></ng-daterangepicker>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-secondary btn-success">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row ui">
+        <div class="col col-sm-12">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="circle-tile">
+                                <a href="#">
+                                    <div class="circle-tile-heading dark-blue">
+                                        <i class="fa fa-phone fa-fw fa-2x"></i>
+                                    </div>
+                                </a>
+                                <div class="circle-tile-content content">
+                                    <div class="circle-tile-description text-faded">
+                                        Total Calls
+                                    </div>
+                                    <div class="circle-tile-number text-faded">
+                                        {{totalcalls}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="circle-tile">
+                                <a href="#">
+                                    <div class="circle-tile-heading orange">
+                                        <i class="fa fa-mobile fa-fw fa-2x"></i>
+                                    </div>
+                                </a>
+                                <div class="circle-tile-content content">
+                                    <div class="circle-tile-description text-faded">
+                                        Total Unique Calls
+                                    </div>
+                                    <div class="circle-tile-number text-faded">
+                                        {{totalansweredcalls}} </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="circle-tile">
+                                <a href="#">
+                                    <div class="circle-tile-heading blue">
+                                        <i class="fa fa-bell fa-fw fa-2x"></i>
+                                    </div>
+                                </a>
+                                <div class="circle-tile-content content">
+                                    <div class="circle-tile-description text-faded">
+                                        Average Handling Time
+                                    </div>
+                                    <div class="circle-tile-number text-faded">
+                                        {{aht}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="circle-tile">
+                                <a href="#">
+                                    <div class="circle-tile-heading red">
+                                        <i class="fa fa-headphones fa-fw fa-2x"></i>
+                                    </div>
+                                </a>
+                                <div class="circle-tile-content content">
+                                    <div class="circle-tile-description text-faded">
+                                        Total Unique Answered Calls
+                                    </div>
+                                    <div class="circle-tile-number text-faded">
+                                        {{totaluniqueansweredcalls}} <span id="sparklineC"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="row ui pb_balance">
+        <div class="col col-sm-12">
+            <div class="card mb-3 pb_balance">
+                <div class="card-header"></div>
+                <div class="card-body">
+                    <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="mat-elevation-z8 table-bordered mat-table"
+                        style="width:100%">
+
+                        <thead>
+                            <tr class="mat-header-row ng-tns-c13-4 ng-star-inserted">
+                                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">Date</th>
+                                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">Buyer
+                                    Number</th>
+                                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">Customer
+                                    Number</th>
+                                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">Disposition</th>
+                                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                                    Duration</th>
+                                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">Call
+                                    Start</th>
+                                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">Call
+                                    End</th>
+                                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted"
+                                    *ngIf="loggedUser.buyer_id === 441">
+                                    Recording</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr *ngFor="let element of buyerReport;let i = index" class="mat-row ng-tns-c4-0 ng-star-inserted">
+                                <td class="mat-cell ng-star-inserted">{{element.date}}</td>
+                                <td class="mat-cell ng-star-inserted">{{element.buyer_id}}</td>
+                                <td class="mat-cell ng-star-inserted">{{(element.dst === element.buyer_id)? element.src
+                                    : element.dst}}</td>
+                                <td class="mat-cell ng-star-inserted">{{element.disposition}}</td>
+                                <td class="mat-cell ng-star-inserted">{{element.duration}}</td>
+                                <td class="mat-cell ng-star-inserted">{{element.callstart}}</td>
+                                <td class="mat-cell ng-star-inserted">{{element.callend}}</td>
+                                <td class="mat-cell ng-star-inserted" *ngIf="loggedUser.buyer_id === 441">
+                                    <button type="button" class="btn btn-default" (click)="showAudio(i)" *ngIf="element.recordingfile !== ''"
+                                        title="Play"><i class="
+                        fa fa-volume-up"></i></button>
+                                    <audio class="recording_class" controls="true" preload="none" *ngIf="element.recordingfile !== '' && selectedAudio === i"
+                                        [autoplay]="element.recordingfile !== '' && selectedAudio === i">
+                                        <source src="https://s3.us-east-2.amazonaws.com/cyberlynk-recordings/66_2019/{{element.date | date:'MM/dd' }}/{{element.recordingfile.replace('+','%2B')}}"
+                                            type="audio/ogg">
+                                        <source src="https://s3.us-east-2.amazonaws.com/cyberlynk-recordings/66_2019/{{element.date | date:'MM/dd' }}/{{element.recordingfile.replace('+','%2B')}}"
+                                            type="audio/mpeg">
+                                        https://s3.us-east-2.amazonaws.com/cyberlynk-recordings/66_2019/{{element.recordingfile.replace('+','%2B')}}
+                                    </audio>
+                                    <span style="display:none">{{element.recordingfile !==
+                                        ''?'https://s3.us-east-2.amazonaws.com/cyberlynk-recordings/66_2019/'+(element.date
+                                        | date:'MM/dd')+'/'+element.recordingfile.replace('+','%2B'):''}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+
+                    <img src="../../../../assets/images/loading.gif" style="position: absolute; z-index: 999; left: 40%;top:30%;"
+                        *ngIf="isLoadingTable">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

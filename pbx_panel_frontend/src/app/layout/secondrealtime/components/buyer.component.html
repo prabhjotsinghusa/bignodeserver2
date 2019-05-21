@@ -1,0 +1,116 @@
+<div [@routerTransition]>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <i class="fa fa-dashboard"></i>
+      <a href="/dashboard" ng-reflect-router-link="/dashboard">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item active">
+      <i class="fa fa-fw fa-area-chart"></i> Realtime Buyer Calls</li>
+  </ol>
+
+  <div class="row ui">
+    <div class="col col-sm-12">
+      <div class="card mb-3">
+        <div class="card-header">Realtime Buyer Calls</div>
+        <div class="card-body">
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let item of realtime; let i = index;" [expanded]="panelOpenIndex == i"
+              (opened)="panelOpenIndex = i">
+              <mat-expansion-panel-header *ngIf="item !== null">
+                <mat-panel-title>
+                  <p class="realtime blue">{{item.name}}</p>
+                </mat-panel-title>
+                <mat-panel-description>
+                  &nbsp;&nbsp;<p class="realtime blue">Total Calls: <strong>{{item.total}}</strong></p>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+              <div class="row" *ngFor="let calls of item.calls;">
+                <p class="realtime green" *ngIf="item.dynamic && calls !== null">Buyer No: {{calls !==
+                  null?calls.key:'-NA'}}</p>
+                <p class="realtime green" *ngIf="item.dynamic && calls">Total Calls: {{calls !==
+                  null? totalcalls[calls.key]:'-NA-'}}</p>
+                <!-- <p class="realtime green" *ngIf="item.dynamic && calls !== null">Total Answered Calls: {{calls !==
+                  null?totalansweredcalls:'-NA'}}</p> -->
+                <p class="realtime green" *ngIf="item.dynamic && calls !== null">Total Unique Answered Calls: {{calls
+                  !==
+                  null?totaluniqueansweredcalls[calls.key]:'-NA'}}</p>
+                <p class="realtime green" *ngIf="item.dynamic && calls !== null">AHT: {{calls !==
+                  null?AHT[calls.key]:'-NA-'}}</p>
+                <div class="table-responsive" *ngIf="item !== null && calls !== null">
+                  <table class="mat-elevation-z8 table-bordered mat-table table-hover table table-striped table-bordered"
+                    style="width:100%">
+                    <thead>
+                      <tr class="mat-header-row">
+                        <th class="mat-header-cell" *ngIf="loggedUser.role !== 'buyer'">TFN</th>
+                        <th class="mat-header-cell">Taking To</th>
+                        <th class="mat-header-cell">Duration</th>
+                        <th class="mat-header-cell">Extension</th>
+                        <th class="mat-header-cell" *ngIf="loggedUser.role !== 'buyer'">Publisher</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="mat-row" *ngFor="let realtimeData of calls.value;">
+                        <td class="mat-cell" *ngIf="loggedUser.role !== 'buyer'">{{realtimeData.from_did}}</td>
+                        <td class="mat-cell">{{realtimeData.talking_to}}</td>
+                        <td class="mat-cell">{{realtimeData.duration}}</td>
+                        <td class="mat-cell">{{realtimeData.buyer_number}}</td>
+                        <td class="mat-cell" *ngIf="loggedUser.role !== 'buyer'">{{realtimeData.pub_name}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+        <hr>
+      </div>
+    </div>
+  </div>
+
+  <div class="row ui" *ngIf="loggedUser.role !== 'buyer'">
+    <div class="col col-sm-12">
+      <div class="card mb-3">
+        <div class="card-header">Waiting Calls</div>
+        <div class="card-body">
+          <mat-accordion>
+            <mat-expansion-panel [expanded]="true" (opened)="true">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+
+                </mat-panel-title>
+                <mat-panel-description>
+                  &nbsp;&nbsp;<p class="realtime blue">Total Calls: <strong>{{waitingcalls.length}}</strong></p>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <div class="table-responsive">
+                <table class="table-hover table table-striped table-bordered" style="width:100%">
+                  <thead>
+                    <tr class="mat-header-row">
+                      <th class="mat-header-cell">#</th>
+                      <th class="mat-header-cell">TFN</th>
+                      <th class="mat-header-cell">Taking To</th>
+                      <th class="mat-header-cell">Duration</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="mat-row" *ngFor="let realtimeData of waitingcalls;  let i = index">
+                      <td class="mat-cell">{{realtimeData.sno}}</td>
+                      <td class="mat-cell">{{realtimeData.did}}</td>
+                      <td class="mat-cell">{{realtimeData.connected}}</td>
+                      <td class="mat-cell">{{realtimeData.time}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+        <hr>
+      </div>
+    </div>
+  </div>
+
+
+</div>

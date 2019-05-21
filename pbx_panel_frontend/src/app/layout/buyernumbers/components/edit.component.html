@@ -1,0 +1,176 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>Buyer Number Settings</small></li>
+    </ol>
+    <div class="container">
+        <div class="card add box effect2">
+            <div class="card-header">
+                    <div _ngcontent-c19="" class="card-icon"><i _ngcontent-c19="" class="fa fa-cog" aria-hidden="true"></i></div>
+                <h4>Buyer Number Settings</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2 col-sm-12">
+                        <div class="alert alert-danger" *ngIf="show_error">{{error_message}}</div>
+                        <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="save()">                                
+                                <!--<div class="col-md-12">
+                                    <div class="form-group input-group">
+                                            <div class="input-group-prepend mb_10">
+                                                <span class="input-group-text padding_11">
+                                                    <p>Buyer Name</p>
+                                                </span> 
+                                            </div>
+                                            <input type="text" class="form-control"
+                                                name="buyer_name"  formControlName="buyer_name">
+                                        </div> 
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group input-group">
+                                        <div class="input-group-prepend mb_10">
+                                            <span class="input-group-text padding_11">
+                                                <p>Buyer Number</p>
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control" 
+                                            name="buyer_number" formControlName="buyer_number">
+                                    </div>
+                                    
+                                </div>-->
+                             <div class="row buyer_edit">
+                                <div class="col-md-6">
+                                    
+                                    <div class="form-group input-group">
+                                            <div class="input-group-prepend margin_right">
+                                                <span class="input-group-text">Enable CDR</span>
+                                            </div>
+                                            <div class="btn-group btn-group-toggle" ngbRadioGroup name="cdr_module"
+                                                formControlName="cdr_module">
+                                                <label ngbButtonLabel class="btn-primary">
+                                                    <input ngbButton type="radio" [value]="1"> Enable
+                                                </label>
+                                                <label ngbButtonLabel class="btn-primary">
+                                                    <input ngbButton type="radio" [value]="0"> Disable
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group input-group">
+                                                <div class="input-group-prepend margin_right">
+                                                    <span class="input-group-text">Enable Capping</span>
+                                                </div>
+                                                <div class="btn-group btn-group-toggle" ngbRadioGroup name="capping_module"
+                                                    formControlName="capping_module">
+                                                    <label ngbButtonLabel class="btn-primary">
+                                                        <input ngbButton type="radio" [value]="1"> Enable
+                                                    </label>
+                                                    <label ngbButtonLabel class="btn-primary">
+                                                        <input ngbButton type="radio" [value]="0"> Disable
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        
+                                    </div>
+                             </div> 
+
+                             <div class="row buyer_edit">
+                                <div class="col-md-6">
+                                    <div class="form-group input-group">
+                                            <div class="input-group-prepend margin_right">
+                                                <span class="input-group-text">Enable Realtime</span>
+                                            </div>
+                                            <div class="btn-group btn-group-toggle" ngbRadioGroup name="realtime_module"
+                                                formControlName="realtime_module">
+                                                <label ngbButtonLabel class="btn-primary">
+                                                    <input ngbButton type="radio" [value]="1"> Enable
+                                                </label>
+                                                <label ngbButtonLabel class="btn-primary">
+                                                    <input ngbButton type="radio" [value]="0"> Disable
+                                                </label>
+                                            </div>
+                                        </div>
+                                    
+                                </div>
+                            <div class="col-md-6">
+                                    <div class="form-group input-group">
+                                            <div class="input-group-prepend margin_right">
+                                                <span class="input-group-text">Buyer Finance</span>
+                                            </div>
+                                            <div class="btn-group btn-group-toggle" ngbRadioGroup name="wallet_module"
+                                                formControlName="wallet_module">
+                                                <label ngbButtonLabel class="btn-primary">
+                                                    <input ngbButton type="radio" [value]="1"> Enable
+                                                </label>
+                                                <label ngbButtonLabel class="btn-primary">
+                                                    <input ngbButton type="radio" [value]="0"> Disable
+                                                </label>
+                                            </div>
+                                        </div>
+                                    
+                                </div>
+                             </div>
+
+                             <div class="row buyer_edit">
+                                <div class="col-md-6">
+                                    <div class="form-group input-group">
+                                            <div class="input-group-prepend margin_right">
+                                                <span class="input-group-text">Enable Monitoring</span>
+                                            </div>
+                                            <div class="btn-group btn-group-toggle" ngbRadioGroup name="monitoring_module"
+                                                formControlName="monitoring_module">
+                                                <label ngbButtonLabel class="btn-primary">
+                                                    <input ngbButton type="radio" [value]="1"> Enable
+                                                </label>
+                                                <label ngbButtonLabel class="btn-primary">
+                                                    <input ngbButton type="radio" [value]="0"> Disable
+                                                </label>
+                                            </div>
+                                        </div>
+                                    
+                            </div>
+                            <div class="col-md-6 buyer_edit">
+                                    <div class="form-group input-group">
+                                            <div class="input-group-prepend margin_right">
+                                                <span class="input-group-text">Enable Queue</span>
+                                            </div>
+                                            <div class="btn-group btn-group-toggle" ngbRadioGroup name="queue_module"
+                                                formControlName="queue_module" >
+                                                <label ngbButtonLabel class="btn-primary">
+                                                    <input ngbButton type="radio" [value]="1" id="btn1" (click)="toggle($event)"> Enable
+                                                </label>
+                                                <label ngbButtonLabel class="btn-primary">
+                                                    <input ngbButton type="radio" [value]="0" id="btn2" (click)="toggle($event)"> Disable
+                                                </label>
+                                            </div>
+                                        </div>
+                                    
+                                </div> 
+                             </div>
+
+                             <div class="row mt-4">
+
+                                <div class="col-md-12" *ngIf="status">
+                                    <div class="form-group input-group">
+                                        <div class="input-group-prepend mb_10">
+                                                <span class="input-group-text padding_14">
+                                                    <p>Agents</p>
+                                                </span>
+                                        </div>
+                                        <textarea class="form-control" placeholder="Agents" name="agent"
+                                        formControlName="agent"></textarea>
+                                    </div>
+                                </div>
+                    
+                    <button type="submit" class="btn btn-secondary btn-success">Submit</button>&nbsp;
+                    <a routerLink="/buyernumbers" class="btn btn-secondary btn-default">Cancel</a>
+                             </div>
+
+                        </form>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+        </div>
+    </div>
+</div>

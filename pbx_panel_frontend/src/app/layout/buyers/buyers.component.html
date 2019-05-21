@@ -1,0 +1,68 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>Manage Buyers</small></li>
+    </ol>
+    <div class="row">
+        <div class="col-md-12">
+            <flash-messages></flash-messages>
+        </div>
+    </div>
+    <div class="col-md-12 col-md-offset-1">
+        <div class="pull-left" *ngIf="show_add_buton">
+            <a routerLink="/buyers/add" class="btn btn-success">Add Buyer</a>
+        </div>
+        <!-- data tables -->
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+            class="mat-elevation-z8 table-bordered mat-table" style="width:100%">
+            <thead>
+                <tr class="mat-header-row">
+                    <th class="mat-header-cell">
+                        ID
+                    </th>
+                    <th class="mat-header-cell ">
+                        Fullname</th>
+                    <th class="mat-header-cell ">
+                        Email</th>
+                    <th class="mat-header-cell ">
+                        Contact Number</th>
+                    <th class="mat-header-cell ">
+                        Address</th>
+                    <th class="mat-header-cell ">
+                        Price Per Call</th>
+                    <th class="mat-header-cell ">
+                        Buffer Time</th>
+                    <th class="mat-header-cell ">
+                        Created At</th>
+                    <th class="mat-header-cell ">
+                        Status</th>
+                        <th class="mat-header-cell ">
+                            Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="mat-row" *ngFor="let element of users; let i = index">
+                    <td class="mat-cell col-responsive">{{element.buyer_id}}</td>
+                    <td class="mat-cell">{{element.name}}</td>
+                    <td class="mat-cell">{{element.email}}</td>
+                    <td class="mat-cell">{{element.contact}}</td>
+                    <td class="mat-cell">{{element.address}}</td>
+                    <td class="mat-cell">{{element.price_per_call}}</td>
+                    <td class="mat-cell">{{element.buffer_time}}</td>
+                    <td class="mat-cell">{{element.created_at}}</td>
+                    <td class="mat-cell">{{(element.status)}}</td>
+                    <td class="mat-cell">
+                        <a routerLink="/buyers/buyernumber/{{element.buyer_id}}" title="Add Buyer Numbers"><i
+                                class="fa fa-phone"></i></a>&nbsp;
+                        <a routerLink="/buyers/edit/{{element.buyer_id}}" title="Edit"><i
+                                class="fa fa-pencil"></i></a>&nbsp;
+                        <i class="fa fa-trash-o" (click)="deleteBuyer(element.buyer_id)" style="color:#0062cc;"></i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <img src="../../../../assets/images/loading.gif" style="position: absolute; z-index: 999; left: 40%;"
+        *ngIf="isLoading">
+</div>

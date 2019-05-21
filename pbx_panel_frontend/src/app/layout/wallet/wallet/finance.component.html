@@ -1,0 +1,296 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>View Publisher Balance(Charge Per Minute)</small></li>
+    </ol>
+
+    <div class="row ui pb_balance">
+        <div class="col col-sm-12">
+            <div class="card mb-3 pb_balance">
+                <div class="card-header"></div>
+                <div class="card-body">
+                    <div class="col-md-12">
+                        <div class="alert alert-success" *ngIf="show_success">{{success_message}}</div>
+                    </div>
+                    <div class="col-md-12">
+                        <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="searchWithFilter()">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-4" style="margin-left: 15px;"
+                                        *ngIf="loggedUser.role !== 'publisher'">
+                                        <img src="../../../../assets/images/loader.gif"
+                                            style="position: absolute; z-index: 999; width: 60px;right: 12px;"
+                                            *ngIf="isLoading">
+                                        <mat-form-field class="example-full-width form-control">
+                                            <input matInput placeholder="Choose a publisher" [matAutocomplete]="auto"
+                                                formControlName="pub_id" (blur)="hideLoader()" (keyup)="showLoader()">
+                                        </mat-form-field>
+                                        <!-- <span>Your choice is: {{formdata.get('pub_id').value | json}}</span> -->
+                                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                            <mat-option *ngFor="let publisher of (filteredPublishers| async)?.user"
+                                                [value]="publisher" (click)="hideLoader()">
+                                                <span>{{ publisher.fullname }}</span>
+                                                <small> | ID: {{publisher.uid}}</small>
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div [class]="loggedUser.role !== 'publisher'? 'col-md-4': 'col-md-8'"
+                                        style="margin-left: 15px;">
+                                        <input type="text" ngxDaterangepickerMd startKey="start" endKey="end"
+                                            [locale]="{format:'DD-MM-YYYY'}" formControlName="daterange"
+                                            [ranges]="ranges" [alwaysShowCalendars]="true" [showCustomRangeLabel]="true"
+                                            [linkedCalendars]="true" [showClearButton]="true"
+                                            class="form-control dash-range" placeholder="Select range" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button type="submit" class="btn btn-secondary btn-success">Search</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="selected_pub_id > 0" style="display: block !important; margin-left:12px">
+        <button class="btn btn-success btn-sm pull-left"
+            *ngIf="current_bal <= -500 && notification_check && loggedUser.role === 'publisher'"
+            (click)="sendNotification()">Send Payment Request!</button>
+        <div class="row mb-3 pull-left" style="position: relative;">
+            <div class="col-md-4">
+                <button class="btn btn-success btn-sm"
+                    *ngIf="current_bal <= -500 && notification_check && loggedUser.role !== 'publisher'"
+                    (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
+                    aria-controls="makePayment">Add
+                    payment for {{selected_pub_name}}</button>
+            </div>
+            <!-- add make payment pop form for the selected publisher -->
+            <div id="makePayment" [ngbCollapse]="isCollapsed"
+                style="position: absolute; width: 500px;top:25px; left:12px;z-index: 99; border:2px solid; border-radius: 5px;">
+                <div class="card">
+                    <div class="card-body">
+                        <form [formGroup]="formdata2" role="form" method="POST" (ngSubmit)="addPayment()">
+                            <h4>Payment for {{selected_pub_name}}</h4>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <mat-form-field class="example-full-width form-control">
+                                        <input type="text" matInput placeholder="Mode of Payment"
+                                            formControlName="mode">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-form-field class="example-full-width form-control">
+                                        <input matInput type="number" placeholder="Amount" formControlName="amount"
+                                            min="10">
+                                        <!-- <mat-error *ngIf="options.get('fontSize')?.invalid">Minimum  size: 10px</mat-error> -->
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <mat-form-field class="example-full-width form-control">
+                                    <input matInput [matDatepicker]="picker" formControlName="paymentDate"
+                                        placeholder="Payment Date">
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class="form-field">
+                                <mat-form-field class="example-full-width form-control" style="width: 100%;">
+                                    <textarea matInput placeholder="Remarks" formControlName="remarks"
+                                        style="height: 30px;"></textarea>
+                                </mat-form-field>
+                            </div>
+                            <div class="form-field ">
+                                <button type="submit" class="btn btn-secondary btn-success">Submit</button>&nbsp;
+                                <button type="reset" class="btn btn-secondary btn-default">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <div [class]="(current_bal > 0) ? 'pull-left current_bal_positive':'pull-left current_bal_negative'">
+            <p style="padding: 0px 0px 0px 3px;display: block;font-size: 14px;margin-bottom:0; font-weight: bold;">
+                Current Balance:
+                {{current_bal}} &nbsp;</p>
+        </div>
+        <br>
+        <div>
+            <p style="font-size:14px;font-weight: bold;">Payable Amount: {{payable_amount}}</p>
+        </div>
+    </div>
+    <br />
+    <div class="row ui">
+        <div class="col col-sm-12">
+            <div class="card mb-3">
+                <!-- <div class="card-header"></div> -->
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="pull-right">
+                                <mat-form-field>
+                                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 table-bordered"
+                            style="width:100%">
+                            <ng-container matColumnDef="curdate">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+                                <td mat-cell *matCellDef="let element"> {{element.cdr.start}} </td>
+                            </ng-container>
+                            <!-- Weight Column -->
+                            <ng-container matColumnDef="publisherName">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Publisher Name </th>
+                                <td mat-cell *matCellDef="let element"> {{element.cdr.publisherName !== undefined?
+                                                  element.cdr.publisherName:'-NA-'}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="campaignName">
+                                <th mat-header-cell *matHeaderCellDef> Campaign Name </th>
+                                <td mat-cell *matCellDef="let element"> {{element.cdr.campaignName}} </td>
+                            </ng-container>
+                            <!-- Symbol Column -->
+                            <ng-container matColumnDef="total_calls">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Payable Minutes </th>
+                                <td mat-cell *matCellDef="let element"> {{element.d.payable[0].total}} </td>
+                            </ng-container>
+                           
+                            <ng-container matColumnDef="charge_per_minute">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Charge Per Minute </th>
+                                <td mat-cell *matCellDef="let element">
+                                    {{(element.cdr.campaigndata!==undefined)?element.cdr.campaigndata.charge_per_minute:'-NA-'}}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="total_amount">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount </th>
+                                <td mat-cell *matCellDef="let element"> {{element.d.payable[0].total_amount}} </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                        <mat-paginator #paging1 [pageSizeOptions]="[20, 50, 200]" showFirstLastButtons></mat-paginator>
+                    </div>
+                    <img src="../../../../assets/images/loading.gif"
+                        style="position: absolute; z-index: 999; left: 40%; top:20%;" *ngIf="isLoading2">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row ui">
+        <div class="col col-sm-12">
+            <div class="card mb-3">
+                <div class="card-header">Paid Transactions</div>
+                <div class="card-body">
+                    <div class="row" style="margin-top:2rem">
+                        <div class="col-md-12">
+                            <div class="pull-right">
+                                <mat-form-field>
+                                    <input matInput (keyup)="applyFilter2($event.target.value)" placeholder="Filter">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <table mat-table [dataSource]="dataSource2" matSort class="mat-elevation-z8 table-bordered"
+                            style="width:100%">
+                            <ng-container matColumnDef="payment_date">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Payment Date </th>
+                                <td mat-cell *matCellDef="let element"> {{element.payment_date}} </td>
+                            </ng-container>
+                            <!-- Weight Column -->
+                            <ng-container matColumnDef="publisherName">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Publisher Name </th>
+                                <td mat-cell *matCellDef="let element"> {{element.publisherName}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="mode_payment">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Mode </th>
+                                <td mat-cell *matCellDef="let element"> {{element.mode_payment}} </td>
+                            </ng-container>
+                            <!-- Symbol Column -->
+                            <ng-container matColumnDef="amount">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount </th>
+                                <td mat-cell *matCellDef="let element"> {{element.amount}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="remark">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Remarks </th>
+                                <td mat-cell *matCellDef="let element"> {{element.remark}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="edit">
+                                <th mat-header-cell *matHeaderCellDef> Actions </th>
+                                <td mat-cell *matCellDef="let element">
+                                    <button type="button" (click)="deleteTransaction(element._id)"
+                                        class="btn btn-danger btn-sm" title="Delete"><i
+                                            class="fa fa-trash-o"></i></button>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+                        </table>
+                        <mat-paginator #paging2 [pageSizeOptions]="[10, 20, 50, 200]" showFirstLastButtons>
+                        </mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row ui">
+        <div class="col col-sm-12">
+            <div class="card mb-3">
+                <div class="card-header">Deductions</div>
+                <div class="card-body">
+                    <div class="row" style="margin-top:2rem">
+                        <div class="col-md-12">
+                            <div class="pull-right">
+                                <mat-form-field>
+                                    <input matInput (keyup)="applyFilter3($event.target.value)" placeholder="Search">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <table mat-table [dataSource]="dataSource3" matSort class="mat-elevation-z8 table-bordered"
+                            style="width:100%">
+                            <ng-container matColumnDef="deduction_date">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Deduction Date </th>
+                                <td mat-cell *matCellDef="let element"> {{element.deduction_date}} </td>
+                            </ng-container>
+                            <!-- Weight Column -->
+                            <ng-container matColumnDef="publisherName">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Publisher Name </th>
+                                <td mat-cell *matCellDef="let element"> {{element.publisherName}} </td>
+                            </ng-container>
+
+                            <!-- Symbol Column -->
+                            <ng-container matColumnDef="amount">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount </th>
+                                <td mat-cell *matCellDef="let element"> {{element.amount}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="remarks">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Remarks </th>
+                                <td mat-cell *matCellDef="let element"> {{element.remarks}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="edit">
+                                <th mat-header-cell *matHeaderCellDef> Actions </th>
+                                <td mat-cell *matCellDef="let element">
+                                    <button type="button" (click)="deleteDeduction(element._id)"
+                                        class="btn btn-danger btn-sm" title="Delete"><i
+                                            class="fa fa-trash-o"></i></button>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns3;"></tr>
+                        </table>
+                        <mat-paginator #paging3 [pageSizeOptions]="[10, 20, 50, 200]" showFirstLastButtons>
+                        </mat-paginator>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

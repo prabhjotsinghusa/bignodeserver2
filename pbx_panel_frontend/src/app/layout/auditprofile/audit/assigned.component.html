@@ -1,0 +1,96 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>Manage Audit Profile</small></li>
+    </ol>
+
+    <div class="container">
+        <div class="card add box effect2">
+            <div class="card-header">
+                <h4 class="pl_0">Assigned Publishers </h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="saveAssignedPublishers()">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-field">
+                                        <img src="../../../../assets/images/loader.gif"
+                                            style="position: absolute; z-index: 999; width: 60px;right: 12px;"
+                                            *ngIf="isLoading">
+                                        <mat-form-field class="example-chip-list form-control">
+                                            <mat-chip-list #chipList>
+                                                <mat-chip *ngFor="let pub of publishers" [selectable]="selectable"
+                                                    [removable]="removable" (removed)="remove(pub)">
+                                                    {{pub.fullname}}
+                                                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                                                </mat-chip>
+                                                <input placeholder="Choose Publisher..." #pubInput
+                                                    [formControl]="publishersCtrl" [matAutocomplete]="auto"
+                                                    [matChipInputFor]="chipList"
+                                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                                    [matChipInputAddOnBlur]="addOnBlur">
+                                            </mat-chip-list>
+                                            <mat-autocomplete #auto="matAutocomplete"
+                                                (optionSelected)="selected($event)">
+                                                <mat-option *ngFor="let publisher of filteredpublishers | async"
+                                                    [value]="publisher">
+                                                    {{publisher.fullname}}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+                                        <div style="color:red;" *ngIf="error && publishers.length <= 0">Publisher
+                                            is required.</div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Enabled Record</span>
+                                        </div>
+                                        <div class="btn-group btn-group-toggle" ngbRadioGroup name="enabled_record"
+                                            formControlName="enabled_record">
+                                            <label ngbButtonLabel class="btn-primary">
+                                                <input ngbButton type="radio" [value]="1"> Enable
+                                            </label>
+                                            <label ngbButtonLabel class="btn-primary">
+                                                <input ngbButton type="radio" [value]="0"> Disable
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Display CNUM</span>
+                                        </div>
+                                        <div class="btn-group btn-group-toggle" ngbRadioGroup name="display_cnum"
+                                            formControlName="display_cnum">
+                                            <label ngbButtonLabel class="btn-primary">
+                                                <input ngbButton type="radio" [value]="1"> Enable
+                                            </label>
+                                            <label ngbButtonLabel class="btn-primary">
+                                                <input ngbButton type="radio" [value]="0"> Disable
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-secondary btn-success">Save</button>&nbsp;
+                                    <a routerLink="/auditprofile" class="btn btn-secondary btn-default">Cancel</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+        </div>
+    </div>
+</div>

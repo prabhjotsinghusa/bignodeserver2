@@ -1,0 +1,95 @@
+<div [@routerTransition]>
+  <ol class="breadcrumb">
+    <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+    <li>&nbsp;<small>Manage TFN(s)</small></li>
+  </ol>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="alert alert-success" *ngIf="tfn_deleted">{{deleted_msg}}</div>
+    </div>
+
+  </div>
+
+  <div class="col-md-12 col-md-offset-1">
+    <div class="pull-left col-md-6" *ngIf="show_buttons">
+      <a routerLink="/tfns/add" class="btn btn-success" style="margin: -1% 1% 1% 0%;">Add TFN(s)</a>
+      <button type="button" class="btn btn-danger" (click)="massAction('publisher_remove');"
+        style="margin: -1% 1% 1% 0%;">Publisher
+        Delete</button>
+      <button type="button" class="btn btn-warning" (click)="massAction('permanent_remove');"
+        style="margin: -1% 1% 1% 0%;">Permanent
+        Delete</button>
+    </div>
+    <div class="pull-right">
+      <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+      </mat-form-field>
+    </div>
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 table-bordered" style="width:100%">
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <mat-header-cell *matHeaderCellDef>
+          <!-- <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()">
+          </mat-checkbox> -->
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row; let i = index;">
+          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+        </mat-cell>
+      </ng-container>
+      <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> # </th>
+        <td mat-cell *matCellDef="let element; let i=index"> {{(i+1) + (paginator.pageIndex*paginator.pageSize)}} </td>
+      </ng-container>
+      <ng-container matColumnDef="tfn">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> TFN </th>
+        <td mat-cell *matCellDef="let element"> {{element.tfn}} </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="publisherName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Publisher </th>
+        <td mat-cell *matCellDef="let element"> {{element.publisherName}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+        <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+      </ng-container>
+      <ng-container matColumnDef="price_per_tfn">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Price Per TFN </th>
+        <td mat-cell *matCellDef="let element"> {{element.price_per_tfn}} </td>
+      </ng-container>
+      <ng-container matColumnDef="edit">
+        <th mat-header-cell *matHeaderCellDef> Edit </th>
+        <td mat-cell *matCellDef="let element">
+          <a class="btn btn-info btn-sm" routerLink="/tfns/edit/{{element._id}}" title="Add Buyer"><i
+              class="fa fa-pencil"></i></a>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="permanent_delete">
+        <th mat-header-cell *matHeaderCellDef> Permanent Delete </th>
+        <td mat-cell *matCellDef="let element">
+          <button type="button" (click)="deleteTFN(element._id,'permanent_remove')" class="btn btn-danger btn-sm"
+            title="Delete"><i class="fa fa-trash-o"></i></button>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="pub_delete">
+        <th mat-header-cell *matHeaderCellDef> Delete from Publisher Account </th>
+        <td mat-cell *matCellDef="let element">
+          <button type="button" (click)="deleteTFN(element._id,'publisher_remove')" class="btn btn-danger btn-sm"
+            title="Publisher Delete" *ngIf="element.pub_id > 0">Delete</button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[20, 50, 200]" showFirstLastButtons></mat-paginator>
+  </div>
+  <img src="../../../../assets/images/loading.gif" style="position: absolute; z-index: 999; left: 40%;"
+    *ngIf="isLoading">
+</div>

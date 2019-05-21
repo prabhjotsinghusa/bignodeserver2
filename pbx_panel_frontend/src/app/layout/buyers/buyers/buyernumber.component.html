@@ -1,0 +1,85 @@
+<div [@routerTransition]>
+    <div class="container">
+        <div class="card add box effect2">
+            <div class="card-header">
+                    <div class="card-icon">
+                            <i class="fa fa-address-book-o" aria-hidden="true"></i>
+                        </div> 
+                <h4>Add Destination Number</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2 col-sm-12">
+                        <div class="alert alert-success" *ngIf="success_show">Buyer number is added successfully.</div>
+                        <div class="alert alert-success" *ngIf="delete_show">Buyer number is deleted successfully.</div>
+                        <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="saveBuyerNumber()">
+                            <img src="../../../../assets/images/loader.gif"
+                                style="position: absolute; z-index: 999; width: 100px;left: 40%; top:200px"
+                                *ngIf="isLoading">
+                            <div class="form-group input-group">
+                                <!-- <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                                </div> -->
+                                <input type="text" class="form-control" placeholder="Add Number" name="buyer_number"
+                                    formControlName="buyer_number" pattern="[0-9+]*">
+                            </div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.buyer_number.errors != null && formdata.controls.buyer_number.errors.required">
+                                Buyer
+                                Number is required.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.buyer_number.errors != null && formdata.controls.buyer_number.errors.minlength">
+                                Buyer
+                                Number minimum 3 digit.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.buyer_number.errors != null && formdata.controls.buyer_number.errors.maxlength">
+                                Buyer
+                                Number maximum 15 digit.</div>
+                            <div style="color:red;"
+                                *ngIf="error && formdata.controls.buyer_number.errors != null && formdata.controls.buyer_number.errors.pattern">
+                                Buyer
+                                Number contains only numbers and plus(+).</div>
+
+                            <button type="submit" class="btn btn-secondary btn-success">Submit</button>&nbsp;
+                            <a routerLink="/buyers" class="btn btn-secondary btn-default">Back</a>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.row -->
+                <div class="row">
+                    &nbsp;
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="card col-md-12">
+                        <div class="card-header">
+                            Buyer Numbers (Buyer: {{buyer !== undefined ? buyer.name:''}})
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table class="mat-elevation-z8 table-bordered table table-hover table-striped table-bordered">
+                                <thead>
+                                    <tr class="mat-header-row">
+                                        <th class="mat-header-cell">#</th>
+                                        <th class="mat-header-cell">Number</th>
+                                        <th class="mat-header-cell">Status</th>
+                                        <th class="mat-header-cell">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="mat-header-cell">
+                                    <tr class="mat-row" *ngFor="let bn of buyer_numbers;index as i">
+                                        <th class="mat-row" scope="row">{{i+1}}</th>
+                                        <td class="mat-cell">{{bn.number}}</td>
+                                        <td class="mat-cell">{{bn.status}}</td>
+                                        <td class="mat-cell"><button class="btn btn-danger" (click)="deleteBuyerNumber(bn._id);"><i
+                                                    class="fa fa-trash"></i></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

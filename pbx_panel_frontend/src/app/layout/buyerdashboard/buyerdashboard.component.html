@@ -1,0 +1,144 @@
+<div [@routerTransition]>
+  <ol class="breadcrumb">
+    <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+
+  </ol>
+
+  <div class="row ui eod">
+    <div class="col col-sm-12">
+      <div class="mb-3">
+        <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="searchWithFilter()">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="offset-md-8 col-md-3">
+                <div class="form-group">
+                  <div class="input-group datepicker-input">
+                    <input class="form-control" placeholder="yyyy-mm-dd" name="dp" formControlName="selected_date"
+                      ngbDatepicker #d="ngbDatepicker" dateFormat="yyyy-MMM-dd">
+                    <button class="input-group-addon" (click)="d.toggle()" type="button">
+                      <!-- <img src="img/calendar-icon.svg" style="width: 1.2rem; height: 1rem; cursor: pointer;"/> -->
+                      <span class="fa fa-calendar"></span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-1">
+                <button type="submit" class="btn btn-secondary btn-success" style="margin-top:0"><i
+                    class="fa fa-search"></i></button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="row ui">
+    <div class="col col-sm-12">
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="circle-tile">
+                <a href="#">
+                  <div class="circle-tile-heading dark-blue">
+                    <i class="fa fa-phone fa-fw fa-2x"></i>
+                  </div>
+                </a>
+                <div class="circle-tile-content content">
+                  <div class="circle-tile-description text-faded">
+                    Total Calls
+                  </div>
+                  <div class="circle-tile-number text-faded">
+                    {{totalcalls}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="circle-tile">
+                <a href="#">
+                  <div class="circle-tile-heading orange">
+                    <i class="fa fa-mobile fa-fw fa-2x"></i>
+                  </div>
+                </a>
+                <div class="circle-tile-content content">
+                  <div class="circle-tile-description text-faded">
+                    Total Payable Calls
+                  </div>
+                  <div class="circle-tile-number text-faded">
+                    {{totalpayablecalls}} </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="circle-tile">
+                <a href="#">
+                  <div class="circle-tile-heading blue">
+                    <i class="fa fa-headphones fa-fw fa-2x"></i>
+                  </div>
+                </a>
+                <div class="circle-tile-content content">
+                  <div class="circle-tile-description text-faded">
+                    Total Payable Amount
+                  </div>
+                  <div class="circle-tile-number text-faded">
+                    {{totalpayableamount}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row ui pb_balance">
+    <div class="col col-sm-12">
+      <div class="card mb-3 pb_balance">
+        <div class="card-header"></div>
+        <div class="card-body">
+          <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+            class="mat-elevation-z8 table-bordered mat-table" style="width:100%">
+            <thead>
+              <tr class="mat-header-row ng-tns-c13-4 ng-star-inserted">
+                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">#
+                </th>
+                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                  Date</th>
+                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                  Buyer Number</th>
+                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                  Total
+                  Calls</th>
+                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                  Payable
+                  Calls</th>
+                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                  Price Per Call</th>
+                <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                  Payable
+                  Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let element of buyerdashboard; let i = index;" class="mat-row ng-tns-c4-0 ng-star-inserted">
+                <td class="mat-cell ng-star-inserted">{{(i+1)}}</td>
+                <td class="mat-cell ng-star-inserted">{{element.date | date:'yyyy-MM-dd' }}</td>
+                <td class="mat-cell ng-star-inserted">{{element.number}}</td>
+                <td class="mat-cell ng-star-inserted">{{element.result.totalCalls}}</td>
+                <td class="mat-cell ng-star-inserted">{{element.result.payableCalls}}</td>
+                <td class="mat-cell ng-star-inserted">{{element.price_per_call}}</td>
+                <td class="mat-cell ng-star-inserted">{{element.result.payableAmount.length > 0 ?
+                        element.result.payableAmount[0].amount:0}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <img src="../../../../assets/images/loading.gif" style="position: absolute; z-index: 999; left: 40%;top:30%;"
+            *ngIf="isLoading">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
