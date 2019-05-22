@@ -9,9 +9,8 @@ var http = require('http'),
   cors = require('cors'),
   passport = require('passport'),
   errorhandler = require('errorhandler'),
-  mongoose = require('mongoose'),
-
-  mysql = require('mysql');
+  mongoose = require('mongoose');
+  
   moment=require('moment');
   const busboy = require('connect-busboy');
 

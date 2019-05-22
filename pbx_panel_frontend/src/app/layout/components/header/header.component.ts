@@ -59,7 +59,7 @@ export class HeaderComponent implements OnInit {
         const that = this;
         if (this.show_live) {
             this.intervalVar = setInterval(() => {
-                that.realtimeCount();
+                // that.realtimeCount();
             }, 5000);
         }
     }

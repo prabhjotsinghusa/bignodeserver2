@@ -14,7 +14,7 @@ const TfnSchema = new mongoose.Schema({
     status: { type: String, default: 'active', trim: true },
     purchase_date: { type: String, default: null },
     charge_per_minute: { type: Number, default: 0 },
-    server_ip: { type: String, default: '' }
+    server: { type: Object, required: [true, 'Selec the server first'] }
 }, { timestamps: false });
 
 // TfnSchema.plugin(uniqueValidator, { message: 'is already taken.' });
@@ -28,7 +28,7 @@ TfnSchema.pre('save', function () {
 });
 
 /* for saving in the incoming asterisk table */
-TfnSchema.post('save', function (tfndata, next) {
+/* TfnSchema.post('save', function (tfndata, next) {
     if (this.wasNew) {
         let query = `INSERT INTO asterisk.incoming 
         (cidnum,extension,destination,privacyman,alertinfo,ringing,mohclass,description,grppre,delay_answer,pricid,pmmaxretries,pmminlength,reversal,rvolume)
@@ -45,5 +45,5 @@ TfnSchema.post('save', function (tfndata, next) {
         });
     }
 });
-
+ */
 mongoose.model('Tfn', TfnSchema);

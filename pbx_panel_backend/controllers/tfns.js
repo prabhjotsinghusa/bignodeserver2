@@ -21,7 +21,8 @@ const {
     fetchFile,
     schedulePayment,
     generateRandomString,
-    serverCall
+    serverCall,
+    getServerApi
 } = require('../Utilities/Utilities');
 
 var tfn = {};
@@ -225,18 +226,20 @@ tfn.addTfn = async (req, res, next) => {
 
             // tfn.buyer_id = req.body.buyer_id;
             // tfn.pub_id = req.body.pub_id;
+            tfn.server = req.body.server;
             tfn.tfn = value;
             tfn.price_per_tfn = req.body.price_per_tfn || 0;
             tfn.status = req.body.status || "available";
             tfn.pub_id = req.body.pub_id || 0;
 
             //tfn.purchase_date = Date.now();
-            tfn.save().then(data => { //create email verification tokenand update user data with the email verification token
-
+            tfn.save().then(async data => { //create email verification tokenand update user data with the email verification token
+                const r = await getServerApi('apis/create_ir.php', tfn, tfn.server, 'getall');
+                console.log(r,'in tfn file');
                 if (!data) { return res.sendStatus(422); }
                 if (check) {
                     console.log('call after all tfns added on both sides');
-                    serverCall();
+                   // serverCall();
                 }
                 resolve(data);
             }).catch(next);

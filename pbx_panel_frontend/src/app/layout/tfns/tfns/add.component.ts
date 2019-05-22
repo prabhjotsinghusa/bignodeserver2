@@ -24,13 +24,18 @@ export class AddComponent implements OnInit {
 
     isLoading = false;
     filteredPublishers: Observable<any>;
+    servers: any;
     ngOnInit() {
         this.formdata = new FormGroup({
+            server: new FormControl(''),
             tfn: new FormControl('', Validators.compose([
                 Validators.required,
                 Validators.minLength(10),
             ])),
         });
+        this.myservice.get('/server/activeServer').subscribe(data=>{
+            this.servers = data.servers;
+        })
     }
     addTfn() {
         this.error = false;
@@ -39,20 +44,21 @@ export class AddComponent implements OnInit {
             this.error = true;
         } else {
             const data = this.formdata.value;
+            data.server = JSON.parse(data.server);
             const tfnArr = data.tfn.split('\n');
-            const tempArr = [];
-            tfnArr.forEach((tfn, index) => {
+            /*const tempArr = [];
+             tfnArr.forEach((tfn, index) => {
                 tempArr.push(tfn);
-                /* if (tfn.indexOf(1) === 0) {
+                if (tfn.indexOf(1) === 0) {
                     tempArr.push(tfn);
                 } else {
                     tempArr.push(1 + tfn);
-                } */
-            });
-            data.tfn = tempArr;
+                }
+            }); */
+            data.tfn = tfnArr;
 
-            /* console.log(data); */
-            this.myservice.post('/addTfn/', data)
+            console.log(data);
+           this.myservice.post('/addTfn/', data)
                 .subscribe(
                     result => {
                         if (result.success === 'OK') {
@@ -62,7 +68,7 @@ export class AddComponent implements OnInit {
                     err => {
                         console.log(err, 'error');
                     }
-                );
+                ); 
 
         }
     }

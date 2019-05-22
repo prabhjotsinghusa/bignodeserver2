@@ -17,7 +17,7 @@ const server = new Hapi.server({
     },
 });
 
-mongoose.connect('mongodb://nodeuser:MongoUser@localhost/asteriskcdrdb', { useNewUrlParser: true });
+mongoose.connect('mongodb://nodeuser:nodeuser@localhost/asteriskcdrdb?authSource=admin', { useNewUrlParser: true });
 mongoose.set('useCreateIndex', true);
 mongoose.set('debug', true);
 

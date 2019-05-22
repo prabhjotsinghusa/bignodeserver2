@@ -4,6 +4,7 @@
 // } = require('jsonwebtoken');
 const md5 = require('md5');
 const exec = require('child_process').exec;
+const request = require('request-promise');
 // const path = require('path');
 const fs = require('fs');
 // const pdf = require('html-pdf');
@@ -800,6 +801,30 @@ const getBlacklist = () => {
 
     });
 }
+/* common post function for multiple servers */
+const getServerApi = (path, data, server, operation) => {
+
+    const options = {
+        method: 'POST',
+       // uri: 'http://66.185.29.98/apis/create_ir.php',
+       uri: `http://${server.ip}/${path}`,
+        form: {
+            token: server.server_key,//'rQS0CGHlS39x1XmwEwgLJKKjPExjLH',
+            operation: operation,
+            data: data
+        },
+    };
+    return new Promise((resolve, reject) => {
+        console.log(options,'function hit');
+        request(options)
+            .then(res => {
+                console.log(res);
+                resolve(data);
+            }).catch((e) => {
+                reject(e);
+            });
+    });
+}
 
 module.exports = {
 
@@ -819,6 +844,7 @@ module.exports = {
     serverCall,
     blacklist,
     getBlacklist,
-    delBlacklist
+    delBlacklist,
+    getServerApi,
 
 };

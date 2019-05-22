@@ -1,3 +1,3 @@
-const config = {url:'mongodb://nodeuser:MongoUser@localhost/asteriskcdrdb?authSource=admin'};
+const config = {url:'mongodb://nodeuser:nodeuser@localhost/asteriskcdrdb?authSource=admin'};
 
 module.exports = config;
