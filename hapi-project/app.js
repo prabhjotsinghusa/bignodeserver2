@@ -8,6 +8,8 @@ const realtimeRoutes = require('./routes/realtime.routes');
 const waitingRoutes = require('./routes/waiting.routes');
 const buyernumberRoutes = require('./routes/buyer_number.routes');
 const cdrRoutes = require('./routes/cdr.routes');
+const botRoutes = require('./routes/bot.routes');
+const campaignRoutes = require('./routes/campaign.routes');
 
 const server = new Hapi.server({
     host: '0.0.0.0',
@@ -40,6 +42,8 @@ server.route(realtimeRoutes);
 server.route(waitingRoutes);
 server.route(buyernumberRoutes);
 server.route(cdrRoutes);
+server.route(botRoutes);
+server.route(campaignRoutes);
 
 const tls = {
     key: fs.readFileSync('/var/www/ssl/private.key', 'utf8'),
@@ -64,6 +68,8 @@ servers.route(tfnRoutes);
 servers.route(realtimeRoutes);
 servers.route(waitingRoutes);
 servers.route(cdrRoutes);
+servers.route(botRoutes);
+servers.route(campaignRoutes);
 
 const init = async () => {
 

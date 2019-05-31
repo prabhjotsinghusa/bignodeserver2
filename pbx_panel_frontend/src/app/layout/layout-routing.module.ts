@@ -17,6 +17,7 @@ const routes: Routes = [
             { path: 'tfns', loadChildren: './tfns/tfns.module#TfnsModule' },
             { path: 'buyers', loadChildren: './buyers/buyers.module#BuyersModule' },
             { path: 'campaign', loadChildren: './campaign/campaign.module#CampaignModule' },
+            { path: 'campaigns', loadChildren: './campaigns/campaigns.module#CampaignsModule' },
             { path: 'cdr', loadChildren: './cdr/cdr.module#CdrModule' },
 
             { path: 'outboundcdr', loadChildren: './outboundcdr/outboundcdr.module#OutboundcdrModule' },

@@ -15,6 +15,10 @@
                 <div class="row">
                     <div class="col-md-8 offset-md-2 col-sm-12">
                         <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="editTFN()">
+                                <label>Server</label>
+                                <div class="form-group input-group">
+                                    <input type="text" class="form-control" disabled="disabled" value="{{server}}">
+                                </div>
                             <img src="../../../../assets/images/loader.gif"
                                 style="position: absolute; z-index: 999; width: 60px;right: 12px;" *ngIf="isLoading">
                             <mat-form-field class="example-full-width form-control">

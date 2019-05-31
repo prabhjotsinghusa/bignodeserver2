@@ -1,7 +1,8 @@
 const Tfn = require('../models/tfn.model');
 module.exports = {
     find(req, reply) {
-        let str = { tfn: req.query.tfn };
+         //str = { tfn: req.query.tfn };
+        let str =  { $or: [ { tfn: req.query.tfn }, { tfn: '+'+req.query.tfn } ] };
         const aggregateObj = [
             {
                 $match: str

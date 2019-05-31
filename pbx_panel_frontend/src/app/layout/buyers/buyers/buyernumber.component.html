@@ -62,7 +62,7 @@
                                         <th class="mat-header-cell">#</th>
                                         <th class="mat-header-cell">Number</th>
                                         <th class="mat-header-cell">Status</th>
-                                        <th class="mat-header-cell">Action</th>
+                                        <th class="mat-header-cell" *ngIf="loggedUser.role !== 'buyer'">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody class="mat-header-cell">
@@ -70,7 +70,7 @@
                                         <th class="mat-row" scope="row">{{i+1}}</th>
                                         <td class="mat-cell">{{bn.number}}</td>
                                         <td class="mat-cell">{{bn.status}}</td>
-                                        <td class="mat-cell"><button class="btn btn-danger" (click)="deleteBuyerNumber(bn._id);"><i
+                                        <td class="mat-cell" *ngIf="loggedUser.role !== 'buyer'"><button class="btn btn-danger" (click)="deleteBuyerNumber(bn._id);"><i
                                                     class="fa fa-trash"></i></button></td>
                                     </tr>
                                 </tbody>

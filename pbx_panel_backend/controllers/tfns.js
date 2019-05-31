@@ -63,6 +63,7 @@ tfn.getAllTfns = (req, res, next) => {
 
                 "tfn_id": 1,
                 "tfn": 1,
+                server: 1,
                 "pub_id": 1,
                 "status": 1,
                 "price_per_tfn": 1,
@@ -105,6 +106,7 @@ tfn.getPendingTfns = (req, res, next) => {
 
                 "tfn_id": 1,
                 "tfn": 1,
+                server: 1,
                 "pub_id": 1,
                 "status": 1,
                 "price_per_tfn": 1,
@@ -235,11 +237,11 @@ tfn.addTfn = async (req, res, next) => {
             //tfn.purchase_date = Date.now();
             tfn.save().then(async data => { //create email verification tokenand update user data with the email verification token
                 const r = await getServerApi('apis/create_ir.php', tfn, tfn.server, 'getall');
-                console.log(r,'in tfn file');
+                console.log(r, 'in tfn file');
                 if (!data) { return res.sendStatus(422); }
                 if (check) {
                     console.log('call after all tfns added on both sides');
-                   // serverCall();
+                    // serverCall();
                 }
                 resolve(data);
             }).catch(next);
@@ -388,8 +390,8 @@ tfn.tfnapi = (req, res, next) => {
 
 
 tfn.addTfn2 = async (req, res, next) => {
-    function addTFNServer(tfn){
-        const url = 'http://'+tfn.server_ip+'/apis/create_ir.php'
+    function addTFNServer(tfn) {
+        const url = 'http://' + tfn.server_ip + '/apis/create_ir.php'
         const options = {
             method: 'POST',
             uri: url,
@@ -405,8 +407,8 @@ tfn.addTfn2 = async (req, res, next) => {
                 return e;
             });
     }
-    function coreReload(ip){
-        const url = 'http://'+ip+'/apis/create_ir.php'
+    function coreReload(ip) {
+        const url = 'http://' + ip + '/apis/create_ir.php'
         const options = {
             method: 'POST',
             uri: url,
@@ -444,7 +446,7 @@ tfn.addTfn2 = async (req, res, next) => {
                 addTFNServer();
                 if (check) {
                     console.log('call after all tfns added on both sides');
-                   // serverCall(); coreReload(req.body.server_ip);
+                    // serverCall(); coreReload(req.body.server_ip);
                 }
                 resolve(data);
             }).catch(next);

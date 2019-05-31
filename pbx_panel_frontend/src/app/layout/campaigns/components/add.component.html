@@ -1,0 +1,191 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>Manage Campaign</small></li>
+    </ol>
+
+    <div class="container">
+        <div class="card add box effect2">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                </div>
+                <h4> Add Campaign<small>(Step 1)</small></h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2 col-sm-12">
+                        <div class="alert alert-danger" *ngIf="show_error">{{error_message}}</div>
+                        <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="addCampaign()">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group input-group">
+                                        <!-- <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-500px"></i></span>
+                                        </div> -->
+                                        <input type="text" class="form-control" placeholder="Campaign Name"
+                                            name="camp_name" formControlName="camp_name">
+                                    </div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.camp_name.errors != null && formdata.controls.camp_name.errors.required">
+                                        Campaign
+                                        Name
+                                        is required.</div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.camp_name.errors != null && formdata.controls.camp_name.errors.minlength">
+                                        Campaign
+                                        Name
+                                        minimum 4 characters.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group input-group">
+                                        <select class="form-control" placeholder="Time Zone" name="time_zone"
+                                            formControlName="time_zone">
+                                            <option value="CST">C.S.T.</option>
+                                            <option value="EST">E.S.T.</option>
+                                            <option value="PST">P.S.T.</option>
+                                            <option value="IST">I.S.T.</option>
+                                        </select>
+                                    </div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.time_zone.errors != null && formdata.controls.time_zone.errors.required">
+                                        Time
+                                        Zone is required.</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group input-group">
+                                        <!-- <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
+                                        </div> -->
+                                        <input type="text" class="form-control" placeholder="Buffer Time"
+                                            name="buffer_time" formControlName="buffer_time" pattern="[0-9]*">
+                                    </div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.buffer_time.errors != null && formdata.controls.buffer_time.errors.required">
+                                        Buffer
+                                        Time
+                                        is required.</div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.buffer_time.errors != null && formdata.controls.buffer_time.errors.minlength">
+                                        Buffer
+                                        Time
+                                        minimum 1 digit.</div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.buffer_time.errors != null && formdata.controls.buffer_time.errors.pattern">
+                                        Buffer
+                                        Time
+                                        contains only numbers.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group input-group">
+                                        <!-- <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="fa fa-clock-o"></i></span>
+                                        </div> -->
+                                        <input type="text" class="form-control" placeholder="Price Per Call"
+                                            name="price_per_call" formControlName="price_per_call" pattern="[0-9]*">
+                                    </div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.price_per_call.errors != null && formdata.controls.price_per_call.errors.required">
+                                        Price
+                                        Per Call
+                                        is required.</div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.price_per_call.errors != null && formdata.controls.price_per_call.errors.minlength">
+                                        Price
+                                        Per Call
+                                        minimum 1 digit.</div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.price_per_call.errors != null && formdata.controls.price_per_call.errors.pattern">
+                                        Price
+                                        Per Call
+                                        contains only numbers.</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group active-hours">
+                                        <label>Open Time</label>
+                                        <ngb-timepicker formControlName="active_on" class="pull-right"></ngb-timepicker>
+                                    </div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.active_on.errors != null && formdata.controls.active_on.errors.required">
+                                        Open
+                                        Time is required.</div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group active-hours">
+                                        <label>Close Time</label>
+                                        <ngb-timepicker formControlName="active_off" class="pull-right"></ngb-timepicker>
+                                    </div>
+                                    <div style="color:red;"
+                                        *ngIf="error && formdata.controls.active_off.errors != null && formdata.controls.active_off.errors.required">
+                                        Close
+                                        Time is required.</div>
+                                </div>
+                            </div>
+                            <div class="for_admin" *ngIf="loggedUser.role == 'admin'">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <img src="../../../../assets/images/loader.gif"
+                                            style="position: absolute; z-index: 999; width: 60px;right: 12px;"
+                                            *ngIf="isLoading">
+                                        <mat-form-field class="example-full-width form-control"
+                                            style="margin-bottom:10px;">
+                                            <input matInput placeholder="Choose a publisher" [matAutocomplete]="auto"
+                                                formControlName="pub_id" (blur)="hideLoader()" (keyup)="showLoader()">
+                                        </mat-form-field>
+                                        <!-- <span>Your choice is: {{formdata.get('pub_id').value | json}}</span> -->
+                                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                                            <mat-option *ngFor="let publisher of (filteredPublishers| async)?.user"
+                                                [value]="publisher" (click)="hideLoader()">
+                                                <span>{{ publisher.fullname }}</span>
+                                                <small> | ID: {{publisher.uid}}</small>
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Read Only Mode</span>
+                                            </div>
+                                            <div class="btn-group btn-group-toggle" ngbRadioGroup name="read_only"
+                                                formControlName="read_only">
+                                                <label ngbButtonLabel class="btn-primary" *ngFor="let op of optionsArr">
+                                                    <input ngbButton type="radio" [value]="op.key"> {{op.value}}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="for_publisher" *ngIf="loggedUser.role == 'publisher'">
+                                <div class="row">
+                                    <input type="hidden" name="pub_id" formControlName="pub_id">
+                                    <div class="col-md-6">
+                                        <div class="form-group input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Read Only Mode</span>
+                                            </div>
+                                            <div class="btn-group btn-group-toggle" ngbRadioGroup name="read_only"
+                                                formControlName="read_only">
+                                                <label ngbButtonLabel class="btn-primary" *ngFor="let op of optionsArr">
+                                                    <input ngbButton type="radio" [value]="op.key"> {{op.value}}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-secondary btn-success">Next</button>&nbsp;
+                            <a routerLink="/campaign" class="btn btn-secondary btn-default">Cancel</a>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+        </div>
+
+    </div>
+</div>

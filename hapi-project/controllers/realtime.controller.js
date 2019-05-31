@@ -189,7 +189,7 @@ module.exports = {
         }
 
 
-        return request('https://portal.pbx4you.com/realtime.php?hasher=U3VjY2Vzcw')
+        return request('http://portal.routemycalls.com/realtime.php?hasher=U3VjY2Vzcw')
             .then(async (body) => {
 
                 //  console.log(body, "=======================")
@@ -395,7 +395,7 @@ module.exports = {
         }
 
 
-        return request('https://portal.pbx4you.com/realtime.php?hasher=U3VjY2Vzcw')
+        return request('http://portal.routemycalls.com/realtime.php?hasher=U3VjY2Vzcw')
             .then(async (body) => {
 
                 //  console.log(body, "=======================")
@@ -520,13 +520,25 @@ module.exports = {
             });
         }
 
-        return request('https://portal.pbx4you.com/realtime.php?hasher=U3VjY2Vzcw')
+        return request('http://portal.routemycalls.com/realtime.php?hasher=U3VjY2Vzcw')
             .then(async (body) => {
 
                 //  console.log(body, "=======================")
                 //resolve(statusCode, body, headers);
                 const result = await mergeArray(JSON.parse(body));
                 return { data: result };
+            }).catch((e) => {
+                return { err: e };
+            });
+
+    },
+    getPublisher(req, reply, next) {
+
+        return request('http://portal.routemycalls.com/realtime.php?hasher=U3VjY2Vzcw')
+            .then(async body => {
+                const r = await body;
+                //console.log(r, "=======================");
+                return { data:  JSON.parse(r)};
             }).catch((e) => {
                 return { err: e };
             });

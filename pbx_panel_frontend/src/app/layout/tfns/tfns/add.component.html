@@ -16,7 +16,7 @@
                     <div class="col-md-8 offset-md-2 col-sm-12">
                         <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="addTfn()">
                             <div class="form-group input-group">
-                            <select name="server" class="form-control" formControlName="server">
+                            <select name="server" class="form-control" formControlName="server" placeholder="Select Server">
                                 <option *ngFor="let ss of servers" value="{{ss|json}}">{{ss.server_name}}|&nbsp;{{ss.ip}}</option>
                             </select>
                             </div>

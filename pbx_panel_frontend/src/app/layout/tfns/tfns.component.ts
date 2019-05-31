@@ -22,7 +22,7 @@ export class TfnsComponent implements OnInit {
   loggedUserSettings;
   show_buttons = true;
   isLoading = true;
-  displayedColumns: string[] = ['select', 'id', 'tfn', 'publisherName', 'status', 'price_per_tfn', 'edit', 'permanent_delete',
+  displayedColumns: string[] = ['select', 'id', 'tfn', 'ip', 'publisherName', 'status', 'price_per_tfn', 'edit', 'permanent_delete',
     'pub_delete'];
   dataSource = new MatTableDataSource<Tfn>(ELEMENT_DATA);
   data = Object.assign(ELEMENT_DATA);

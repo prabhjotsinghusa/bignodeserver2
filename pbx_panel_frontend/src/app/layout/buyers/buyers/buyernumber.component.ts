@@ -12,7 +12,13 @@ import { CommonService } from '../../../shared/services/common.service';
     animations: [routerTransition()]
 })
 export class BuyernumberComponent implements OnInit {
-    constructor(public router: Router, private activeroute: ActivatedRoute, private myservice: CommonService) { }
+    loggedUser;
+    loggedUserSettings;
+    constructor(public router: Router, private activeroute: ActivatedRoute, private myservice: CommonService) { 
+
+        this.loggedUser = JSON.parse(localStorage.getItem('user'));
+        this.loggedUserSettings = JSON.parse(localStorage.getItem('userSettings'));
+    }
     formdata;
     error = false;
     isLoading = true;

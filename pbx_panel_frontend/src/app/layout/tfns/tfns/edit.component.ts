@@ -25,6 +25,7 @@ export class EditComponent implements OnInit {
     edit_pub_id = 0;
     isLoading = false;
     filteredPublishers: Observable<any>;
+    server = '-NA-';
     ngOnInit() {
         this.formdata = new FormGroup({
             pub_id: new FormControl('', Validators.required),
@@ -48,6 +49,7 @@ export class EditComponent implements OnInit {
             data => {
                 const tfn = data.tfn[0];
                 this.edit_pub_id = tfn.pub_id;
+                this.server = tfn.server !== undefined? tfn.server.ip : '-NA-';
                 this.formdata.patchValue({
                     pub_id: tfn.pub_id,
                     tfn: tfn.tfn,

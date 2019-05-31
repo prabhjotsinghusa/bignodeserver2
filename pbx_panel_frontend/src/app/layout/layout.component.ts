@@ -17,12 +17,12 @@ export class LayoutComponent implements OnInit {
     constructor(public router: Router) {
 
         const AccessControl = {
-            director: ['dashboard', 'charts', 'users', 'auditprofile', 'activehours', 'tfns', 'buyers', 'campaign', 'cdr', 'eod',
+            director: ['dashboard', 'charts', 'users', 'auditprofile', 'activehours', 'tfns', 'buyers', 'campaign',  'campaigns', 'cdr', 'eod',
                 'agenteod', 'agentreport', 'tables', 'forms', 'bs-element', 'grid', 'components', 'managegroup', 'paymentnotification',
                 'wallet', 'realtime', 'cccapping', 'financehours', 'oxygencalls', 'customerreport', 'usagereport', 'buyerreport',
                 'buyerdashboard', 'login', 'error', 'access-denied', 'not-found', 'secondrealtime', 'buyereod'],
 
-            admin: ['dashboard', 'charts', 'users', 'auditprofile', 'activehours', 'tfns', 'buyers', 'campaign', 'cdr', 'eod',
+            admin: ['dashboard', 'charts', 'users', 'auditprofile', 'activehours', 'tfns', 'buyers', 'campaign',  'campaigns', 'cdr', 'eod',
                 'agenteod', 'agentreport', 'tables', 'forms', 'bs-element', 'grid', 'components', 'managegroup', 'paymentnotification',
                 'wallet', 'realtime', 'cccapping', 'financehours', 'oxygencalls', 'customerreport', 'usagereport', 'buyerreport',
                 'buyerdashboard', 'login', 'error', 'access-denied', 'not-found', 'secondrealtime', 'buyereod', 'buyernumbers', 'audio',
@@ -30,7 +30,7 @@ export class LayoutComponent implements OnInit {
 
             audit_profile: ['dashboard', 'auditreport', 'login', 'error', 'access-denied', 'not-found'],
 
-            publisher: ['dashboard', 'buyers', 'tfns', 'campaign', 'cdr', 'realtime', 'wallet', 'login', 'error', 'access-denied',
+            publisher: ['dashboard', 'buyers', 'tfns', 'campaign',  'campaigns',  'cdr', 'realtime', 'wallet', 'login', 'error', 'access-denied',
                 'not-found', 'users', 'secondrealtime', 'usagereport'],
 
             buyer: ['buyerdashboard', 'cdr', 'realtime', 'wallet', 'buyerreport', 'login', 'error', 'access-denied', 'not-found',

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const AutoIncrement = require('mongoose-sequence')(mongoose);
+
 const CampaignSchema = new mongoose.Schema({
 
     campaign_id: { type: Number, unique: true, index: true },
@@ -22,4 +23,4 @@ const CampaignSchema = new mongoose.Schema({
 
 CampaignSchema.plugin(AutoIncrement, { inc_field: 'campaign_id' });
 
-mongoose.model('Campaign', CampaignSchema);
+module.exports = mongoose.model('Campaign', CampaignSchema);

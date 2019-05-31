@@ -45,34 +45,34 @@ campaign.getCampaign = (req, res, next) => {
   }
 
   let aggregateData = [{
-      $match: query
-    },
-    {
-      $lookup: {
-        from: "users",
-        localField: "pub_id",
-        foreignField: "uid",
-        as: "userdata"
-      }
-    },
-    {
-      $project: {
-        campaign_id: 1,
-        pub_id: 1,
-        camp_name: 1,
-        buffer_time: 1,
-        price_per_call: 1,
-        created_at: 1,
-        status: 1,
-        time_zone: 1,
-        queue_name: 1,
-        queue_no: 1,
-        read_only: 1,
-        publisherName: {
-          $arrayElemAt: ["$userdata.fullname", 0]
-        }
+    $match: query
+  },
+  {
+    $lookup: {
+      from: "users",
+      localField: "pub_id",
+      foreignField: "uid",
+      as: "userdata"
+    }
+  },
+  {
+    $project: {
+      campaign_id: 1,
+      pub_id: 1,
+      camp_name: 1,
+      buffer_time: 1,
+      price_per_call: 1,
+      created_at: 1,
+      status: 1,
+      time_zone: 1,
+      queue_name: 1,
+      queue_no: 1,
+      read_only: 1,
+      publisherName: {
+        $arrayElemAt: ["$userdata.fullname", 0]
       }
     }
+  }
   ];
 
   Campaign.aggregate(aggregateData)
@@ -124,8 +124,8 @@ campaign.getAllIvrDetails = (req, res, next) => {
 
 campaign.getCampPubTfns = (req, res, next) => {
   CampPubTfn.find({
-      camp_id: req.params.camp_id
-    })
+    camp_id: req.params.camp_id
+  })
     .then(data => {
       if (!data) {
         return res.sendStatus(422);
@@ -138,8 +138,8 @@ campaign.getCampPubTfns = (req, res, next) => {
 };
 campaign.getCampBuyerTfns = (req, res, next) => {
   CampBuyerTfn.find({
-      camp_id: req.params.camp_id
-    })
+    camp_id: req.params.camp_id
+  })
     .then(data => {
       if (!data) {
         return res.sendStatus(422);
@@ -162,8 +162,8 @@ campaign.deleteCampaign = (req, res, next) => {
       pub_id: pub_id
     };
     Tfn.findOneAndUpdate(query, {
-        status: "unused"
-      }, options)
+      status: "unused"
+    }, options)
       .then(data2 => {
         console.log("update1 tfn in mongodb");
       })
@@ -223,8 +223,8 @@ campaign.deleteCampaign = (req, res, next) => {
     }
     deleteQueue(q);
     CampPubTfn.find({
-        camp_id: campaign.campaign_id
-      })
+      camp_id: campaign.campaign_id
+    })
       .then(pub_tfns => {
         pub_tfns.forEach(async p => {
           await oldTfns(p.tfn, p.pub_id);
@@ -238,8 +238,8 @@ campaign.deleteCampaign = (req, res, next) => {
       console.log(data, "delete the buyer camp tfn");
     }).catch(next);
     Campaign.deleteOne({
-        campaign_id: req.params.campaignId
-      })
+      campaign_id: req.params.campaignId
+    })
       .then(data => {
         if (!data) {
           return res.sendStatus(422);
@@ -254,6 +254,33 @@ campaign.deleteCampaign = (req, res, next) => {
 };
 
 campaign.addCampaign = async (req, res, next) => {
+
+
+
+  console.log(req.body);
+  /* Adding the new Campaign */
+  let campaign = new Campaign();
+  campaign.pub_id = req.body.pub_id;
+  campaign.camp_name = req.body.camp_name;
+  campaign.buffer_time = req.body.buffer_time || 0;
+  campaign.price_per_call = req.body.price_per_call || 0;
+  campaign.time_zone = req.body.time_zone;
+  campaign.read_only = req.body.read_only;
+  campaign.created_at = Date.now();
+  campaign.inside_route = req.body.inside_route || "";
+  campaign.active_on = req.body.active_on || '00:00:00';
+  campaign.active_off = req.body.active_off || '23:59:59';
+  campaign
+    .save()
+    .then(data => {
+      if (!data) {
+        return res.sendStatus(422);
+      }
+      return res.json({ data: data });
+    })
+    .catch(next);
+};
+campaign.addCampaign_old = async (req, res, next) => {
   function updateIncoming(tfn, queue) {
     let dest = "";
     if (isNaN(queue) && queue.indexOf(",") > -1) {
@@ -280,196 +307,196 @@ campaign.addCampaign = async (req, res, next) => {
 
   function addQueueDetails(buyer_numbers, queue_no, queue_name) {
     let queue_member = [{
-        keyword: "announce-frequency",
-        data: "0",
-        flags: "0"
-      },
-      {
-        keyword: "announce-holdtime",
-        data: "no",
-        flags: "0"
-      },
-      {
-        keyword: "announce-position",
-        data: "no",
-        flags: "0"
-      },
-      {
-        keyword: "answered_elsewhere",
-        data: "0",
-        flags: "0"
-      },
-      {
-        keyword: "autofill",
-        data: "yes",
-        flags: "0"
-      },
-      {
-        keyword: "autopause",
-        data: "no",
-        flags: "0"
-      },
-      {
-        keyword: "autopausebusy",
-        data: "no",
-        flags: "0"
-      },
-      {
-        keyword: "autopausedelay",
-        data: "0",
-        flags: "0"
-      },
-      {
-        keyword: "autopauseunavail",
-        data: "no",
-        flags: "0"
-      },
-      {
-        keyword: "cron_random",
-        data: "false",
-        flags: "0"
-      },
-      {
-        keyword: "cron_schedule",
-        data: "never",
-        flags: "0"
-      },
-      {
-        keyword: "joinempty",
-        data: "yes",
-        flags: "0"
-      },
-      {
-        keyword: "leavewhenempty",
-        data: "no",
-        flags: "0"
-      },
-      {
-        keyword: "maxlen",
-        data: "0",
-        flags: "0"
-      },
-      //{keyword:"member",data:"Local/18886739960@from-queue/n,0",flags:"0"},
-      {
-        keyword: "memberdelay",
-        data: "0",
-        flags: "0"
-      },
-      {
-        keyword: "min-announce-frequency",
-        data: "15",
-        flags: "0"
-      },
-      {
-        keyword: "monitor-join",
-        data: "yes",
-        flags: "0"
-      },
-      {
-        keyword: "music",
-        data: "none	",
-        flags: "0"
-      },
-      {
-        keyword: "penaltymemberslimit",
-        data: "0",
-        flags: "0"
-      },
-      {
-        keyword: "periodic-announce-frequency",
-        data: "0",
-        flags: "0"
-      },
-      {
-        keyword: "queue-callswaiting",
-        data: "silence/1",
-        flags: "0"
-      },
-      {
-        keyword: "queue-thankyou",
-        data: "",
-        flags: "0"
-      },
-      {
-        keyword: "queue-thereare",
-        data: "silence/1",
-        flags: "0"
-      },
-      {
-        keyword: "queue-youarenext",
-        data: "silence/1",
-        flags: "0"
-      },
-      {
-        keyword: "recording",
-        data: "force",
-        flags: "0"
-      },
-      {
-        keyword: "reportholdtime",
-        data: "no",
-        flags: "0"
-      },
-      {
-        keyword: "retry",
-        data: "0",
-        flags: "0"
-      },
-      {
-        keyword: "ringinuse",
-        data: "yes",
-        flags: "0"
-      },
-      {
-        keyword: "rvolume",
-        data: "0",
-        flags: "0"
-      },
-      {
-        keyword: "servicelevel",
-        data: "60",
-        flags: "0"
-      },
-      {
-        keyword: "setinterfacevar",
-        data: "yes",
-        flags: "0"
-      },
-      {
-        keyword: "skip_joinannounce",
-        data: "",
-        flags: "0"
-      },
-      {
-        keyword: "strategy",
-        data: "rrmemory",
-        flags: "0"
-      },
-      {
-        keyword: "timeout",
-        data: "15",
-        flags: "0"
-      },
-      {
-        keyword: "timeoutpriority",
-        data: "app",
-        flags: "0"
-      },
-      {
-        keyword: "timeoutrestart",
-        data: "no",
-        flags: "0"
-      },
-      {
-        keyword: "weight",
-        data: "0",
-        flags: "0"
-      },
-      {
-        keyword: "wrapuptime",
-        data: "0",
-        flags: "0"
-      }
+      keyword: "announce-frequency",
+      data: "0",
+      flags: "0"
+    },
+    {
+      keyword: "announce-holdtime",
+      data: "no",
+      flags: "0"
+    },
+    {
+      keyword: "announce-position",
+      data: "no",
+      flags: "0"
+    },
+    {
+      keyword: "answered_elsewhere",
+      data: "0",
+      flags: "0"
+    },
+    {
+      keyword: "autofill",
+      data: "yes",
+      flags: "0"
+    },
+    {
+      keyword: "autopause",
+      data: "no",
+      flags: "0"
+    },
+    {
+      keyword: "autopausebusy",
+      data: "no",
+      flags: "0"
+    },
+    {
+      keyword: "autopausedelay",
+      data: "0",
+      flags: "0"
+    },
+    {
+      keyword: "autopauseunavail",
+      data: "no",
+      flags: "0"
+    },
+    {
+      keyword: "cron_random",
+      data: "false",
+      flags: "0"
+    },
+    {
+      keyword: "cron_schedule",
+      data: "never",
+      flags: "0"
+    },
+    {
+      keyword: "joinempty",
+      data: "yes",
+      flags: "0"
+    },
+    {
+      keyword: "leavewhenempty",
+      data: "no",
+      flags: "0"
+    },
+    {
+      keyword: "maxlen",
+      data: "0",
+      flags: "0"
+    },
+    //{keyword:"member",data:"Local/18886739960@from-queue/n,0",flags:"0"},
+    {
+      keyword: "memberdelay",
+      data: "0",
+      flags: "0"
+    },
+    {
+      keyword: "min-announce-frequency",
+      data: "15",
+      flags: "0"
+    },
+    {
+      keyword: "monitor-join",
+      data: "yes",
+      flags: "0"
+    },
+    {
+      keyword: "music",
+      data: "none	",
+      flags: "0"
+    },
+    {
+      keyword: "penaltymemberslimit",
+      data: "0",
+      flags: "0"
+    },
+    {
+      keyword: "periodic-announce-frequency",
+      data: "0",
+      flags: "0"
+    },
+    {
+      keyword: "queue-callswaiting",
+      data: "silence/1",
+      flags: "0"
+    },
+    {
+      keyword: "queue-thankyou",
+      data: "",
+      flags: "0"
+    },
+    {
+      keyword: "queue-thereare",
+      data: "silence/1",
+      flags: "0"
+    },
+    {
+      keyword: "queue-youarenext",
+      data: "silence/1",
+      flags: "0"
+    },
+    {
+      keyword: "recording",
+      data: "force",
+      flags: "0"
+    },
+    {
+      keyword: "reportholdtime",
+      data: "no",
+      flags: "0"
+    },
+    {
+      keyword: "retry",
+      data: "0",
+      flags: "0"
+    },
+    {
+      keyword: "ringinuse",
+      data: "yes",
+      flags: "0"
+    },
+    {
+      keyword: "rvolume",
+      data: "0",
+      flags: "0"
+    },
+    {
+      keyword: "servicelevel",
+      data: "60",
+      flags: "0"
+    },
+    {
+      keyword: "setinterfacevar",
+      data: "yes",
+      flags: "0"
+    },
+    {
+      keyword: "skip_joinannounce",
+      data: "",
+      flags: "0"
+    },
+    {
+      keyword: "strategy",
+      data: "rrmemory",
+      flags: "0"
+    },
+    {
+      keyword: "timeout",
+      data: "15",
+      flags: "0"
+    },
+    {
+      keyword: "timeoutpriority",
+      data: "app",
+      flags: "0"
+    },
+    {
+      keyword: "timeoutrestart",
+      data: "no",
+      flags: "0"
+    },
+    {
+      keyword: "weight",
+      data: "0",
+      flags: "0"
+    },
+    {
+      keyword: "wrapuptime",
+      data: "0",
+      flags: "0"
+    }
     ];
     buyer_numbers.forEach(bn => {
       queue_member.push({
@@ -590,11 +617,11 @@ campaign.addCampaign = async (req, res, next) => {
             campbuyertfn.penalty = 0;
             campbuyertfn.created_at = Date.now();
             campbuyertfn.save().then(data5 => {
-                if (!data5) {
-                  return res.sendStatus(422);
-                }
-                console.log("add the record in the camp buyer");
-              })
+              if (!data5) {
+                return res.sendStatus(422);
+              }
+              console.log("add the record in the camp buyer");
+            })
               .catch(next);
           });
           addQueueDetails(req.body.buyer_numbers, queue_no, queue_name);
@@ -614,12 +641,12 @@ campaign.addCampaign = async (req, res, next) => {
 
         /* updating the tfn collection for specific publisher and adding data in camp_pub_tfn collection */
         Tfn.findOneAndUpdate(
-            query, {
-              pub_id: req.body.pub_id,
-              status: "used"
-            },
-            options
-          )
+          query, {
+            pub_id: req.body.pub_id,
+            status: "used"
+          },
+          options
+        )
           .then(data2 => {
 
             if (data2) {
@@ -630,10 +657,10 @@ campaign.addCampaign = async (req, res, next) => {
               camp_pub_tfn.queue = queue_no;
               camp_pub_tfn.created_at = Date.now();
               camp_pub_tfn.save().then(data4 => {
-                  if (!data4) {
-                    return res.sendStatus(422);
-                  }
-                })
+                if (!data4) {
+                  return res.sendStatus(422);
+                }
+              })
                 .catch(next);
               /* updating the asterisk incoming table */
               updateIncoming(tfn, queue_no);
@@ -648,21 +675,21 @@ campaign.addCampaign = async (req, res, next) => {
       };
 
       Campaign.findOneAndUpdate({
-            campaign_id: data.campaign_id
-          }, {
-            queue_name: queue_name,
-            queue_no: queue_no
-          },
-          options
-        ).then(data6 => {
-          if (!data6) {
-            return res.sendStatus(422);
-          }
-          console.log("updating the campaign");
-          return res.json({
-            success: "OK"
-          });
-        })
+        campaign_id: data.campaign_id
+      }, {
+          queue_name: queue_name,
+          queue_no: queue_no
+        },
+        options
+      ).then(data6 => {
+        if (!data6) {
+          return res.sendStatus(422);
+        }
+        console.log("updating the campaign");
+        return res.json({
+          success: "OK"
+        });
+      })
         .catch(next);
     })
     .catch(next);
@@ -675,10 +702,10 @@ campaign.editCampaign = async (req, res, next) => {
       pub_id: pub_id
     };
     Tfn.findOneAndUpdate(query, {
-        status: "unused"
-      }, options).then(data2 => {
-        console.log("update1 tfn");
-      })
+      status: "unused"
+    }, options).then(data2 => {
+      console.log("update1 tfn");
+    })
       .catch(next);
     return new Promise((resolve, reject) => {
       db.query("UPDATE `asterisk`.`incoming` set destination='app-blackhole,hangup,1' WHERE extension LIKE '%" + tfn + "%'",
@@ -749,196 +776,196 @@ campaign.editCampaign = async (req, res, next) => {
   async function addQueueDetails(buyer_numbers, queue_no, queue_name) {
     await deleteBuyerNumber(buyer_numbers, queue_no);
     let queue_member = [{
-        keyword: "announce-frequency",
-        data: "0",
-        flags: "0"
-      },
-      {
-        keyword: "announce-holdtime",
-        data: "no",
-        flags: "0"
-      },
-      {
-        keyword: "announce-position",
-        data: "no",
-        flags: "0"
-      },
-      {
-        keyword: "answered_elsewhere",
-        data: "0",
-        flags: "0"
-      },
-      {
-        keyword: "autofill",
-        data: "yes",
-        flags: "0"
-      },
-      {
-        keyword: "autopause",
-        data: "no",
-        flags: "0"
-      },
-      {
-        keyword: "autopausebusy",
-        data: "no",
-        flags: "0"
-      },
-      {
-        keyword: "autopausedelay",
-        data: "0",
-        flags: "0"
-      },
-      {
-        keyword: "autopauseunavail",
-        data: "no",
-        flags: "0"
-      },
-      {
-        keyword: "cron_random",
-        data: "false",
-        flags: "0"
-      },
-      {
-        keyword: "cron_schedule",
-        data: "never",
-        flags: "0"
-      },
-      {
-        keyword: "joinempty",
-        data: "yes",
-        flags: "0"
-      },
-      {
-        keyword: "leavewhenempty",
-        data: "no",
-        flags: "0"
-      },
-      {
-        keyword: "maxlen",
-        data: "0",
-        flags: "0"
-      },
-      //{keyword:"member",data:"Local/18886739960@from-queue/n,0",flags:"0"},
-      {
-        keyword: "memberdelay",
-        data: "0",
-        flags: "0"
-      },
-      {
-        keyword: "min-announce-frequency",
-        data: "15",
-        flags: "0"
-      },
-      {
-        keyword: "monitor-join",
-        data: "yes",
-        flags: "0"
-      },
-      {
-        keyword: "music",
-        data: "none	",
-        flags: "0"
-      },
-      {
-        keyword: "penaltymemberslimit",
-        data: "0",
-        flags: "0"
-      },
-      {
-        keyword: "periodic-announce-frequency",
-        data: "0",
-        flags: "0"
-      },
-      {
-        keyword: "queue-callswaiting",
-        data: "silence/1",
-        flags: "0"
-      },
-      {
-        keyword: "queue-thankyou",
-        data: "",
-        flags: "0"
-      },
-      {
-        keyword: "queue-thereare",
-        data: "silence/1",
-        flags: "0"
-      },
-      {
-        keyword: "queue-youarenext",
-        data: "silence/1",
-        flags: "0"
-      },
-      {
-        keyword: "recording",
-        data: "force",
-        flags: "0"
-      },
-      {
-        keyword: "reportholdtime",
-        data: "no",
-        flags: "0"
-      },
-      {
-        keyword: "retry",
-        data: "0",
-        flags: "0"
-      },
-      {
-        keyword: "ringinuse",
-        data: "yes",
-        flags: "0"
-      },
-      {
-        keyword: "rvolume",
-        data: "0",
-        flags: "0"
-      },
-      {
-        keyword: "servicelevel",
-        data: "60",
-        flags: "0"
-      },
-      {
-        keyword: "setinterfacevar",
-        data: "yes",
-        flags: "0"
-      },
-      {
-        keyword: "skip_joinannounce",
-        data: "",
-        flags: "0"
-      },
-      {
-        keyword: "strategy",
-        data: "rrmemory",
-        flags: "0"
-      },
-      {
-        keyword: "timeout",
-        data: "15",
-        flags: "0"
-      },
-      {
-        keyword: "timeoutpriority",
-        data: "app",
-        flags: "0"
-      },
-      {
-        keyword: "timeoutrestart",
-        data: "no",
-        flags: "0"
-      },
-      {
-        keyword: "weight",
-        data: "0",
-        flags: "0"
-      },
-      {
-        keyword: "wrapuptime",
-        data: "0",
-        flags: "0"
-      }
+      keyword: "announce-frequency",
+      data: "0",
+      flags: "0"
+    },
+    {
+      keyword: "announce-holdtime",
+      data: "no",
+      flags: "0"
+    },
+    {
+      keyword: "announce-position",
+      data: "no",
+      flags: "0"
+    },
+    {
+      keyword: "answered_elsewhere",
+      data: "0",
+      flags: "0"
+    },
+    {
+      keyword: "autofill",
+      data: "yes",
+      flags: "0"
+    },
+    {
+      keyword: "autopause",
+      data: "no",
+      flags: "0"
+    },
+    {
+      keyword: "autopausebusy",
+      data: "no",
+      flags: "0"
+    },
+    {
+      keyword: "autopausedelay",
+      data: "0",
+      flags: "0"
+    },
+    {
+      keyword: "autopauseunavail",
+      data: "no",
+      flags: "0"
+    },
+    {
+      keyword: "cron_random",
+      data: "false",
+      flags: "0"
+    },
+    {
+      keyword: "cron_schedule",
+      data: "never",
+      flags: "0"
+    },
+    {
+      keyword: "joinempty",
+      data: "yes",
+      flags: "0"
+    },
+    {
+      keyword: "leavewhenempty",
+      data: "no",
+      flags: "0"
+    },
+    {
+      keyword: "maxlen",
+      data: "0",
+      flags: "0"
+    },
+    //{keyword:"member",data:"Local/18886739960@from-queue/n,0",flags:"0"},
+    {
+      keyword: "memberdelay",
+      data: "0",
+      flags: "0"
+    },
+    {
+      keyword: "min-announce-frequency",
+      data: "15",
+      flags: "0"
+    },
+    {
+      keyword: "monitor-join",
+      data: "yes",
+      flags: "0"
+    },
+    {
+      keyword: "music",
+      data: "none	",
+      flags: "0"
+    },
+    {
+      keyword: "penaltymemberslimit",
+      data: "0",
+      flags: "0"
+    },
+    {
+      keyword: "periodic-announce-frequency",
+      data: "0",
+      flags: "0"
+    },
+    {
+      keyword: "queue-callswaiting",
+      data: "silence/1",
+      flags: "0"
+    },
+    {
+      keyword: "queue-thankyou",
+      data: "",
+      flags: "0"
+    },
+    {
+      keyword: "queue-thereare",
+      data: "silence/1",
+      flags: "0"
+    },
+    {
+      keyword: "queue-youarenext",
+      data: "silence/1",
+      flags: "0"
+    },
+    {
+      keyword: "recording",
+      data: "force",
+      flags: "0"
+    },
+    {
+      keyword: "reportholdtime",
+      data: "no",
+      flags: "0"
+    },
+    {
+      keyword: "retry",
+      data: "0",
+      flags: "0"
+    },
+    {
+      keyword: "ringinuse",
+      data: "yes",
+      flags: "0"
+    },
+    {
+      keyword: "rvolume",
+      data: "0",
+      flags: "0"
+    },
+    {
+      keyword: "servicelevel",
+      data: "60",
+      flags: "0"
+    },
+    {
+      keyword: "setinterfacevar",
+      data: "yes",
+      flags: "0"
+    },
+    {
+      keyword: "skip_joinannounce",
+      data: "",
+      flags: "0"
+    },
+    {
+      keyword: "strategy",
+      data: "rrmemory",
+      flags: "0"
+    },
+    {
+      keyword: "timeout",
+      data: "15",
+      flags: "0"
+    },
+    {
+      keyword: "timeoutpriority",
+      data: "app",
+      flags: "0"
+    },
+    {
+      keyword: "timeoutrestart",
+      data: "no",
+      flags: "0"
+    },
+    {
+      keyword: "weight",
+      data: "0",
+      flags: "0"
+    },
+    {
+      keyword: "wrapuptime",
+      data: "0",
+      flags: "0"
+    }
     ];
     buyer_numbers.forEach(bn => {
       queue_member.push({
@@ -1007,8 +1034,8 @@ campaign.editCampaign = async (req, res, next) => {
   };
 
   Campaign.findOneAndUpdate({
-      campaign_id: req.params.campaignId
-    },
+    campaign_id: req.params.campaignId
+  },
     campaign,
     options
   ).then(data => {
@@ -1020,8 +1047,8 @@ campaign.editCampaign = async (req, res, next) => {
     let queue_no = 0;
     let queue_name = "";
     CampBuyerTfn.deleteMany({
-        camp_id: data.campaign_id
-      })
+      camp_id: data.campaign_id
+    })
       .then(data2 => {
         if (data2.ok) {
           if (req.body.inside_route != undefined && req.body.inside_route !== "") {
@@ -1101,7 +1128,7 @@ campaign.editCampaign = async (req, res, next) => {
       camp_pubArr = [...camp_pubArr, tfn2.tfn];
     });
     /* Remove old TFN from campagin that are not required */
-    camp_pubArr.forEach((t)=>{
+    camp_pubArr.forEach((t) => {
       if (req.body.tfns.indexOf(t) === -1) {
         CampPubTfn.deleteMany({
           camp_id: data.campaign_id,
@@ -1134,12 +1161,12 @@ campaign.editCampaign = async (req, res, next) => {
           };
           /* updating the tfn collection for specific publisher and adding data in camp_pub_tfn collection */
           Tfn.findOneAndUpdate(
-              query, {
-                pub_id: req.body.pub_id,
-                status: "used"
-              },
-              options
-            )
+            query, {
+              pub_id: req.body.pub_id,
+              status: "used"
+            },
+            options
+          )
             .then(data2 => {
               if (data2) {
                 if (queue_no === 0) {

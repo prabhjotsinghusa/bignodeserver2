@@ -1,0 +1,109 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>Manage Campaign</small></li>
+    </ol>
+
+    <div class="container">
+        <div class="card add box effect2">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                </div>
+                <h4>Campaign Add TFN(s)<small>(Step 2)</small></h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2 col-sm-12">
+                        <div class="alert alert-danger" *ngIf="show_error">{{error_message}}</div>
+                        <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group input-group">
+                                        Campaign Details with publisher details
+                                    </div>
+                                    
+                                </div>
+                           
+                            </div>
+                
+                        <form [formGroup]="formdata" role="form" method="POST" (ngSubmit)="addCampaign()">
+                                <div class="row"
+                                *ngIf="selected_pub_settings.enable_inside_route && !selected_pub_settings.number_to_ivr">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label><strong>Internal Routing</strong></label>
+                                        <div class="container row">
+                                            <div *ngIf="selected_publisher.pub_queue == null || selected_publisher.pub_queue == 'others'"
+                                                class="container row">
+                                                <label class="form-control col-md-4">
+                                                    <input type="radio" value="602"
+                                                        formControlName="inside_route" name="inside_route">602
+                                                </label>
+                                                <label class="form-control col-md-4">
+                                                    <input type="radio" value="604"
+                                                        formControlName="inside_route" name="inside_route">604
+                                                </label>
+                                                <label class="form-control col-md-4">
+                                                    <input type="radio" value="100009988"
+                                                        formControlName="inside_route"
+                                                        name="inside_route">100009988
+                                                </label>
+                                            </div>
+                                            <label class="form-control col-md-6"
+                                                *ngIf="selected_publisher.pub_queue == 'travel'">
+                                                <input type="radio" value="602" formControlName="inside_route"
+                                                    name="inside_route" [checked]="true">602
+                                            </label>
+                                            <label class="form-control col-md-6"
+                                                *ngIf="selected_publisher.pub_queue == 'tech'">
+                                                <input type="radio" value="604" formControlName="inside_route"
+                                                    name="inside_route" [checked]="true">604
+                                            </label>
+                                            <label class="form-control col-md-6"
+                                                *ngIf="selected_publisher.pub_queue == 'forwarding'">
+                                                <input type="radio" value="100009988"
+                                                    formControlName="inside_route" name="inside_route"
+                                                    [checked]="true">100009988
+                                            </label>
+
+                                        </div>
+                                        <div class="container row">
+                                            <button type="button" class="btn btn-info col-md-2"
+                                                (click)="otherInsideroute()">Others</button>
+                                            <input type="number" placeholder="Enter Inside Route"
+                                                formControlName="inside_route" name="inside_route"
+                                                *ngIf="checkother" class="form-control col-md-6">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="for_publisher" *ngIf="loggedUser.role == 'publisher'">
+                                <div class="row">
+                                    <input type="hidden" name="pub_id" formControlName="pub_id">
+                                    <div class="col-md-6">
+                                        <div class="form-group input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Read Only Mode</span>
+                                            </div>
+                                            <div class="btn-group btn-group-toggle" ngbRadioGroup name="read_only"
+                                                formControlName="read_only">
+                                                <label ngbButtonLabel class="btn-primary" *ngFor="let op of optionsArr">
+                                                    <input ngbButton type="radio" [value]="op.key"> {{op.value}}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-secondary btn-success">Next</button>&nbsp;
+                            <a routerLink="/campaign" class="btn btn-secondary btn-default">Cancel</a>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+        </div>
+
+    </div>
+</div>

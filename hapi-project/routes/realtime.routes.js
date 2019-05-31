@@ -15,5 +15,9 @@ module.exports = [
         method:'GET',
         handler: RealtimeController.getBuyer2
     },
-
+    {
+        path: '/realtime/publisher',
+        method:'GET',
+        handler: RealtimeController.getPublisher
+    },
 ];
