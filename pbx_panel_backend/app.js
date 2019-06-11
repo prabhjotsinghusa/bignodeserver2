@@ -78,7 +78,7 @@ require('./models/Cappings');
 require('./models/PublisherKeys');
 require('./models/Audio');
 require('./models/Server');
-
+require('./models/UserHistory');
 
 require('./config/passport');
 
@@ -102,6 +102,7 @@ app.use(require('./routes/api/audio'));
 app.use(require('./routes/api/wallet_monthly'));
 
 app.use(require('./routes/api/server'));
+app.use(require('./routes/api/userhistory'));
 // /// catch 404 and forward to error handler
 // app.use(function(req, res, next) {
 //   var err = new Error('Not Found');

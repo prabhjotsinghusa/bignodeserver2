@@ -32,15 +32,11 @@ campaign.getCampaign = (req, res, next) => {
   if (req.params.campaignId) {
     query = {
       campaign_id: parseInt(req.params.campaignId),
-      pub_id: {
-        $ne: 0
-      }
+      pub_id: { $ne: 0 }
     };
   } else {
     query = {
-      pub_id: {
-        $ne: 0
-      }
+      pub_id: { $ne: 0 }
     };
   }
 
@@ -68,6 +64,8 @@ campaign.getCampaign = (req, res, next) => {
       queue_name: 1,
       queue_no: 1,
       read_only: 1,
+      active_on: 1,
+      active_off: 1,
       publisherName: {
         $arrayElemAt: ["$userdata.fullname", 0]
       }
@@ -254,9 +252,6 @@ campaign.deleteCampaign = (req, res, next) => {
 };
 
 campaign.addCampaign = async (req, res, next) => {
-
-
-
   console.log(req.body);
   /* Adding the new Campaign */
   let campaign = new Campaign();

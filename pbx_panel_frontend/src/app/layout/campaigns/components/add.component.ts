@@ -94,24 +94,20 @@ export class AddComponent implements OnInit {
             this.error = true;
         } else {
             const data = this.formdata.value;
+            if (data.pub_id.uid > 0) {
+                data.pub_id = data.pub_id.uid;
+            }
             data.active_on = this.changeTimeData(data.active_on.hour) + ':' + this.changeTimeData(data.active_on.minute) + ':00';
             data.active_off = this.changeTimeData(data.active_off.hour) + ':' + this.changeTimeData(data.active_off.minute) + ':00';
-            console.log(data, 'campaign data');
-            this.router.navigate(['/campaigns/addtfn/123']);
-            /*   this.myservice.post('/Campaign/add', data)
-                              .subscribe(
-                                  result => {
-                                      if (result.success === 'OK') {
-                                          this.router.navigate(['/campaign']);
-                                      }
-                                  },
-                                  err => {
-                                      console.log(err, 'error');
-                                  }
-                              ); */
+            //  console.log(data, 'campaign data');
 
-
-
+            this.myservice.post('/Campaign/add', data)
+                .subscribe(result => {
+                    const campaign = result.data
+                    this.router.navigate(['/campaigns/addtfn/' + campaign.campaign_id]);
+                }, err => {
+                    console.log(err, 'error');
+                });
         }
 
     }

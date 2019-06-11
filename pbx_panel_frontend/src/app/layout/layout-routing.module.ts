@@ -47,7 +47,8 @@ const routes: Routes = [
             { path: 'buyernumbers', loadChildren: './buyernumbers/buyernumbers.module#BuyernumbersModule' },
             { path: 'buyereod', loadChildren: './buyereod/buyereod.module#BuyereodModule'},
             { path: 'audio', loadChildren: './audio/audio.module#AudioModule' },
-            { path: 'blacklist', loadChildren: './blacklist/blacklist.module#BlacklistModule' }
+            { path: 'blacklist', loadChildren: './blacklist/blacklist.module#BlacklistModule' },
+            { path: 'userhistory', loadChildren: './userhistory/userhistory.module#UserhistoryModule' }
 
 
         ]

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { switchMap, debounceTime } from 'rxjs/operators';
 import { NgbModal, ModalDismissReasons, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -19,68 +19,55 @@ import { PublisherService } from '../../../shared/services/publisher.service';
 export class AddtfnComponent implements OnInit {
     loggedUser;
     formdata;
+    edit_id = 0;
     error = false;
     error2 = false;
     isLoading = false;
     show_error = false;
     error_message = ``;
 
-    filteredPublishers: Observable<any>;
-    selected_pub = { uid: 0, fullname: '' };
-    optionsArr = [{ key: 0, value: 'Disable' }, { key: 1, value: 'Enable' }];
-
+    selected_campaign: any;
+    selected_publisher = 0;
+    selected_pub_settings: any;
+    pub_tfn: any;
+    selected_tfns: any = [];
     closeResult: string;
     modalReference: NgbModalRef;
 
-    constructor(public router: Router, private myservice: CommonService, private publisherservice: PublisherService,
+    constructor(public router: Router, private activeroute: ActivatedRoute, private myservice: CommonService, private publisherservice: PublisherService,
         private modalService: NgbModal) {
         this.loggedUser = JSON.parse(localStorage.getItem('user'));
-    }
-
-    ngOnInit() {
-        this.formdata = new FormGroup({
-            camp_name: new FormControl('', Validators.compose([
-                Validators.required,
-                Validators.minLength(4),
-            ])),
-            buffer_time: new FormControl('', Validators.compose([
-                Validators.required,
-                Validators.minLength(1),
-            ])),
-            price_per_call: new FormControl('', Validators.compose([
-                Validators.required,
-                Validators.minLength(1),
-            ])),
-            time_zone: new FormControl('CST'),
-            pub_id: new FormControl('', Validators.required),
-            read_only: new FormControl(0),
+        this.activeroute.params.subscribe(params => {
+            this.edit_id = params.id;
         });
-        this.filteredPublishers = this.formdata.get('pub_id').valueChanges.pipe(
-            debounceTime(200),
-            switchMap(value => this.publisherservice.search(value))
-        );
-        /* for publisher logged account */
-        if (this.loggedUser.role === 'publisher') {
-            this.selected_pub = this.loggedUser;
-            this.formdata.patchValue({
-                pub_id: this.selected_pub.uid
+
+        this.myservice.get('/Campaign/getCampaignByCampaignId/' + this.edit_id).subscribe(res => {
+            this.selected_campaign = res.campaigns[0];
+            this.selected_publisher = this.selected_campaign.pub_id;
+            /* for publisher logged account */
+            if (this.loggedUser.role === 'publisher' && this.selected_publisher !== this.loggedUser.uid) {
+                this.router.navigate(['/campaigns']);
+            }
+            this.myservice.get('/publisher/getPublisherSettings/' + this.selected_publisher).subscribe(data => {
+                this.selected_pub_settings = data.settings;
             });
-        }
-    }
-    hideLoader() {
-        this.isLoading = false;
-        if (this.formdata.get('pub_id').value) {
-            console.log(this.selected_pub.uid);
-        }
 
-    }
-    showLoader() {
-        this.isLoading = true;
+            /* Get all tfn of the publisher */
+            this.myservice.get('/getTfnByPublisher/' + this.selected_publisher).subscribe(
+                data => {
+                    this.pub_tfn = data.tfn;
+                    this.selected_tfns = [];
+
+                }, err => {
+                    console.log(err);
+                }
+            );
+
+        });
     }
 
-    displayFn(publisher) {
-        if (publisher) { return publisher.fullname; }
-    }
+    ngOnInit() { }
+
 
     addCampaign() {
         this.error = false;
@@ -88,7 +75,7 @@ export class AddtfnComponent implements OnInit {
             this.error = true;
         } else {
             const data = this.formdata.value;
-            console.log(data, 'campaign data')
+            console.log(data, 'campaign data');
             /*   this.myservice.post('/Campaign/add', data)
                               .subscribe(
                                   result => {

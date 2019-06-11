@@ -114,11 +114,8 @@ export class SidebarComponent {
     }
     /* Logout from sidebar */
     onLoggedout() {
-        localStorage.removeItem('isLoggedin');
-        localStorage.removeItem('user');
-        localStorage.removeItem('login_token');
-        localStorage.removeItem('userSettings');
-        localStorage.removeItem('buyerNumbers');
+        window.localStorage.clear();
         this.router.navigate(['login']);
+        location.reload();
     }
 }

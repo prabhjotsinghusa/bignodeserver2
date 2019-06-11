@@ -4,7 +4,7 @@ import { routerTransition } from '../router.animations';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { CommonService } from '../shared/services/common.service';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
@@ -12,17 +12,17 @@ import {HttpClient} from '@angular/common/http';
     animations: [routerTransition()]
 })
 export class LoginComponent implements OnInit {
-    ipAddress:any;
-    constructor(public router: Router, private myservice: CommonService,private http: HttpClient) { 
-        this.http.get<{ip:string}>('https://jsonip.com')
-        .subscribe( data => {
-        this.ipAddress = data.ip;
-        })
-
+    ipAddress: any;
+    constructor(public router: Router, private myservice: CommonService, private http: HttpClient) {
+        window.localStorage.clear();
+        this.http.get<{ ip: string }>('https://jsonip.com')
+            .subscribe(data => {
+                this.ipAddress = data.ip;
+            });
     }
 
     ngOnInit() {
-        var loggedIn = localStorage.getItem('isLoggedin');
+        const loggedIn = localStorage.getItem('isLoggedin');
         if (loggedIn == 'true') {
             this.router.navigate(['dashboard']);
         }
@@ -44,6 +44,7 @@ export class LoginComponent implements OnInit {
     onLoggedin() {
         this.error = false;
         const formd = this.formdata.value;
+        const ipaddr = ['103.43.155.130', '103.43.153.50'];
         if (formd.username !== '' && formd.password !== '') {
             this.myservice.post('/users/login/', formd)
                 .subscribe(data => {
@@ -56,21 +57,20 @@ export class LoginComponent implements OnInit {
                             localStorage.setItem('login_token', data.login_token);
                             localStorage.setItem('isLoggedin', 'true');
                             localStorage.setItem('userSettings', JSON.stringify({}));
-                    
+
                             /* array for buyer dashboard */
                             const buyerArr = [454];
-                            const ipaddr = ['103.43.155.130'];
                             if (buyerArr.indexOf(data.user.buyer_id) > -1) {
                                 this.router.navigate(['buyerdashboard']);
                             } else {
                                 if (data.user.buyer_id === 453) {
+                                    this.loginHistory();
                                     this.router.navigate(['buyermonitoring/627/FR']);
-                                } 
-                                else if(data.user.buyer_id === 477){
-                                    if(ipaddr.indexOf(this.ipAddress) > -1){
+                                } else if (data.user.buyer_id === 477) {
+                                    if (ipaddr.indexOf(this.ipAddress) > -1) {
+                                        this.loginHistory();
                                         this.router.navigate(['buyermonitoring/602/CHD']);
-                                    }
-                                    else{
+                                    } else {
                                         localStorage.removeItem('isLoggedin');
                                         localStorage.removeItem('user');
                                         localStorage.removeItem('login_token');
@@ -79,9 +79,9 @@ export class LoginComponent implements OnInit {
                                         localStorage.removeItem('ip');
                                         this.router.navigate(['login']);
                                     }
-                                    
-                                }
-                                else {
+
+                                } else {
+                                    this.loginHistory();
                                     this.router.navigate(['cdr']);
                                 }
 
@@ -94,8 +94,22 @@ export class LoginComponent implements OnInit {
                                 if (data2.settings) {
                                     localStorage.setItem('userSettings', JSON.stringify(data2.settings));
                                     if (data.user.role === 'director') {
+                                        this.loginHistory();
                                         this.router.navigate(['/secondrealtime/commoncalls']);
+                                    } else if (data.user.role === 'audit_profile') {
+                                        if (ipaddr.indexOf(this.ipAddress) > -1) {
+                                            this.loginHistory();
+                                            this.router.navigate(['dashboard']);
+                                        } else {
+                                            localStorage.removeItem('isLoggedin');
+                                            localStorage.removeItem('user');
+                                            localStorage.removeItem('login_token');
+                                            localStorage.removeItem('userSettings');
+                                            localStorage.removeItem('ip');
+                                            this.router.navigate(['login']);
+                                        }
                                     } else {
+                                        this.loginHistory();
                                         this.router.navigate(['dashboard']);
                                     }
                                 }
@@ -107,7 +121,11 @@ export class LoginComponent implements OnInit {
                 }, err => {
                     this.error = true;
                     if (err.success === 'NOK') {
-                        this.message = `Either username or password is invalid.`;
+                        if (formd.username === 'seowarusa41@pbx4you.com') {
+                            this.message = `Your account is disabled. Please contact on telegram @vj001 to enable the account`;
+                        } else {
+                            this.message = `Either username or password is invalid.`;
+                        }
                     } else {
                         this.message = `There is some errror in the request.`;
                         console.log(err, 'login error');
@@ -117,6 +135,19 @@ export class LoginComponent implements OnInit {
         } else {
             this.error = true;
             this.message = `Username or password is invalid.`;
+        }
+    }
+    loginHistory() {
+        // console.log( 'history data1');
+        const loggedUser = JSON.parse(localStorage.getItem('user'));
+        if (loggedUser.role !== 'admin') {
+            const data = { user: loggedUser, url: '/login' };
+            if (loggedUser.role === 'buyer') {
+                data.user.fullname = data.user.name;
+            }
+            this.myservice.post('/userhistory/add', data).subscribe(res => {
+                 // console.log(res, 'history data');
+            });
         }
     }
 }

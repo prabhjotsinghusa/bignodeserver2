@@ -17,7 +17,7 @@ var connection = mysql.createConnection({
   // database: 'customer',
   // connectTimeout:30000
 });
-
+/* 
 connection.connect((err) => {
   if (err) { 
     console.log(err); 
@@ -25,7 +25,7 @@ connection.connect((err) => {
     console.log('You are now connected to mysql database')
   }
 
-});
+}); */
 
 
 module.exports = connection;

@@ -1,0 +1,70 @@
+<div [@routerTransition]>
+    <ol class="breadcrumb">
+        <li><i class="fa fa-dashboard"></i><a routerLink="/dashboard">Dashboard</a></li>
+        <li>&nbsp;<small>Users History</small></li>
+    </ol>
+
+    <div class="row ui eod">
+        <div class="col col-sm-12">
+            <div class="card mb-3">
+                <div class="card-header">
+                    Users History
+                    <div class="pull-right">
+                        <button class="btn btn-sm btn-success" (click)="refreshData()" title="Refresh"><i
+                                class="fa fa-refresh"></i></button>&nbsp;
+                        <button class="btn btn-sm btn-danger" (click)="deleteAll()" title="Delete All"><i
+                                class="fa fa-trash"></i></button>
+
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                        class="mat-elevation-z8 table-bordered mat-table" style="width:100%">
+                        <thead>
+                            <tr class="mat-header-row ng-tns-c13-4 ng-star-inserted">
+                                <th
+                                    class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                                    #
+                                </th>
+                                <th
+                                    class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                                    Url</th>
+                                <th
+                                    class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                                    User</th>
+                                <th
+                                    class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                                    Role</th>
+                                <th
+                                    class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                                    IP Address</th>
+                                <th
+                                    class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                                    Created At</th>
+                                <th
+                                    class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted">
+                                    Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let element of userhistory; let i = index"
+                                class="mat-row ng-tns-c4-0 ng-star-inserted">
+                                <td class="mat-cell ng-star-inserted">{{i+1}}</td>
+                                <td class="mat-cell ng-star-inserted">{{element.url}}</td>
+                                <td class="mat-cell ng-star-inserted">{{element.user.fullname}}</td>
+                                <td class="mat-cell ng-star-inserted">{{element.user.role}}</td>
+                                <td class="mat-cell ng-star-inserted">{{element.ip}}</td>
+                                <td class="mat-cell ng-star-inserted">{{element.createdAt| date:'yyyy-MM-dd HH:mm:ss'}}
+                                </td>
+                                <td class="mat-cell ng-star-inserted"><i class="fa fa-ban" title="Delete"
+                                        (click)="deleteHistory(element,i)"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <img src="../../../../assets/images/loading.gif"
+                        style="position: absolute; z-index: 999; left: 40%; top:45%;" *ngIf="isLoading">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

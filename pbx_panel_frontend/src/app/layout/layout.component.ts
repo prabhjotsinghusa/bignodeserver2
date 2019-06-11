@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RoutesRecognized } from '@angular/router';
+import { Router, RoutesRecognized, NavigationEnd } from '@angular/router';
 import 'rxjs/add/operator/pairwise';
 import 'rxjs/add/operator/filter';
+import { CommonService } from '../shared/services';
 
 @Component({
     selector: 'app-layout',
@@ -14,19 +15,19 @@ export class LayoutComponent implements OnInit {
     loggedUser: any;
     loggedUserSettings: any;
 
-    constructor(public router: Router) {
+    constructor(public router: Router, private myservice:CommonService) {
 
         const AccessControl = {
             director: ['dashboard', 'charts', 'users', 'auditprofile', 'activehours', 'tfns', 'buyers', 'campaign',  'campaigns', 'cdr', 'eod',
                 'agenteod', 'agentreport', 'tables', 'forms', 'bs-element', 'grid', 'components', 'managegroup', 'paymentnotification',
                 'wallet', 'realtime', 'cccapping', 'financehours', 'oxygencalls', 'customerreport', 'usagereport', 'buyerreport',
-                'buyerdashboard', 'login', 'error', 'access-denied', 'not-found', 'secondrealtime', 'buyereod'],
+                'buyerdashboard', 'login', 'error', 'access-denied', 'not-found', 'secondrealtime', 'buyereod', 'userhistory'],
 
             admin: ['dashboard', 'charts', 'users', 'auditprofile', 'activehours', 'tfns', 'buyers', 'campaign',  'campaigns', 'cdr', 'eod',
                 'agenteod', 'agentreport', 'tables', 'forms', 'bs-element', 'grid', 'components', 'managegroup', 'paymentnotification',
                 'wallet', 'realtime', 'cccapping', 'financehours', 'oxygencalls', 'customerreport', 'usagereport', 'buyerreport',
                 'buyerdashboard', 'login', 'error', 'access-denied', 'not-found', 'secondrealtime', 'buyereod', 'buyernumbers', 'audio',
-                'blacklist'],
+                'blacklist', 'userhistory'],
 
             audit_profile: ['dashboard', 'auditreport', 'login', 'error', 'access-denied', 'not-found'],
 
@@ -40,14 +41,7 @@ export class LayoutComponent implements OnInit {
 
         this.loggedUser = JSON.parse(localStorage.getItem('user'));
         this.loggedUserSettings = JSON.parse(localStorage.getItem('userSettings'));
-        /* this.router.events
-            .filter((e: any) => e instanceof RoutesRecognized)
-            .pairwise()
-            .subscribe((e) => {
-                console.log(e);
-                const currentRoute = e[1].urlAfterRedirects;
-            }); */
-        /* working on direct accessing the url with other roles than admin */
+
         const currentUrl = this.router.url;
         const routess = currentUrl.split('/');
 
@@ -99,7 +93,23 @@ export class LayoutComponent implements OnInit {
             }
 
         }
-        //  console.log(currentUrl, routess[1]);
+        // console.log(currentUrl, routess[1]);
+        this.router.events
+            .filter((e: any) => e instanceof NavigationEnd)
+            .pairwise()
+            .subscribe((e) => {
+                // console.log(e, this.loggedUser);
+                const currentRoute = e[1].urlAfterRedirects;
+                if (currentRoute !== undefined && this.loggedUser.role !== 'admin') {
+                    const data = { user: this.loggedUser, url: currentRoute };
+                    if (this.loggedUser.role === 'buyer') {
+                        data.user.fullname = data.user.name;
+                    }
+                    this.myservice.post('/userhistory/add', data).subscribe(res => {
+                        // console.log(res, 'history data');
+                    });
+                }
+            });
     }
 
     ngOnInit() { }
