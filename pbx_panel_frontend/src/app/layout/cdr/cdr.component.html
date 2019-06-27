@@ -247,7 +247,10 @@
                                         <i (click)="viewDetail(i,element)" title="Details"
                                             [className]="(rowView === i)?'fa fa-minus-square-o':'fa fa-plus-square-o'"></i>
                                     </td>
-                                    <td class="mat-cell ng-star-inserted">{{element.start | date:'yyyy-MM-dd' }}</td>
+                                    <td class="mat-cell ng-star-inserted">
+                                        {{element.start| date:'long'}} |
+                                        {{element.start | date:'yyyy-MM-dd' }}
+                                    </td>
                                     <td class="mat-cell ng-star-inserted">{{element.start | date:'HH:mm:ss' }}</td>
                                     <td class="mat-cell ng-star-inserted">{{element.did}}</td>
                                     <td class="mat-cell ng-star-inserted">{{(loggedUser.role ==='publisher' && !loggedUserSettings.display_cnum)
@@ -415,8 +418,8 @@
                                         *ngIf="loggedUser.role === 'admin' || (loggedUser.role === 'publisher' && loggedUserSettings.enabled_record)">
                                         Recording</th>
                                     <th class="mat-header-cell ng-tns-c14-6 cdk-column-uid mat-column-uid ng-tns-c13-4 ng-star-inserted"
-                                    *ngIf="loggedUser.role === 'admin'">
-                                    Actions</th>
+                                        *ngIf="loggedUser.role === 'admin'">
+                                        Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -467,7 +470,10 @@
                                         <span
                                             style="display:none">{{element.recordingfile !== ''?'https://s3.us-east-2.amazonaws.com/cyberlynk-recordings/66_2019/'+(element.start | date:'MM/dd')+'/'+element.recordingfile.replace('+','%2B'):''}}</span>
                                     </td>
-                                    <td class="mat-cell ng-star-inserted" *ngIf="loggedUser.role ==='admin'"><i class="fa fa-ban" (click)="blockNumber(element)" title="Block Number" [ngStyle]="{'color': element.callerid_blocked === true ? 'red':'black'}"></i></td>
+                                    <td class="mat-cell ng-star-inserted" *ngIf="loggedUser.role ==='admin'"><i
+                                            class="fa fa-ban" (click)="blockNumber(element)" title="Block Number"
+                                            [ngStyle]="{'color': element.callerid_blocked === true ? 'red':'black'}"></i>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

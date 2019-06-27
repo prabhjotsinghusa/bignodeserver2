@@ -13,6 +13,7 @@
                 <h4>Campaign Add TFN(s)<small>(Step 2)</small></h4>
             </div>
             <div class="card-body">
+
                 <div class="row">
                     <div class="col-md-8 offset-md-2 col-sm-12">
                         <div class="alert alert-danger" *ngIf="show_error">{{error_message}}</div>
@@ -55,29 +56,18 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <dual-list display="tfn" [source]="source" [(destination)]="confirmed" [format]="format"></dual-list>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-secondary btn-success" (click)="addTFN()">Next</button>&nbsp;
+                                <a routerLink="/campaign" class="btn btn-secondary btn-default">Cancel</a>
+                            </div>
+                        </div>
 
-                       
-                       
-                                <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label><strong>Select TFN(s)</strong></label>
-                                                <div class="container">
-                                                    <div class="row" *ngFor="let tfn of pub_tfn;">
-                                                        <label class="form-control col-md-4"
-                                                            *ngIf="!(tfn.status == 'used' || tfn.status == 'pending')">
-                                                            <input type="checkbox" value="{{tfn.tfn}}"
-                                                                [checked]="tfn.status === 'used'"
-                                                                (change)="selectTFN($event)">{{tfn.tfn}}
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                            <button type="submit" class="btn btn-secondary btn-success">Next</button>&nbsp;
-                            <a routerLink="/campaign" class="btn btn-secondary btn-default">Cancel</a>
-                  
                     </div>
                 </div>
                 <!-- /.row -->

@@ -34,13 +34,21 @@ export class AddtfnComponent implements OnInit {
     closeResult: string;
     modalReference: NgbModalRef;
 
+    source: any = [];
+    format = {
+        add: 'Available TFN(s)', remove: 'Selected TFN(s)', all: 'All', none: 'None',
+        direction: 'left-to-right', draggable: true, locale: 'en'
+    };
+    confirmed: any = [];
     constructor(public router: Router, private activeroute: ActivatedRoute, private myservice: CommonService, private publisherservice: PublisherService,
         private modalService: NgbModal) {
         this.loggedUser = JSON.parse(localStorage.getItem('user'));
         this.activeroute.params.subscribe(params => {
             this.edit_id = params.id;
         });
+    }
 
+    ngOnInit() {
         this.myservice.get('/Campaign/getCampaignByCampaignId/' + this.edit_id).subscribe(res => {
             this.selected_campaign = res.campaigns[0];
             this.selected_publisher = this.selected_campaign.pub_id;
@@ -57,7 +65,7 @@ export class AddtfnComponent implements OnInit {
                 data => {
                     this.pub_tfn = data.tfn;
                     this.selected_tfns = [];
-
+                    this.source = data.tfn.filter(d => !(d.status === 'used' || d.status === 'pending'));
                 }, err => {
                     console.log(err);
                 }
@@ -66,15 +74,14 @@ export class AddtfnComponent implements OnInit {
         });
     }
 
-    ngOnInit() { }
-
-
-    addCampaign() {
-        this.error = false;
-        if (this.formdata.invalid) {
-            this.error = true;
+    addTFN() {
+        this.show_error = false;
+        if (this.confirmed.length < 1) {
+            this.show_error = true;
+            this.error_message = `Select a TFN(s) in campaign first!`;
         } else {
-            const data = this.formdata.value;
+            
+            const data = { tfns: this.confirmed, pub_id:this.selected_publisher, camp_id: this.selected_campaign.campaign_id };
             console.log(data, 'campaign data');
             /*   this.myservice.post('/Campaign/add', data)
                               .subscribe(

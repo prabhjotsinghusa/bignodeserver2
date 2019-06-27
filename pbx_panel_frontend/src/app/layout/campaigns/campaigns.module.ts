@@ -7,6 +7,7 @@ MatInputModule, MatAutocompleteModule, MatStepperModule} from '@angular/material
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AngularDualListBoxModule } from 'angular-dual-listbox';
 
 import { CommonService } from '../../shared/services/common.service';
 import { PublisherService } from '../../shared/services/publisher.service';
@@ -36,6 +37,7 @@ import { AddtfnComponent } from './components/addtfn.component';
     FormsModule,
     ReactiveFormsModule,
     NgbModule.forRoot(),
+    AngularDualListBoxModule
   ],
   exports: [
     MatButtonModule,
