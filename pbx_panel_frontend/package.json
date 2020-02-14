@@ -57,7 +57,7 @@
     "rxjs": "^6.2.2",
     "rxjs-compat": "^6.5.2",
     "xlsx": "^0.14.0",
-    "yarn": "^1.6.0",
+    "yarn": "^1.22.0",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
