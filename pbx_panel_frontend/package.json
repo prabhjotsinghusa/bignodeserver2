@@ -47,7 +47,7 @@
     "jquery": "^3.3.1",
     "jszip": "^3.1.5",
     "md-date-range-picker": "^0.8.3",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "ng-daterangepicker": "^1.1.0",
     "ng-multiselect-dropdown": "^0.2.3",
     "ng2-charts": "^1.6.0",
